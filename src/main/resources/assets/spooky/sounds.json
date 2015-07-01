@@ -1,0 +1,11 @@
+{
+	"records.spookyscaryskeletons": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "records/spookyscaryskeletons",
+				"stream": true
+			}
+		]
+	}
+}

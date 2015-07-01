@@ -1,0 +1,16 @@
+[
+{
+  "modid": "Spooky",
+  "name": "Spooky Scary Skeletons",
+  "description": "Spooky, scary skeletons, send shivers down your spine.\nShrieking skulls will shock your soul, seal your doom tonight.",
+  "version": "1.0",
+  "mcversion": "1.8.x",
+  "url": "https://www.youtube.com/watch?v=HzdQJTpUubo",
+  "updateUrl": "",
+  "authorList": ["Aditya Gupta"],
+  "credits": "Andrew Gold for making the Spooky Scary Skeletons song, which inspired this mod.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

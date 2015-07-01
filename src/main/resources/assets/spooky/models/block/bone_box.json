@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube", 
+	"textures": { 
+		"down": "spooky:blocks/bone_box",
+		"up": "spooky:blocks/bone_box",
+		"north": "spooky:blocks/bone_box",
+		"south": "spooky:blocks/bone_box",
+		"west": "spooky:blocks/bone_box",
+		"east": "spooky:blocks/bone_box",
+		"particle": "spooky:blocks/bone_box"
+	}
+}
