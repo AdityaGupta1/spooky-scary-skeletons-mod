@@ -9,4 +9,11 @@ seal your doom tonight."
 
 The Spooky Scary Skeletons mod for Minecraft 1.8 is a fun adventure mod that adds lots of new items, blocks, and tools.
 
-== Other stuff? (WIP)
+== Planned Stuff
+
+. New biome
+. New dimension
+. Lots of new bones
+. New entities
+. New crafting table
+. New storage blocks
