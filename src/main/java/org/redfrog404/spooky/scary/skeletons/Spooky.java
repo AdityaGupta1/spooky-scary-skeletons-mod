@@ -3,36 +3,31 @@ package org.redfrog404.spooky.scary.skeletons;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelCow;
-import net.minecraft.client.renderer.entity.RenderCow;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = Spooky.MODID, version = Spooky.VERSION)
 public class Spooky {
 
 	public static final String MODID = "Spooky";
-	public static final String VERSION = "1.0";
+	public static final String VERSION = "1.0.0";
 	
 	public static final Enchantment haste = new EnchantmentArrowFast(150,
 			new ResourceLocation("haste"), 2);
@@ -97,7 +92,7 @@ public class Spooky {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-
+		
 		Enchantment.addToBookList(haste);
 		MinecraftForge.EVENT_BUS.register(haste);
 
@@ -418,6 +413,23 @@ public class Spooky {
 		
 		GameRegistry.addRecipe(new ItemStack(bone_key1), " bb", " b ", "cbc", 'b',
 				bone8, 'c', bone_core2);
+		
+		ItemStack spooky_book = new ItemStack(Items.writable_book);
+		NBTTagList bookPages = new NBTTagList();
+		bookPages.appendTag(new NBTTagString("Spooky, scary skeletons, send shivers down your spine. Shrieking skulls will shock your soul, seal your doom tonight."));
+		bookPages.appendTag(new NBTTagString("Spooky, scary skeletons speak with such a screech. You'll shake and shudder in surprise when you hear these zombies shriek."));
+		bookPages.appendTag(new NBTTagString("We're so sorry, skeletons, you're so misunderstood. You only want to socialize, (but I don't think we should!)"));
+		bookPages.appendTag(new NBTTagString("'Cause spooky, scary skeletons shout startling, shrilly screams. They'll sneak from their sarcophagus and just won't let you be."));
+		bookPages.appendTag(new NBTTagString("Spirits supernatural are shy, what's all the fuss? But bags of bones seem so unsafe, it's semi-serious."));
+		bookPages.appendTag(new NBTTagString("Spooky, scary skeletons are silly all the same. They'll smile and scrabble slowly by and drive you so insane!"));
+		bookPages.appendTag(new NBTTagString("Sticks and stones will break your bones; they seldom let you snooze. Spooky, scary skeletons will wake you with a BOO!"));
+		spooky_book.setTagInfo("pages", bookPages);
+		spooky_book.setTagInfo("author", new NBTTagString("Unknown"));
+		spooky_book.setTagInfo("title", new NBTTagString("Spooky Scary Skeletons"));
+		spooky_book.setItem(Items.written_book);
+		GameRegistry.addShapelessRecipe(spooky_book,
+				new ItemStack(Items.bone), new ItemStack(Items.writable_book));
+		
 	}
 
 }
