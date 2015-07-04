@@ -1,14 +1,15 @@
-package org.redfrog404.spooky.scary.skeletons;
+package org.redfrog404.spooky.scary.skeletons.creativetab;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public final class MaterialsTab extends CreativeTabs
+import org.redfrog404.spooky.scary.skeletons.Spooky;
+
+public final class WeaponsTab extends CreativeTabs
 {
-    public MaterialsTab(int par1, String par2Str)
+    public WeaponsTab(int par1, String par2Str)
     {
         super(par1, par2Str);
     }
@@ -16,6 +17,6 @@ public final class MaterialsTab extends CreativeTabs
     @SideOnly(Side.CLIENT)
     public Item getTabIconItem()
     {
-        return Items.bone;
+        return Spooky.bc1_sword;
     }
 }

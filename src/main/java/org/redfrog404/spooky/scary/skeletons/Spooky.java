@@ -10,6 +10,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -23,19 +24,34 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import org.redfrog404.spooky.scary.skeletons.armor.GenericArmor;
+import org.redfrog404.spooky.scary.skeletons.creativetab.ArmorTab;
+import org.redfrog404.spooky.scary.skeletons.creativetab.BlocksTab;
+import org.redfrog404.spooky.scary.skeletons.creativetab.MaterialsTab;
+import org.redfrog404.spooky.scary.skeletons.creativetab.RecordsTab;
+import org.redfrog404.spooky.scary.skeletons.creativetab.ToolsTab;
+import org.redfrog404.spooky.scary.skeletons.creativetab.WeaponsTab;
+import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentArrowFast;
+import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentBones;
+import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentPoison;
+import org.redfrog404.spooky.scary.skeletons.toolsandarmor.GenericAxe;
+import org.redfrog404.spooky.scary.skeletons.toolsandarmor.GenericPickaxe;
+import org.redfrog404.spooky.scary.skeletons.toolsandarmor.GenericSpade;
+import org.redfrog404.spooky.scary.skeletons.toolsandarmor.GenericSword;
+
 @Mod(modid = Spooky.MODID, version = Spooky.VERSION)
 public class Spooky {
 
 	public static final String MODID = "Spooky";
-	public static final String VERSION = "1.0.0";
-	
+	public static final String VERSION = "1.1.0";
+
 	public static final Enchantment haste = new EnchantmentArrowFast(150,
 			new ResourceLocation("haste"), 2);
 	public static final Enchantment poison = new EnchantmentPoison(151,
 			new ResourceLocation("poison"), 2);
 	public static final Enchantment bones = new EnchantmentBones(152,
 			new ResourceLocation("bones"), 2);
-	
+
 	public static final CreativeTabs materials = new MaterialsTab(
 			CreativeTabs.getNextID(), "materialsTab");
 	public static final CreativeTabs blocks = new BlocksTab(
@@ -44,6 +60,8 @@ public class Spooky {
 			CreativeTabs.getNextID(), "toolsTab");
 	public static final CreativeTabs weapons = new WeaponsTab(
 			CreativeTabs.getNextID(), "weaponsTab");
+	public static final CreativeTabs armor = new ArmorTab(
+			CreativeTabs.getNextID(), "armorTab");
 	public static final CreativeTabs records = new RecordsTab(
 			CreativeTabs.getNextID(), "recordsTab");
 
@@ -53,11 +71,14 @@ public class Spooky {
 			3122, 17.5F, 6.0F, 20);
 	public static ToolMaterial BC1 = EnumHelper.addToolMaterial("BC1", 4, 5000,
 			20.0F, 7.0F, 22);
-	public static ToolMaterial MOSS = EnumHelper.addToolMaterial("MOSS", 4, 4096,
-			19.0F, 8.0F, 20);
+	public static ToolMaterial MOSS = EnumHelper.addToolMaterial("MOSS", 4,
+			4096, 19.0F, 8.0F, 20);
 	public static ToolMaterial BC2 = EnumHelper.addToolMaterial("BC2", 5, 7500,
 			23.0F, 10.0F, 25);
-	
+
+	public static ArmorMaterial MOSSARMOR = EnumHelper.addArmorMaterial(
+			"MOSSARMOR", "spooky:moss_armor", 20, new int[] { 5, 6, 4, 5 }, 18);
+
 	public static Item bone1;
 	public static Item bone2;
 	public static Item bone3;
@@ -69,9 +90,9 @@ public class Spooky {
 	public static Item bone8;
 	public static Item bone_core2;
 	public static Item bone_key1;
-	
+
 	public static Item spookyscaryskeletons;
-	
+
 	public static Block bone_box;
 
 	public static Item fire_sword;
@@ -82,9 +103,13 @@ public class Spooky {
 	public static Item bc1_pickaxe;
 	public static Item bc1_axe;
 	public static Item bc1_spade;
-	
+
 	public static Item moss_sword;
-	
+	public static Item moss_helmet;
+	public static Item moss_chestplate;
+	public static Item moss_leggings;
+	public static Item moss_boots;
+
 	public static Item bc2_sword;
 	public static Item bc2_pickaxe;
 	public static Item bc2_axe;
@@ -92,16 +117,16 @@ public class Spooky {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		
+
 		Enchantment.addToBookList(haste);
 		MinecraftForge.EVENT_BUS.register(haste);
 
 		Enchantment.addToBookList(poison);
 		MinecraftForge.EVENT_BUS.register(poison);
-		
+
 		Enchantment.addToBookList(bones);
 		MinecraftForge.EVENT_BUS.register(bones);
-		
+
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 
 		bone1 = new GenericItem("bone1");
@@ -204,7 +229,7 @@ public class Spooky {
 				"spooky:bone_box", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemBone_Box, 0, modelBone_Box);
-		
+
 		bone5 = new GenericItem("bone5");
 		GameRegistry.registerItem(bone5, "bone5");
 		Item modelItemBone5 = GameRegistry.findItem("spooky", "bone5");
@@ -212,7 +237,7 @@ public class Spooky {
 				"spooky:bone5", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemBone5, 0, modelBone5);
-		
+
 		bone6 = new GenericItem("bone6");
 		GameRegistry.registerItem(bone6, "bone6");
 		Item modelItemBone6 = GameRegistry.findItem("spooky", "bone6");
@@ -220,7 +245,7 @@ public class Spooky {
 				"spooky:bone6", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemBone6, 0, modelBone6);
-		
+
 		bone7 = new GenericItem("bone7");
 		GameRegistry.registerItem(bone7, "bone7");
 		Item modelItemBone7 = GameRegistry.findItem("spooky", "bone7");
@@ -228,7 +253,7 @@ public class Spooky {
 				"spooky:bone7", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemBone7, 0, modelBone7);
-		
+
 		bone8 = new GenericItem("bone8");
 		GameRegistry.registerItem(bone8, "bone8");
 		Item modelItemBone8 = GameRegistry.findItem("spooky", "bone8");
@@ -236,7 +261,7 @@ public class Spooky {
 				"spooky:bone8", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemBone8, 0, modelBone8);
-		
+
 		bone_core2 = new GenericItem("bone_core2");
 		GameRegistry.registerItem(bone_core2, "bone_core2");
 		Item modelItemBone_Core2 = GameRegistry
@@ -245,16 +270,16 @@ public class Spooky {
 				"spooky:bone_core2", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemBone_Core2, 0, modelBone_Core2);
-		
+
 		moss_sword = new GenericSword("moss_sword", MOSS);
 		GameRegistry.registerItem(moss_sword, "moss_sword");
-		Item modelItemMoss_Sword = GameRegistry.findItem("spooky",
-				"moss_sword");
+		Item modelItemMoss_Sword = GameRegistry
+				.findItem("spooky", "moss_sword");
 		ModelResourceLocation modelMoss_Sword = new ModelResourceLocation(
 				"spooky:moss_sword", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemMoss_Sword, 0, modelMoss_Sword);
-		
+
 		bc2_sword = new GenericSword("bc2_sword", BC2);
 		GameRegistry.registerItem(bc2_sword, "bc2_sword");
 		Item modelItemBC2_Sword = GameRegistry.findItem("spooky", "bc2_sword");
@@ -287,27 +312,68 @@ public class Spooky {
 				"spooky:bc2_spade", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemBC2_Spade, 0, modelBC2_Spade);
-		
-		bone_key1 = new GenericItem("bone_key1");
+
+		bone_key1 = new GenericItem("bone_key1").setMaxStackSize(1);
 		GameRegistry.registerItem(bone_key1, "bone_key1");
-		Item modelItemBone_Key1 = GameRegistry
-				.findItem("spooky", "bone_key1");
+		Item modelItemBone_Key1 = GameRegistry.findItem("spooky", "bone_key1");
 		ModelResourceLocation modelBone_Key1 = new ModelResourceLocation(
 				"spooky:bone_key1", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemBone_Key1, 0, modelBone_Key1);
-		
+
 		spookyscaryskeletons = new GenericRecord("spookyscaryskeletons");
 		GameRegistry.registerItem(spookyscaryskeletons, "spookyscaryskeletons");
-		Item modelItemSpookyScarySkeletons = GameRegistry
-				.findItem("spooky", "spookyscaryskeletons");
+		Item modelItemSpookyScarySkeletons = GameRegistry.findItem("spooky",
+				"spookyscaryskeletons");
 		ModelResourceLocation modelSpookyScarySkeletons = new ModelResourceLocation(
 				"spooky:spookyscaryskeletons", "inventory");
+		Minecraft
+				.getMinecraft()
+				.getRenderItem()
+				.getItemModelMesher()
+				.register(modelItemSpookyScarySkeletons, 0,
+						modelSpookyScarySkeletons);
+
+		GameRegistry.registerItem(moss_helmet = new GenericArmor("moss_helmet",
+				MOSSARMOR, 1, 0), "moss_helmet");
+		Item modelItemMoss_Helmet = GameRegistry.findItem("spooky",
+				"moss_helmet");
+		ModelResourceLocation modelMoss_Helmet = new ModelResourceLocation(
+				"spooky:moss_helmet", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-				.register(modelItemSpookyScarySkeletons, 0, modelSpookyScarySkeletons);
-		
-		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(spookyscaryskeletons), 1, 1, 50));
-		
+				.register(modelItemMoss_Helmet, 0, modelMoss_Helmet);
+
+		GameRegistry.registerItem(moss_chestplate = new GenericArmor(
+				"moss_chestplate", MOSSARMOR, 1, 1), "moss_chestplate");
+		Item modelItemMoss_Chestplate = GameRegistry.findItem("spooky",
+				"moss_chestplate");
+		ModelResourceLocation modelMoss_Chestplate = new ModelResourceLocation(
+				"spooky:moss_chestplate", "inventory");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+				.register(modelItemMoss_Chestplate, 0, modelMoss_Chestplate);
+
+		GameRegistry.registerItem(moss_leggings = new GenericArmor(
+				"moss_leggings", MOSSARMOR, 2, 2), "moss_leggings");
+		Item modelItemMoss_Leggings = GameRegistry.findItem("spooky",
+				"moss_leggings");
+		ModelResourceLocation modelMoss_Leggings = new ModelResourceLocation(
+				"spooky:moss_leggings", "inventory");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+				.register(modelItemMoss_Leggings, 0, modelMoss_Leggings);
+
+		GameRegistry.registerItem(moss_boots = new GenericArmor("moss_boots",
+				MOSSARMOR, 1, 3), "moss_boots");
+		Item modelItemMoss_Boots = GameRegistry.findItem("spooky",
+				"moss_boots");
+		ModelResourceLocation modelMoss_Boots = new ModelResourceLocation(
+				"spooky:moss_boots", "inventory");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+				.register(modelItemMoss_Boots, 0, modelMoss_Boots);
+
+		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
+				new WeightedRandomChestContent(new ItemStack(
+						spookyscaryskeletons), 1, 1, 50));
+
 		GameRegistry.registerWorldGenerator(new OreGenerator(), 0);
 
 		GameRegistry.addRecipe(new ItemStack(bone1), "ggg", "gbg", "ggg", 'g',
@@ -361,38 +427,40 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(bc1_spade), "c", "b", "b", 'b',
 				bone4, 'c', bone_core1);
-		
+
 		GameRegistry.addShapelessRecipe(new ItemStack(Items.bone, 32),
 				new ItemStack(bone_box));
-		
+
 		GameRegistry.addRecipe(new ItemStack(bone5), "ttt", "tbt", "ttt", 'b',
 				bone_box, 't', Blocks.tnt);
-		
+
 		GameRegistry.addRecipe(new ItemStack(bone6), "cvc", "vbv", "cvc", 'b',
 				bone_box, 'c', Blocks.mossy_cobblestone, 'v', Blocks.vine);
-		
+
 		GameRegistry.addRecipe(new ItemStack(bone6), "vcv", "cbc", "vcv", 'b',
 				bone_box, 'c', Blocks.mossy_cobblestone, 'v', Blocks.vine);
-		
+
 		GameRegistry.addRecipe(new ItemStack(bone7), "ddd", "dbd", "ddd", 'b',
 				bone_box, 'd', Blocks.dirt);
-		
+
 		GameRegistry.addRecipe(new ItemStack(bone8), "pbp", "bBb", "pbp", 'b',
 				bone_box, 'p', Items.cooked_porkchop, 'B', Blocks.beacon);
-		
+
 		GameRegistry.addRecipe(new ItemStack(bone8), "bpb", "pBp", "bpb", 'b',
 				bone_box, 'p', Items.cooked_porkchop, 'B', Blocks.beacon);
-		
+
 		GameRegistry.addShapelessRecipe(new ItemStack(bone_core2),
 				new ItemStack(bone5), new ItemStack(bone6),
 				new ItemStack(bone7), new ItemStack(bone8), new ItemStack(
-						Blocks.redstone_block), new ItemStack(Blocks.redstone_block),
-				new ItemStack(Blocks.redstone_block), new ItemStack(
-						Blocks.redstone_block), new ItemStack(Blocks.redstone_block));
-		
+						Blocks.redstone_block), new ItemStack(
+						Blocks.redstone_block), new ItemStack(
+						Blocks.redstone_block), new ItemStack(
+						Blocks.redstone_block), new ItemStack(
+						Blocks.redstone_block));
+
 		GameRegistry.addRecipe(new ItemStack(moss_sword), "b", "b", "s", 's',
 				Items.stick, 'b', bone6);
-		
+
 		GameRegistry.addRecipe(new ItemStack(bc2_sword), "c", "c", "b", 'b',
 				bone8, 'c', bone_core2);
 
@@ -407,29 +475,56 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(bc2_spade), "c", "b", "b", 'b',
 				bone8, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(bone_key1), "bb ", " b ", "cbc",
+				'b', bone8, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(bone_key1), " bb", " b ", "cbc",
+				'b', bone8, 'c', bone_core2);
 		
-		GameRegistry.addRecipe(new ItemStack(bone_key1), "bb ", " b ", "cbc", 'b',
-				bone8, 'c', bone_core2);
+		GameRegistry.addRecipe(new ItemStack(moss_helmet), "bcb", "b b",
+				'b', bone6, 'c', bone_core2);
 		
-		GameRegistry.addRecipe(new ItemStack(bone_key1), " bb", " b ", "cbc", 'b',
-				bone8, 'c', bone_core2);
+		GameRegistry.addRecipe(new ItemStack(moss_chestplate), "c c", "bcb", "bbb",
+				'b', bone6, 'c', bone_core2);
 		
+		GameRegistry.addRecipe(new ItemStack(moss_leggings), "bcb", "b b", "b b",
+				'b', bone6, 'c', bone_core2);
+		
+		GameRegistry.addRecipe(new ItemStack(moss_boots), "c c", "b b",
+				'b', bone6, 'c', bone_core2);
+
 		ItemStack spooky_book = new ItemStack(Items.writable_book);
 		NBTTagList bookPages = new NBTTagList();
-		bookPages.appendTag(new NBTTagString("Spooky, scary skeletons, send shivers down your spine. Shrieking skulls will shock your soul, seal your doom tonight."));
-		bookPages.appendTag(new NBTTagString("Spooky, scary skeletons speak with such a screech. You'll shake and shudder in surprise when you hear these zombies shriek."));
-		bookPages.appendTag(new NBTTagString("We're so sorry, skeletons, you're so misunderstood. You only want to socialize, (but I don't think we should!)"));
-		bookPages.appendTag(new NBTTagString("'Cause spooky, scary skeletons shout startling, shrilly screams. They'll sneak from their sarcophagus and just won't let you be."));
-		bookPages.appendTag(new NBTTagString("Spirits supernatural are shy, what's all the fuss? But bags of bones seem so unsafe, it's semi-serious."));
-		bookPages.appendTag(new NBTTagString("Spooky, scary skeletons are silly all the same. They'll smile and scrabble slowly by and drive you so insane!"));
-		bookPages.appendTag(new NBTTagString("Sticks and stones will break your bones; they seldom let you snooze. Spooky, scary skeletons will wake you with a BOO!"));
+		bookPages
+				.appendTag(new NBTTagString(
+						"Spooky, scary skeletons, send shivers down your spine. Shrieking skulls will shock your soul, seal your doom tonight."));
+		bookPages
+				.appendTag(new NBTTagString(
+						"Spooky, scary skeletons speak with such a screech. You'll shake and shudder in surprise when you hear these zombies shriek."));
+		bookPages
+				.appendTag(new NBTTagString(
+						"We're so sorry, skeletons, you're so misunderstood. You only want to socialize, (but I don't think we should!)"));
+		bookPages
+				.appendTag(new NBTTagString(
+						"'Cause spooky, scary skeletons shout startling, shrilly screams. They'll sneak from their sarcophagus and just won't let you be."));
+		bookPages
+				.appendTag(new NBTTagString(
+						"Spirits supernatural are shy, what's all the fuss? But bags of bones seem so unsafe, it's semi-serious."));
+		bookPages
+				.appendTag(new NBTTagString(
+						"Spooky, scary skeletons are silly all the same. They'll smile and scrabble slowly by and drive you so insane!"));
+		bookPages
+				.appendTag(new NBTTagString(
+						"Sticks and stones will break your bones; they seldom let you snooze. Spooky, scary skeletons will wake you with a BOO!"));
 		spooky_book.setTagInfo("pages", bookPages);
 		spooky_book.setTagInfo("author", new NBTTagString("Unknown"));
-		spooky_book.setTagInfo("title", new NBTTagString("Spooky Scary Skeletons"));
+		spooky_book.setTagInfo("title", new NBTTagString(
+				"Spooky Scary Skeletons"));
 		spooky_book.setItem(Items.written_book);
-		GameRegistry.addShapelessRecipe(spooky_book,
-				new ItemStack(Items.bone), new ItemStack(Items.writable_book));
-		
+		GameRegistry.addShapelessRecipe(spooky_book, new ItemStack(Items.bone),
+				new ItemStack(Items.writable_book));
+
 	}
 
 }

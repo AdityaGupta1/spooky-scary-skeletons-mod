@@ -1,13 +1,14 @@
-package org.redfrog404.spooky.scary.skeletons;
+package org.redfrog404.spooky.scary.skeletons.enchantments;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemBow;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import org.redfrog404.spooky.scary.skeletons.Spooky;
 
 public class EnchantmentArrowFast extends Enchantment {
 	public EnchantmentArrowFast(int enchID, ResourceLocation enchName,

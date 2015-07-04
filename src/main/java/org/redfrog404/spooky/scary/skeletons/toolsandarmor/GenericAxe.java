@@ -1,7 +1,8 @@
-package org.redfrog404.spooky.scary.skeletons;
+package org.redfrog404.spooky.scary.skeletons.toolsandarmor;
 
 import net.minecraft.item.ItemAxe;
-import net.minecraft.item.Item.ToolMaterial;
+
+import org.redfrog404.spooky.scary.skeletons.Spooky;
 
 public class GenericAxe extends ItemAxe {
 	

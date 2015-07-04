@@ -1,9 +1,8 @@
-package org.redfrog404.spooky.scary.skeletons;
+package org.redfrog404.spooky.scary.skeletons.toolsandarmor;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemSword;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import org.redfrog404.spooky.scary.skeletons.Spooky;
 
 public class GenericSword extends ItemSword {
 

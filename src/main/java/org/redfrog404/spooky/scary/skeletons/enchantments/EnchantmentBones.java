@@ -1,19 +1,23 @@
-package org.redfrog404.spooky.scary.skeletons;
+package org.redfrog404.spooky.scary.skeletons.enchantments;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class EnchantmentPoison extends Enchantment {
-	protected EnchantmentPoison(int enchID, ResourceLocation enchName,
+import org.redfrog404.spooky.scary.skeletons.Spooky;
+
+public class EnchantmentBones extends Enchantment {
+	private static final String __OBFID = "CL_00000100";
+
+	public EnchantmentBones(int enchID, ResourceLocation enchName,
 			int enchWeight) {
 		super(enchID, enchName, enchWeight, EnumEnchantmentType.WEAPON);
-		this.setName("poison");
+		this.setName("bones");
 	}
 
 	/**
@@ -21,7 +25,7 @@ public class EnchantmentPoison extends Enchantment {
 	 * level passed.
 	 */
 	public int getMinEnchantability(int enchantmentLevel) {
-		return 10 + 20 * (enchantmentLevel - 1);
+		return 20;
 	}
 
 	/**
@@ -29,44 +33,41 @@ public class EnchantmentPoison extends Enchantment {
 	 * level passed.
 	 */
 	public int getMaxEnchantability(int enchantmentLevel) {
-		return super.getMinEnchantability(enchantmentLevel) + 50;
+		return 50;
 	}
 
 	/**
 	 * Returns the maximum level that the enchantment can have.
 	 */
 	public int getMaxLevel() {
-		return 2;
+		return 1;
 	}
 
 	@SubscribeEvent
-	public void applyPoison(LivingAttackEvent event) {
+	public void getBones(LivingAttackEvent event) {
 		if (event.source.getEntity() == null) {
 			return;
 		}
-		
+
 		if (!(event.source.getEntity() instanceof EntityPlayer)) {
 			return;
 		}
-		
+
 		EntityPlayer player = (EntityPlayer) event.source.getEntity();
-		
+
 		if (player.getHeldItem() == null) {
 			return;
 		}
-		
-		int level = EnchantmentHelper.getEnchantmentLevel(Spooky.poison.effectId,
-				player.getHeldItem());
 
-		switch (level) {
-		case 2:
-			event.entityLiving.addPotionEffect(new PotionEffect(19, 100, 1));
-			break;
-		case 1:
-			event.entityLiving.addPotionEffect(new PotionEffect(19, 100, 0));
-			break;
-		default:
-			break;
+		int level = EnchantmentHelper.getEnchantmentLevel(
+				Spooky.bones.effectId, player.getHeldItem());
+
+		if (level < 1) {
+			return;
+		}
+
+		if (!player.worldObj.isRemote) {
+			event.entityLiving.dropItem(Items.bone, 1);
 		}
 	}
 }
