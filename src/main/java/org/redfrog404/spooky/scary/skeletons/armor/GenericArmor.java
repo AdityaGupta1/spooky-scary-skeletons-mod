@@ -4,24 +4,41 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 
-import org.redfrog404.spooky.scary.skeletons.Spooky;
+import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
 public class GenericArmor extends ItemArmor {
 
+	String name;
+
 	public GenericArmor(String name, ArmorMaterial material, int renderIndex,
-			int armorType) {
+			int armorType, String armorName) {
 		super(material, renderIndex, armorType);
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(Spooky.armor);
+		this.canRepair = true;
+		this.name = armorName;
 	}
 
 	@Override
 	public String getArmorTexture(ItemStack armor, Entity entity, int slot,
 			String type) {
-		if (armor.getItem() == Spooky.moss_leggings) {
-			return "spooky:models/armor/moss_armor_2.png";
-		} else {
-			return "spooky:models/armor/moss_armor_1.png";
+		if (name == "moss") {
+			if (armor.getItem() == Spooky.moss_leggings) {
+				return "spooky:models/armor/moss_armor_2.png";
+			} else {
+				return "spooky:models/armor/moss_armor_1.png";
+			}
 		}
+		
+		return null;
 	}
+	
+	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+    {
+        if (name == "moss") {
+        	return Spooky.bone6 == repair.getItem() ? true : super.getIsRepairable(toRepair, repair);
+        }
+        
+        return false;
+    }
 }

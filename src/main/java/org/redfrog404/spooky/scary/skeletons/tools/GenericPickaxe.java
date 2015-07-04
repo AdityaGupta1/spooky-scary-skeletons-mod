@@ -1,8 +1,8 @@
-package org.redfrog404.spooky.scary.skeletons.toolsandarmor;
+package org.redfrog404.spooky.scary.skeletons.tools;
 
 import net.minecraft.item.ItemPickaxe;
 
-import org.redfrog404.spooky.scary.skeletons.Spooky;
+import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
 public class GenericPickaxe extends ItemPickaxe {
 

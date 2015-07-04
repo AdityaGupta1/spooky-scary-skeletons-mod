@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import org.redfrog404.spooky.scary.skeletons.Spooky;
+import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
 public class EnchantmentBones extends Enchantment {
 	private static final String __OBFID = "CL_00000100";

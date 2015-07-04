@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import org.redfrog404.spooky.scary.skeletons.Spooky;
+import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
 public class EnchantmentArrowFast extends Enchantment {
 	public EnchantmentArrowFast(int enchID, ResourceLocation enchName,

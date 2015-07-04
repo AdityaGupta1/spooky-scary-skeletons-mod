@@ -1,8 +1,8 @@
-package org.redfrog404.spooky.scary.skeletons.toolsandarmor;
+package org.redfrog404.spooky.scary.skeletons.tools;
 
 import net.minecraft.item.ItemSword;
 
-import org.redfrog404.spooky.scary.skeletons.Spooky;
+import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
 public class GenericSword extends ItemSword {
 

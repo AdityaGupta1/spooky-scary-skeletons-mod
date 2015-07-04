@@ -7,9 +7,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
-public final class ToolsTab extends CreativeTabs
+public final class GunsTab extends CreativeTabs
 {
-    public ToolsTab(int par1, String par2Str)
+    public GunsTab(int par1, String par2Str)
     {
         super(par1, par2Str);
     }
@@ -17,6 +17,6 @@ public final class ToolsTab extends CreativeTabs
     @SideOnly(Side.CLIENT)
     public Item getTabIconItem()
     {
-        return Spooky.bc1_pickaxe;
+        return Spooky.prismarine_pistol;
     }
 }

@@ -1,4 +1,4 @@
-package org.redfrog404.spooky.scary.skeletons;
+package org.redfrog404.spooky.scary.skeletons.generic;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

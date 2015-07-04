@@ -5,11 +5,11 @@ import net.minecraft.item.Item;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import org.redfrog404.spooky.scary.skeletons.Spooky;
+import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
-public final class RecordsTab extends CreativeTabs
+public final class MiscTab extends CreativeTabs
 {
-    public RecordsTab(int par1, String par2Str)
+    public MiscTab(int par1, String par2Str)
     {
         super(par1, par2Str);
     }

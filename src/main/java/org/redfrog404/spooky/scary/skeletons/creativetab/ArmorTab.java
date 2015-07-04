@@ -1,6 +1,6 @@
 package org.redfrog404.spooky.scary.skeletons.creativetab;
 
-import org.redfrog404.spooky.scary.skeletons.Spooky;
+import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
