@@ -1,11 +1,16 @@
 package org.redfrog404.spooky.scary.skeletons.generic;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.projectile.EntityFireball;
+import net.minecraft.entity.projectile.EntityLargeFireball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -14,6 +19,7 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
@@ -45,7 +51,9 @@ import org.redfrog404.spooky.scary.skeletons.tools.GenericSword;
 public class Spooky {
 
 	public static final String MODID = "Spooky";
-	public static final String VERSION = "1.2.0";
+	public static final String VERSION = "1.2.1";
+
+	public static final List<String> spooky_text = new ArrayList();
 
 	public static final Enchantment haste = new EnchantmentArrowFast(150,
 			new ResourceLocation("haste"), 2);
@@ -82,7 +90,7 @@ public class Spooky {
 
 	public static ArmorMaterial MOSSARMOR = EnumHelper.addArmorMaterial(
 			"MOSSARMOR", "spooky:moss_armor", 20, new int[] { 5, 6, 4, 5 }, 18);
-	
+
 	// Bones, Bone Cores, and Bone Keys
 	public static Item bone1;
 	public static Item bone2;
@@ -119,20 +127,36 @@ public class Spooky {
 	public static Item bc2_pickaxe;
 	public static Item bc2_axe;
 	public static Item bc2_spade;
-	
+
 	// Armor
 	public static Item moss_helmet;
 	public static Item moss_chestplate;
 	public static Item moss_leggings;
 	public static Item moss_boots;
-	
+
 	// Guns
-	public static Item prismarine_pistol;
-	public static Item ender_rifle;
+	public static GenericGun prismarine_pistol;
+	public static GenericGun ender_rifle;
+	public static GenericGun fire_gun;
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		
+
+		spooky_text
+				.add("Spooky, scary skeletons, send shivers down your spine. Shrieking skulls will shock your soul, seal your doom tonight.");
+		spooky_text
+				.add("Spooky, scary skeletons speak with such a screech. You'll shake and shudder in surprise when you hear these zombies shriek.");
+		spooky_text
+				.add("We're so sorry, skeletons, you're so misunderstood. You only want to socialize, (but I don't think we should!)");
+		spooky_text
+				.add("'Cause spooky, scary skeletons shout startling, shrilly screams. They'll sneak from their sarcophagus and just won't let you be.");
+		spooky_text
+				.add("Spirits supernatural are shy, what's all the fuss? But bags of bones seem so unsafe, it's semi-serious.");
+		spooky_text
+				.add("Spooky, scary skeletons are silly all the same. They'll smile and scrabble slowly by and drive you so insane!");
+		spooky_text
+				.add("Sticks and stones will break your bones; they seldom let you snooze. Spooky, scary skeletons will wake you with a BOO!");
+
 		GameRegistry.registerFuelHandler(new FuelHandler());
 
 		Enchantment.addToBookList(haste);
@@ -380,32 +404,48 @@ public class Spooky {
 
 		GameRegistry.registerItem(moss_boots = new GenericArmor("moss_boots",
 				MOSSARMOR, 1, 3, "moss"), "moss_boots");
-		Item modelItemMoss_Boots = GameRegistry.findItem("spooky",
-				"moss_boots");
+		Item modelItemMoss_Boots = GameRegistry
+				.findItem("spooky", "moss_boots");
 		ModelResourceLocation modelMoss_Boots = new ModelResourceLocation(
 				"spooky:moss_boots", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemMoss_Boots, 0, modelMoss_Boots);
-		
-		guardians_eye = new GenericItemMiscellaneous("guardians_eye") ;
+
+		guardians_eye = new GenericItem("guardians_eye", misc);
 		GameRegistry.registerItem(guardians_eye, "guardians_eye");
-		Item modelItemGuardians_Eye = GameRegistry.findItem("spooky", "guardians_eye");
+		Item modelItemGuardians_Eye = GameRegistry.findItem("spooky",
+				"guardians_eye");
 		ModelResourceLocation modelGuardians_Eye = new ModelResourceLocation(
 				"spooky:guardians_eye", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(modelItemGuardians_Eye, 0, modelGuardians_Eye);
-		
-		prismarine_pistol = new GenericGun("prismarine_pistol", 1233, Items.prismarine_shard, (byte) 6);
+
+		prismarine_pistol = new GenericGun("prismarine_pistol", 1233,
+				Items.prismarine_shard, (byte) 6);
 		GameRegistry.registerItem(prismarine_pistol, "prismarine_pistol");
-		Item modelItemPrismarine_Pistol = GameRegistry.findItem("spooky", "prismarine_pistol");
+		Item modelItemPrismarine_Pistol = GameRegistry.findItem("spooky",
+				"prismarine_pistol");
 		ModelResourceLocation modelPrismarine_Pistol = new ModelResourceLocation(
 				"spooky:prismarine_pistol", "inventory");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+		Minecraft
+				.getMinecraft()
+				.getRenderItem()
+				.getItemModelMesher()
 				.register(modelItemPrismarine_Pistol, 0, modelPrismarine_Pistol);
-		
-		ender_rifle = new GenericGun("ender_rifle", 887, Items.ender_pearl, (byte) 11);
+
+		fire_gun = new GenericGun("fire_gun", 665, Items.fire_charge, (byte) 9);
+		GameRegistry.registerItem(fire_gun, "fire_gun");
+		Item modelItemFire_Gun = GameRegistry.findItem("spooky", "fire_gun");
+		ModelResourceLocation modelFire_Gun = new ModelResourceLocation(
+				"spooky:fire_gun", "inventory");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+				.register(modelItemFire_Gun, 0, modelFire_Gun);
+
+		ender_rifle = new GenericGun("ender_rifle", 887, Items.ender_pearl,
+				(byte) 11);
 		GameRegistry.registerItem(ender_rifle, "ender_rifle");
-		Item modelItemEnder_Rifle = GameRegistry.findItem("spooky", "ender_rifle");
+		Item modelItemEnder_Rifle = GameRegistry.findItem("spooky",
+				"ender_rifle");
 		ModelResourceLocation modelEnder_Rifle = new ModelResourceLocation(
 				"spooky:ender_rifle", "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
@@ -522,42 +562,24 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(bone_key1), " bb", " b ", "cbc",
 				'b', bone8, 'c', bone_core2);
-		
-		GameRegistry.addRecipe(new ItemStack(moss_helmet), "bcb", "b b",
-				'b', bone6, 'c', bone_core2);
-		
-		GameRegistry.addRecipe(new ItemStack(moss_chestplate), "c c", "bcb", "bbb",
-				'b', bone6, 'c', bone_core2);
-		
-		GameRegistry.addRecipe(new ItemStack(moss_leggings), "bcb", "b b", "b b",
-				'b', bone6, 'c', bone_core2);
-		
-		GameRegistry.addRecipe(new ItemStack(moss_boots), "c c", "b b",
-				'b', bone6, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(moss_helmet), "bcb", "b b", 'b',
+				bone6, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(moss_chestplate), "c c", "bcb",
+				"bbb", 'b', bone6, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(moss_leggings), "bcb", "b b",
+				"b b", 'b', bone6, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(moss_boots), "c c", "b b", 'b',
+				bone6, 'c', bone_core2);
 
 		ItemStack spooky_book = new ItemStack(Items.writable_book);
 		NBTTagList bookPages = new NBTTagList();
-		bookPages
-				.appendTag(new NBTTagString(
-						"Spooky, scary skeletons, send shivers down your spine. Shrieking skulls will shock your soul, seal your doom tonight."));
-		bookPages
-				.appendTag(new NBTTagString(
-						"Spooky, scary skeletons speak with such a screech. You'll shake and shudder in surprise when you hear these zombies shriek."));
-		bookPages
-				.appendTag(new NBTTagString(
-						"We're so sorry, skeletons, you're so misunderstood. You only want to socialize, (but I don't think we should!)"));
-		bookPages
-				.appendTag(new NBTTagString(
-						"'Cause spooky, scary skeletons shout startling, shrilly screams. They'll sneak from their sarcophagus and just won't let you be."));
-		bookPages
-				.appendTag(new NBTTagString(
-						"Spirits supernatural are shy, what's all the fuss? But bags of bones seem so unsafe, it's semi-serious."));
-		bookPages
-				.appendTag(new NBTTagString(
-						"Spooky, scary skeletons are silly all the same. They'll smile and scrabble slowly by and drive you so insane!"));
-		bookPages
-				.appendTag(new NBTTagString(
-						"Sticks and stones will break your bones; they seldom let you snooze. Spooky, scary skeletons will wake you with a BOO!"));
+		for (int page = 0; page < spooky_text.size(); page++) {
+			bookPages.appendTag(new NBTTagString(spooky_text.get(page)));
+		}
 		spooky_book.setTagInfo("pages", bookPages);
 		spooky_book.setTagInfo("author", new NBTTagString("Unknown"));
 		spooky_book.setTagInfo("title", new NBTTagString(
@@ -565,23 +587,31 @@ public class Spooky {
 		spooky_book.setItem(Items.written_book);
 		GameRegistry.addShapelessRecipe(spooky_book, new ItemStack(Items.bone),
 				new ItemStack(Items.writable_book));
-		
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.prismarine_shard, 4),
-				new ItemStack(Blocks.prismarine));
-		
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.prismarine_shard, 9),
-				new ItemStack(Blocks.prismarine, 1, 1));
-		
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.prismarine_shard, 8),
-				new ItemStack(Blocks.prismarine, 1, 2));
-		
+
+		GameRegistry.addShapelessRecipe(
+				new ItemStack(Items.prismarine_shard, 4), new ItemStack(
+						Blocks.prismarine));
+
+		GameRegistry.addShapelessRecipe(
+				new ItemStack(Items.prismarine_shard, 9), new ItemStack(
+						Blocks.prismarine, 1, 1));
+
+		GameRegistry.addShapelessRecipe(
+				new ItemStack(Items.prismarine_shard, 8), new ItemStack(
+						Blocks.prismarine, 1, 2));
+
 		GameRegistry.addRecipe(new ItemStack(prismarine_pistol), "epp", "  d",
-				'e', guardians_eye, 'p', Items.prismarine_shard, 'd', Items.diamond);
-		
-		GameRegistry.addRecipe(new ItemStack(ender_rifle), "eoo", " bb",
-				'e', Items.ender_eye, 'o', Blocks.end_stone, 'b', bone4);
-		
-		GameRegistry.addSmelting(bone4, new ItemStack(Items.ender_pearl, 6), 0.1F);
+				'e', guardians_eye, 'p', Items.prismarine_shard, 'd',
+				Items.diamond);
+
+		GameRegistry.addRecipe(new ItemStack(ender_rifle), "eoo", " bb", 'e',
+				Items.ender_eye, 'o', Blocks.end_stone, 'b', bone4);
+
+		GameRegistry.addSmelting(bone4, new ItemStack(Items.ender_pearl, 6),
+				0.1F);
+
+		GameRegistry.addRecipe(new ItemStack(fire_gun), "pnn", " bb", 'p',
+				Items.blaze_powder, 'n', Blocks.netherrack, 'b', bone3);
 	}
 
 }
