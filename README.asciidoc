@@ -10,4 +10,6 @@ ____________________________________________
 
 == Overview
 
-The Spooky Scary Skeletons mod for Minecraft 1.8 is a fun adventure mod that adds lots of new items, blocks, and tools.
+The Spooky Scary Skeletons mod for Minecraft 1.8 is a fun adventure mod that adds lots of new items, blocks, tools, and weapons.
+
+To learn more, visit the wiki by clicking on the book icon on the side of the page.
