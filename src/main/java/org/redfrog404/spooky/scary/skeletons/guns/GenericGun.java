@@ -17,45 +17,62 @@ public class GenericGun extends Item {
 
 	private byte damage;
 	private Item ammunition;
+	private int bullets;
 
 	public GenericGun(String name, int durability, Item bullet, byte damage) {
 		super();
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(Spooky.guns);
 		this.setMaxStackSize(1);
-		this.setMaxDamage(durability);
+		this.setMaxDamage(durability - 1);
 		this.damage = damage;
 		ammunition = bullet;
+		this.bullets = 1;
+	}
+	
+	public GenericGun(String name, int durability, Item bullet, byte damage, int bullets) {
+		super();
+		this.setUnlocalizedName(name);
+		this.setCreativeTab(Spooky.guns);
+		this.setMaxStackSize(1);
+		this.setMaxDamage(durability - 1);
+		this.damage = damage;
+		ammunition = bullet;
+		this.bullets = bullets;
 	}
 
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
-		if (!player.capabilities.isCreativeMode) {
-			if (!player.inventory.hasItem(ammunition)) {
-				return stack;
+		for (int bullets = 0 ; bullets < this.bullets ; bullets++) {
+			if (!player.capabilities.isCreativeMode) {
+				if (!player.inventory.hasItem(ammunition)) {
+					return stack;
+				}
+
+				player.inventory.consumeInventoryItem(ammunition);
 			}
 
-			player.inventory.consumeInventoryItem(ammunition);
+			world.playSoundAtEntity(player, "random.bow", 0.5F,
+					0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
+			if (!world.isRemote) {
+				EntityGenericBullet snowball = new EntityGenericBullet(world,
+						player, damage);
+				snowball.motionX *= 2;
+				snowball.motionY *= 2;
+				snowball.motionZ *= 2;
+				world.spawnEntityInWorld(snowball);
+			}
+		}
+		
+		if (!player.capabilities.isCreativeMode) {
 			if (this.getDamage(new ItemStack(this)) == this.getMaxDamage()) {
 				--stack.stackSize;
 			} else {
 				stack.damageItem(1, player);
 			}
 		}
-
-		world.playSoundAtEntity(player, "random.bow", 0.5F,
-				0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-
-		if (!world.isRemote) {
-			EntityGenericBullet snowball = new EntityGenericBullet(world,
-					player, damage);
-			snowball.motionX *= 2;
-			snowball.motionY *= 2;
-			snowball.motionZ *= 2;
-			world.spawnEntityInWorld(snowball);
-		}
-
+		
 		return stack;
 	}
 
@@ -63,9 +80,10 @@ public class GenericGun extends Item {
 	public void addInformation(ItemStack stack, EntityPlayer playerIn,
 			List tooltip, boolean advanced) {
 		tooltip.add(EnumChatFormatting.DARK_RED + "Damage: " + ((float) damage / 2) + " hearts");
+		tooltip.add(EnumChatFormatting.DARK_GREEN + "Bullets Shot: " + bullets);
 		tooltip.add(EnumChatFormatting.AQUA + "Durability: " + (this.getMaxDamage() + 1));
 		tooltip.add(EnumChatFormatting.GOLD + "Ammunition: "
-				+ ammunition.getItemStackDisplayName(new ItemStack(ammunition)));
+				+ ammunition.getItemStackDisplayName(new ItemStack(ammunition))); 
 		tooltip.add("");
 	}
 

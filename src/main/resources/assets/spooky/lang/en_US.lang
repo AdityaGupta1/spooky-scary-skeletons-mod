@@ -44,3 +44,6 @@ item.fire_gun.name=Blazing Fury
 itemGroup.bowsTab=Spooky Scary Skeletons: Bows
 item.ender_bow.name=Ender Crossbow
 item.ender_arrow.name=Pulsating Bolt
+item.compressed_redstone.name=Compressed Redstone
+item.steampunk_gun.name=Steampunker's Shotgun
+item.double_bow.name=Double Bow

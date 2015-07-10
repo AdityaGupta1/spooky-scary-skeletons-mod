@@ -28,28 +28,16 @@ public class GenericBow extends ItemBow {
 	private double damage;
 	private Item bow;
 
-	public GenericBow(Item bow, String name, int durability, Item arrow) {
-		this.maxStackSize = 1;
-		this.setUnlocalizedName(name);
-		this.setMaxDamage(durability);
-		this.setCreativeTab(Spooky.bows);
-		this.arrow = arrow;
-		this.arrows = 1;
-		this.name = name;
-		this.damage = 0.5F;
-		this.bow = bow;
-	}
-
 	public GenericBow(Item bow, String name, int durability, Item arrow,
 			double damage) {
 		this.maxStackSize = 1;
 		this.setUnlocalizedName(name);
-		this.setMaxDamage(durability);
+		this.setMaxDamage(durability - 1);
 		this.setCreativeTab(Spooky.bows);
 		this.arrow = arrow;
 		this.arrows = 1;
 		this.name = name;
-		this.damage = damage;
+		this.damage = damage + 0.5D;
 		this.bow = bow;
 	}
 
@@ -57,12 +45,12 @@ public class GenericBow extends ItemBow {
 			double damage, int arrows) {
 		this.maxStackSize = 1;
 		this.setUnlocalizedName(name);
-		this.setMaxDamage(durability);
+		this.setMaxDamage(durability - 1);
 		this.setCreativeTab(Spooky.bows);
 		this.arrow = arrow;
 		this.arrows = arrows;
 		this.name = name;
-		this.damage = damage;
+		this.damage = damage + 0.5D;
 		this.bow = bow;
 	}
 
@@ -127,7 +115,6 @@ public class GenericBow extends ItemBow {
 					entityarrow.setFire(100);
 				}
 
-				stack.damageItem(1, playerIn);
 				worldIn.playSoundAtEntity(playerIn, "random.bow", 1.0F, 1.0F
 						/ (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
@@ -141,13 +128,14 @@ public class GenericBow extends ItemBow {
 					playerIn.inventory.consumeInventoryItem(arrow);
 				}
 
-				playerIn.triggerAchievement(StatList.objectUseStats[Item
-						.getIdFromItem(this)]);
-
 				if (!worldIn.isRemote) {
 					worldIn.spawnEntityInWorld(entityarrow);
 				}
 			}
+		}
+		
+		if (!playerIn.capabilities.isCreativeMode) {
+			stack.damageItem(1, playerIn);
 		}
 	}
 
@@ -207,7 +195,7 @@ public class GenericBow extends ItemBow {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn,
 			List tooltip, boolean advanced) {
-		tooltip.add(EnumChatFormatting.DARK_RED + "Damage: " + (8 + damage)
+		tooltip.add(EnumChatFormatting.DARK_RED + "Damage: " + (4 + damage)
 				+ " hearts");
 		tooltip.add(EnumChatFormatting.DARK_GREEN + "Arrows Shot: " + arrows);
 		tooltip.add(EnumChatFormatting.AQUA + "Durability: "

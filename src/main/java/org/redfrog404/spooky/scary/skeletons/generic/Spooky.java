@@ -52,7 +52,7 @@ import org.redfrog404.spooky.scary.skeletons.tools.GenericSword;
 public class Spooky {
 
 	public static final String MODID = "Spooky";
-	public static final String VERSION = "1.3.0";
+	public static final String VERSION = "1.3.1";
 
 	public static final List<String> spooky_text = new ArrayList();
 
@@ -107,12 +107,12 @@ public class Spooky {
 	public static Item bone_core2;
 	public static Item bone_key1;
 
+	// Blocks
+	public static Block bone_box;
+
 	// Miscellaneous
 	public static Item spookyscaryskeletons;
 	public static Item guardians_eye;
-
-	// Blocks
-	public static Block bone_box;
 
 	// Tools and Swords
 	public static Item fire_sword;
@@ -137,12 +137,15 @@ public class Spooky {
 	public static Item moss_leggings;
 	public static Item moss_boots;
 
-	// Guns
+	// Guns and Bullets
 	public static GenericGun prismarine_pistol;
-	public static GenericGun ender_rifle;
 	public static GenericGun fire_gun;
+	public static GenericGun ender_rifle;
+	public static GenericGun steampunk_gun;
+	public static Item compressed_redstone;
 
 	// Bows and Arrows
+	public static GenericBow double_bow;
 	public static GenericBow ender_bow;
 	public static Item ender_arrow;
 
@@ -182,23 +185,23 @@ public class Spooky {
 
 		bone1 = new GenericItem("bone1");
 		GameRegistry.registerItem(bone1, "bone1");
-		mesher.register(bone1, 0, new ModelResourceLocation(
-				"spooky:bone1", "inventory"));
+		mesher.register(bone1, 0, new ModelResourceLocation("spooky:bone1",
+				"inventory"));
 
 		bone2 = new GenericItem("bone2");
 		GameRegistry.registerItem(bone2, "bone2");
-		mesher.register(bone2, 0, new ModelResourceLocation(
-				"spooky:bone2", "inventory"));
+		mesher.register(bone2, 0, new ModelResourceLocation("spooky:bone2",
+				"inventory"));
 
 		bone3 = new GenericItem("bone3");
 		GameRegistry.registerItem(bone3, "bone3");
-		mesher.register(bone3, 0, new ModelResourceLocation(
-				"spooky:bone3", "inventory"));
+		mesher.register(bone3, 0, new ModelResourceLocation("spooky:bone3",
+				"inventory"));
 
 		bone4 = new GenericItem("bone4");
 		GameRegistry.registerItem(bone4, "bone4");
-		mesher.register(bone4, 0, new ModelResourceLocation(
-				"spooky:bone4", "inventory"));
+		mesher.register(bone4, 0, new ModelResourceLocation("spooky:bone4",
+				"inventory"));
 
 		bone_core1 = new GenericItem("bone_core1");
 		GameRegistry.registerItem(bone_core1, "bone_core1");
@@ -227,8 +230,8 @@ public class Spooky {
 
 		bc1_axe = new GenericAxe("bc1_axe", BC1);
 		GameRegistry.registerItem(bc1_axe, "bc1_axe");
-		mesher.register(bc1_axe, 0, new ModelResourceLocation(
-				"spooky:bc1_axe", "inventory"));
+		mesher.register(bc1_axe, 0, new ModelResourceLocation("spooky:bc1_axe",
+				"inventory"));
 
 		bc1_spade = new GenericSpade("bc1_spade", BC1);
 		GameRegistry.registerItem(bc1_spade, "bc1_spade");
@@ -238,28 +241,28 @@ public class Spooky {
 		bone_box = new GenericBlock("bone_box", Material.rock, 50.0F, 2000.0F,
 				"pickaxe", 4, Block.soundTypePiston);
 		GameRegistry.registerBlock(bone_box, "bone_box");
-		mesher.register(Item.getItemFromBlock(bone_box), 0, new ModelResourceLocation(
-				"spooky:bone_box", "inventory"));
+		mesher.register(Item.getItemFromBlock(bone_box), 0,
+				new ModelResourceLocation("spooky:bone_box", "inventory"));
 
 		bone5 = new GenericItem("bone5");
 		GameRegistry.registerItem(bone5, "bone5");
-		mesher.register(bone5, 0, new ModelResourceLocation(
-				"spooky:bone5", "inventory"));
+		mesher.register(bone5, 0, new ModelResourceLocation("spooky:bone5",
+				"inventory"));
 
 		bone6 = new GenericItem("bone6");
-		GameRegistry.registerItem(bone6, "bone6"); 
-		mesher.register(bone6, 0, new ModelResourceLocation(
-				"spooky:bone6", "inventory"));
+		GameRegistry.registerItem(bone6, "bone6");
+		mesher.register(bone6, 0, new ModelResourceLocation("spooky:bone6",
+				"inventory"));
 
 		bone7 = new GenericItem("bone7");
 		GameRegistry.registerItem(bone7, "bone7");
-		mesher.register(bone7, 0, new ModelResourceLocation(
-				"spooky:bone7", "inventory"));
+		mesher.register(bone7, 0, new ModelResourceLocation("spooky:bone7",
+				"inventory"));
 
 		bone8 = new GenericItem("bone8");
 		GameRegistry.registerItem(bone8, "bone8");
-		mesher.register(bone8, 0, new ModelResourceLocation(
-				"spooky:bone8", "inventory"));
+		mesher.register(bone8, 0, new ModelResourceLocation("spooky:bone8",
+				"inventory"));
 
 		bone_core2 = new GenericItem("bone_core2");
 		GameRegistry.registerItem(bone_core2, "bone_core2");
@@ -283,8 +286,8 @@ public class Spooky {
 
 		bc2_axe = new GenericAxe("bc2_axe", BC2);
 		GameRegistry.registerItem(bc2_axe, "bc2_axe");
-		mesher.register(bc2_axe, 0, new ModelResourceLocation(
-				"spooky:bc2_axe", "inventory"));
+		mesher.register(bc2_axe, 0, new ModelResourceLocation("spooky:bc2_axe",
+				"inventory"));
 
 		bc2_spade = new GenericSpade("bc2_spade", BC2);
 		GameRegistry.registerItem(bc2_spade, "bc2_spade");
@@ -298,9 +301,15 @@ public class Spooky {
 
 		spookyscaryskeletons = new GenericRecord("spookyscaryskeletons");
 		GameRegistry.registerItem(spookyscaryskeletons, "spookyscaryskeletons");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-				.register(spookyscaryskeletons, 0, new ModelResourceLocation(
-						"spooky:spookyscaryskeletons", "inventory"));
+		Minecraft
+				.getMinecraft()
+				.getRenderItem()
+				.getItemModelMesher()
+				.register(
+						spookyscaryskeletons,
+						0,
+						new ModelResourceLocation(
+								"spooky:spookyscaryskeletons", "inventory"));
 
 		GameRegistry.registerItem(moss_helmet = new GenericArmor("moss_helmet",
 				MOSSARMOR, 1, 0, "moss"), "moss_helmet");
@@ -327,30 +336,54 @@ public class Spooky {
 		mesher.register(guardians_eye, 0, new ModelResourceLocation(
 				"spooky:guardians_eye", "inventory"));
 
-		prismarine_pistol = new GenericGun("prismarine_pistol", 1233,
+		prismarine_pistol = new GenericGun("prismarine_pistol", 1234,
 				Items.prismarine_shard, (byte) 6);
 		GameRegistry.registerItem(prismarine_pistol, "prismarine_pistol");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-				.register(prismarine_pistol, 0, new ModelResourceLocation(
-						"spooky:prismarine_pistol", "inventory"));
+		Minecraft
+				.getMinecraft()
+				.getRenderItem()
+				.getItemModelMesher()
+				.register(
+						prismarine_pistol,
+						0,
+						new ModelResourceLocation("spooky:prismarine_pistol",
+								"inventory"));
 
-		fire_gun = new GenericGun("fire_gun", 665, Items.fire_charge, (byte) 9);
+		fire_gun = new GenericGun("fire_gun", 666, Items.fire_charge, (byte) 9);
 		GameRegistry.registerItem(fire_gun, "fire_gun");
 		mesher.register(fire_gun, 0, new ModelResourceLocation(
 				"spooky:fire_gun", "inventory"));
 
-		ender_rifle = new GenericGun("ender_rifle", 887, Items.ender_pearl,
+		ender_rifle = new GenericGun("ender_rifle", 888, Items.ender_pearl,
 				(byte) 11);
 		GameRegistry.registerItem(ender_rifle, "ender_rifle");
 		mesher.register(ender_rifle, 0, new ModelResourceLocation(
 				"spooky:ender_rifle", "inventory"));
 
+		double_bow = new GenericBow(double_bow, "double_bow", 512, Items.arrow,
+				1.0D, 2);
+		GameRegistry.registerItem(double_bow, "double_bow");
+
+		if (event.getSide().isClient()) {
+			ModelBakery.addVariantName(double_bow, new String[] {
+					"spooky:double_bow", "spooky:double_bow_0",
+					"spooky:double_bow_1", "spooky:double_bow_2" });
+			mesher.register(double_bow, 0, new ModelResourceLocation(
+					"spooky:double_bow", "inventory"));
+			mesher.register(double_bow, 1, new ModelResourceLocation(
+					"spooky:double_bow_0", "inventory"));
+			mesher.register(double_bow, 2, new ModelResourceLocation(
+					"spooky:double_bow_1", "inventory"));
+			mesher.register(double_bow, 3, new ModelResourceLocation(
+					"spooky:double_bow_2", "inventory"));
+		}
+
 		ender_arrow = new GenericItem("ender_arrow", bows);
-		
-		ender_bow = new GenericBow(ender_bow, "ender_bow", 998, ender_arrow,
-				1.5D);
+
+		ender_bow = new GenericBow(ender_bow, "ender_bow", 999, ender_arrow,
+				2.0D);
 		GameRegistry.registerItem(ender_bow, "ender_bow");
-		
+
 		GameRegistry.registerItem(ender_arrow, "ender_arrow");
 		mesher.register(ender_arrow, 0, new ModelResourceLocation(
 				"spooky:ender_arrow", "inventory"));
@@ -368,6 +401,18 @@ public class Spooky {
 			mesher.register(ender_bow, 3, new ModelResourceLocation(
 					"spooky:ender_bow_2", "inventory"));
 		}
+
+		compressed_redstone = new GenericItem("compressed_redstone", guns);
+
+		steampunk_gun = new GenericGun("steampunk_gun", 1280,
+				compressed_redstone, (byte) 10, 4);
+		GameRegistry.registerItem(steampunk_gun, "steampunk_gun");
+		mesher.register(steampunk_gun, 0, new ModelResourceLocation(
+				"spooky:steampunk_gun", "inventory"));
+
+		GameRegistry.registerItem(compressed_redstone, "compressed_redstone");
+		mesher.register(compressed_redstone, 0, new ModelResourceLocation(
+				"spooky:compressed_redstone", "inventory"));
 
 		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
 				new WeightedRandomChestContent(new ItemStack(
@@ -530,11 +575,21 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(fire_gun), "pnn", " bb", 'p',
 				Items.blaze_powder, 'n', Blocks.netherrack, 'b', bone3);
-		
-		GameRegistry.addRecipe(new ItemStack(ender_bow), "b b", " B ", "b b", 'b',
-				bone4, 'B', Items.bow);
-		
-		GameRegistry.addRecipe(new ItemStack(ender_arrow, 48), "o", "b", "f", 'b',
-				bone4, 'o', Blocks.obsidian, 'f', Items.feather);
+
+		GameRegistry.addRecipe(new ItemStack(ender_bow), "b b", " B ", "b b",
+				'b', bone4, 'B', Items.bow);
+
+		GameRegistry.addRecipe(new ItemStack(ender_arrow, 48), "o", "b", "f",
+				'b', bone4, 'o', Blocks.obsidian, 'f', Items.feather);
+
+		GameRegistry.addRecipe(new ItemStack(compressed_redstone, 16), "rrr",
+				"rRr", "rrr", 'r', Items.redstone, 'R', Blocks.redstone_block);
+
+		GameRegistry.addRecipe(new ItemStack(steampunk_gun), "hpr", " tr",
+				"  t", 'r', Items.redstone, 'p', Blocks.piston, 'h',
+				Blocks.hopper, 't', Blocks.redstone_torch);
+
+		GameRegistry.addRecipe(new ItemStack(double_bow), "aba", "aea", "aba",
+				'a', Items.arrow, 'b', Items.bow, 'e', Items.ender_eye);
 	}
 }
