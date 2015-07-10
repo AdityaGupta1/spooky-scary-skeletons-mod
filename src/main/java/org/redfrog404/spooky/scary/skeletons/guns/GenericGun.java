@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -61,10 +62,11 @@ public class GenericGun extends Item {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn,
 			List tooltip, boolean advanced) {
-		tooltip.add("Damage: " + damage);
-		tooltip.add("Uses: " + (this.getMaxDamage() + 1));
-		tooltip.add("Ammunition: "
+		tooltip.add(EnumChatFormatting.DARK_RED + "Damage: " + ((float) damage / 2) + " hearts");
+		tooltip.add(EnumChatFormatting.AQUA + "Durability: " + (this.getMaxDamage() + 1));
+		tooltip.add(EnumChatFormatting.GOLD + "Ammunition: "
 				+ ammunition.getItemStackDisplayName(new ItemStack(ammunition)));
+		tooltip.add("");
 	}
 
 }
