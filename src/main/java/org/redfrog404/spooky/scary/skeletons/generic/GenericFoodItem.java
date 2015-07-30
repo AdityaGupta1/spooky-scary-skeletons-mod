@@ -8,22 +8,10 @@ import net.minecraft.world.World;
 
 public class GenericFoodItem extends ItemFood {
 	
-	private PotionEffect[] effects;
-	
-	public GenericFoodItem(String unlocalizedName, int amount, float saturation, boolean isWolfFood, PotionEffect... effects) {
+	public GenericFoodItem(String unlocalizedName, int amount, float saturation, boolean isWolfFood) {
         super(amount, saturation, isWolfFood);
         this.setUnlocalizedName(unlocalizedName);
-        this.effects = effects;
+        this.setCreativeTab(Spooky.food);
     }
-	
-	@Override
-	protected void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
-	    super.onFoodEaten(stack, world, player);
-	    
-	    for (int i = 0; i < effects.length; i ++) {
-	        if (!world.isRemote && effects[i] != null && effects[i].getPotionID() > 0)
-	            player.addPotionEffect(new PotionEffect(this.effects[i]));
-	    }
-	}
 
 }

@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube", 
+	"textures": { 
+		"down": "spooky:blocks/dimension_gateway",
+		"up": "spooky:blocks/dimension_gateway",
+		"north": "spooky:blocks/dimension_gateway",
+		"south": "spooky:blocks/dimension_gateway",
+		"west": "spooky:blocks/dimension_gateway",
+		"east": "spooky:blocks/dimension_gateway",
+		"particle": "spooky:blocks/dimension_gateway"
+	}
+}

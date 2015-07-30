@@ -84,7 +84,6 @@ public class GenericGun extends Item {
 		tooltip.add(EnumChatFormatting.AQUA + "Durability: " + (this.getMaxDamage() + 1));
 		tooltip.add(EnumChatFormatting.GOLD + "Ammunition: "
 				+ ammunition.getItemStackDisplayName(new ItemStack(ammunition))); 
-		tooltip.add("");
 	}
 
 }

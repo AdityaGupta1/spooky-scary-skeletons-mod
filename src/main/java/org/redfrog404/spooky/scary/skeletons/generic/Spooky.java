@@ -19,6 +19,7 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
@@ -33,11 +34,14 @@ import org.redfrog404.spooky.scary.skeletons.armor.GenericArmor;
 import org.redfrog404.spooky.scary.skeletons.creativetab.ArmorTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.BlocksTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.BowsTab;
+import org.redfrog404.spooky.scary.skeletons.creativetab.FoodTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.GunsTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.MaterialsTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.MiscTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.ToolsTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.WeaponsTab;
+import org.redfrog404.spooky.scary.skeletons.dimensions.DimensionGateway;
+import org.redfrog404.spooky.scary.skeletons.dimensions.DimensionRegistry;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentArrowFast;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentBones;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentPoison;
@@ -79,6 +83,8 @@ public class Spooky {
 			CreativeTabs.getNextID(), "armorTab");
 	public static final CreativeTabs misc = new MiscTab(
 			CreativeTabs.getNextID(), "miscTab");
+	public static final CreativeTabs food = new FoodTab(
+			CreativeTabs.getNextID(), "foodTab");
 
 	public static ToolMaterial HELL = EnumHelper.addToolMaterial("HELL", 3,
 			3122, 15.0F, 4.0F, 15);
@@ -109,10 +115,13 @@ public class Spooky {
 
 	// Blocks
 	public static Block bone_box;
+	public static Block bone_ore;
+	public static Block dimension_gateway;
 
 	// Miscellaneous
 	public static Item spookyscaryskeletons;
 	public static Item guardians_eye;
+	public static Item bone_marrow;
 
 	// Tools and Swords
 	public static Item fire_sword;
@@ -151,6 +160,8 @@ public class Spooky {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		
+		DimensionRegistry.mainRegistry();
 
 		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem()
 				.getItemModelMesher();
@@ -364,6 +375,12 @@ public class Spooky {
 				1.0D, 2);
 		GameRegistry.registerItem(double_bow, "double_bow");
 
+		bone_ore = new GenericBlock("bone_ore", Material.rock, 25.0F, 20.0F,
+				"pickaxe", 2, Block.soundTypePiston, Items.bone, 2, 2);
+		GameRegistry.registerBlock(bone_ore, "bone_ore");
+		mesher.register(Item.getItemFromBlock(bone_ore), 0,
+				new ModelResourceLocation("spooky:bone_ore", "inventory"));
+
 		if (event.getSide().isClient()) {
 			ModelBakery.addVariantName(double_bow, new String[] {
 					"spooky:double_bow", "spooky:double_bow_0",
@@ -413,6 +430,19 @@ public class Spooky {
 		GameRegistry.registerItem(compressed_redstone, "compressed_redstone");
 		mesher.register(compressed_redstone, 0, new ModelResourceLocation(
 				"spooky:compressed_redstone", "inventory"));
+
+		bone_marrow = new GenericFoodItem("bone_marrow", 1, 0.3F, true)
+				.setPotionEffect(Potion.hunger.id, 6, 1, 0.25F);
+		GameRegistry.registerItem(bone_marrow, "bone_marrow");
+		mesher.register(bone_marrow, 0, new ModelResourceLocation(
+				"spooky:bone_marrow", "inventory"));
+
+		dimension_gateway = new DimensionGateway("dimension_gateway",
+				Material.rock, 50, 2000, "pickaxe", 4, Block.soundTypePiston);
+		GameRegistry.registerBlock(dimension_gateway, "dimension_gateway");
+		mesher.register(Item.getItemFromBlock(dimension_gateway), 0,
+				new ModelResourceLocation("spooky:dimension_gateway",
+						"inventory"));
 
 		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
 				new WeightedRandomChestContent(new ItemStack(
@@ -591,5 +621,11 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(double_bow), "aba", "aea", "aba",
 				'a', Items.arrow, 'b', Items.bow, 'e', Items.ender_eye);
+
+		GameRegistry.addRecipe(new ItemStack(bone_marrow, 16), "bbb", "bBb",
+				"bbb", 'B', Items.bone, 'b', new ItemStack(Items.dye, 1, 15));
+		
+		GameRegistry.addRecipe(new ItemStack(dimension_gateway), "bbb", "bBb", "bbb", 'b',
+				bone_box, 'B', bone4);
 	}
 }

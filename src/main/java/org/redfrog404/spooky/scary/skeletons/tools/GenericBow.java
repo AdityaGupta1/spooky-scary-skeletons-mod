@@ -202,7 +202,6 @@ public class GenericBow extends ItemBow {
 				+ (this.getMaxDamage() + 1));
 		tooltip.add(EnumChatFormatting.GOLD + "Ammunition: "
 				+ arrow.getItemStackDisplayName(new ItemStack(arrow)));
-		tooltip.add("");
 	}
 
 	@Override

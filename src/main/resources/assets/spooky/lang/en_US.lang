@@ -47,3 +47,7 @@ item.ender_arrow.name=Pulsating Bolt
 item.compressed_redstone.name=Compressed Redstone
 item.steampunk_gun.name=Steampunker's Shotgun
 item.double_bow.name=Double Bow
+tile.bone_ore.name=Fossilized Remains
+item.bone_marrow.name=Bone Marrow
+itemGroup.foodTab=Spooky Scary Skeletons: Food
+tile.dimension_gateway.name=§3Dimensional Gateway

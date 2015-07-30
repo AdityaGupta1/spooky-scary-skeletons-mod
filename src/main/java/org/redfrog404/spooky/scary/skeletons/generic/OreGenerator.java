@@ -14,9 +14,11 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 public class OreGenerator implements IWorldGenerator {
 	
 	private WorldGenerator bone_box_generator;
+	private WorldGenerator fossil_generator;
 
 	public OreGenerator() {
 	    this.bone_box_generator = new WorldGenMinable(Spooky.bone_box.getDefaultState(), 4, BlockHelper.forBlock(Blocks.end_stone));
+	    this.fossil_generator = new WorldGenMinable(Spooky.bone_ore.getDefaultState(), 8, BlockHelper.forBlock(Blocks.netherrack));
 	}
 
 	@Override
@@ -27,6 +29,7 @@ public class OreGenerator implements IWorldGenerator {
 		case 0: // Overworld
 			break;
 		case -1: // Nether
+			this.runGenerator(this.fossil_generator, world, random, chunkX, chunkZ, 20, 0, 128);
 			break;
 		case 1: // End
 			this.runGenerator(this.bone_box_generator, world, random, chunkX, chunkZ, 20, 0, 80);
