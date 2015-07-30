@@ -57,7 +57,7 @@ import org.redfrog404.spooky.scary.skeletons.tools.GenericSword;
 public class Spooky {
 
 	public static final String MODID = "Spooky";
-	public static final String VERSION = "1.3.1";
+	public static final String VERSION = "2.0.0";
 
 	public static final List<String> spooky_text = new ArrayList();
 
