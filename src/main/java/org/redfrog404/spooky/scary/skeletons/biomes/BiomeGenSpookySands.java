@@ -9,6 +9,7 @@ import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenDesertWells;
 
@@ -27,11 +28,19 @@ public class BiomeGenSpookySands extends BiomeGenBase {
 		this.flowers.add(flower);
 		this.enableRain = false;
 		this.enableSnow = false;
-		this.theBiomeDecorator.generateLakes = false;
+		this.waterColorMultiplier = 0xC28148;
 		this.spawnableCreatureList.clear();
+		this.spawnableWaterCreatureList.clear();
 	}
 
 	public void decorate(World worldIn, Random p_180624_2_, BlockPos p_180624_3_) {
 		super.decorate(worldIn, p_180624_2_, p_180624_3_);
 	}
+	
+	public BiomeDecorator createBiomeDecorator()
+    {
+		BiomeDecorator decorator = getModdedBiomeDecorator(new BiomeDecorator());
+		decorator.generateLakes = false;
+        return decorator;
+    }
 }

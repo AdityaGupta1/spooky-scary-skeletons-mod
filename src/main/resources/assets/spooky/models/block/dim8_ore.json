@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube", 
+	"textures": { 
+		"down": "spooky:blocks/dim8_ore",
+		"up": "spooky:blocks/dim8_ore",
+		"north": "spooky:blocks/dim8_ore",
+		"south": "spooky:blocks/dim8_ore",
+		"west": "spooky:blocks/dim8_ore",
+		"east": "spooky:blocks/dim8_ore",
+		"particle": "spooky:blocks/dim8_ore"
+	}
+}

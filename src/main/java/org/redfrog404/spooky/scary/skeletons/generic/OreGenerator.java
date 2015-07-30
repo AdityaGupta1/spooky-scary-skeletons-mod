@@ -15,10 +15,12 @@ public class OreGenerator implements IWorldGenerator {
 	
 	private WorldGenerator bone_box_generator;
 	private WorldGenerator fossil_generator;
+	private WorldGenerator dim8_generator;
 
 	public OreGenerator() {
 	    this.bone_box_generator = new WorldGenMinable(Spooky.bone_box.getDefaultState(), 4, BlockHelper.forBlock(Blocks.end_stone));
 	    this.fossil_generator = new WorldGenMinable(Spooky.bone_ore.getDefaultState(), 8, BlockHelper.forBlock(Blocks.netherrack));
+	    this.dim8_generator = new WorldGenMinable(Spooky.dim8_ore.getDefaultState(), 3, BlockHelper.forBlock(Blocks.stone));
 	}
 
 	@Override
@@ -33,6 +35,9 @@ public class OreGenerator implements IWorldGenerator {
 			break;
 		case 1: // End
 			this.runGenerator(this.bone_box_generator, world, random, chunkX, chunkZ, 20, 0, 80);
+			break;
+		case 8: // Spooky Sands
+			this.runGenerator(this.dim8_generator, world, random, chunkX, chunkZ, 5, 0, 32);
 			break;
 		}
 

@@ -118,6 +118,7 @@ public class Spooky {
 	public static Block bone_box;
 	public static Block bone_ore;
 	public static Block dimension_gateway;
+	public static Block dim8_ore;
 
 	// Miscellaneous
 	public static Item spookyscaryskeletons;
@@ -441,6 +442,13 @@ public class Spooky {
 		GameRegistry.registerBlock(dimension_gateway, "dimension_gateway");
 		mesher.register(Item.getItemFromBlock(dimension_gateway), 0,
 				new ModelResourceLocation("spooky:dimension_gateway",
+						"inventory"));
+		
+		dim8_ore = new GenericBlock("dim8_ore",
+				Material.rock, 50, 100, "pickaxe", 5, Block.soundTypePiston);
+		GameRegistry.registerBlock(dim8_ore, "dim8_ore");
+		mesher.register(Item.getItemFromBlock(dim8_ore), 0,
+				new ModelResourceLocation("spooky:dim8_ore",
 						"inventory"));
 
 		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
