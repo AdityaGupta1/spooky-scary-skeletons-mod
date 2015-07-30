@@ -31,6 +31,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import org.redfrog404.spooky.scary.skeletons.armor.GenericArmor;
+import org.redfrog404.spooky.scary.skeletons.biomes.BiomeRegistry;
 import org.redfrog404.spooky.scary.skeletons.creativetab.ArmorTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.BlocksTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.BowsTab;
@@ -160,8 +161,6 @@ public class Spooky {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		
-		DimensionRegistry.mainRegistry();
 
 		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem()
 				.getItemModelMesher();
@@ -627,5 +626,9 @@ public class Spooky {
 		
 		GameRegistry.addRecipe(new ItemStack(dimension_gateway), "bbb", "bBb", "bbb", 'b',
 				bone_box, 'B', bone4);
+		
+		DimensionRegistry.mainRegistry();
+		BiomeRegistry.mainRegistry();
+		
 	}
 }

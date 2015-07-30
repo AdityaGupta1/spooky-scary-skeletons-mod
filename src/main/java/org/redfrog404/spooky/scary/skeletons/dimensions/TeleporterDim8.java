@@ -46,7 +46,7 @@ public class TeleporterDim8 extends Teleporter {
 			}
 		}
 
-		entity.setLocationAndAngles((double) i, (double) j, (double) k,
+		entity.setLocationAndAngles((double) i, ((double) j) + 2, (double) k,
 				entity.rotationYaw, 0.0F);
 		entity.motionX = entity.motionY = entity.motionZ = 0.0D;
 
