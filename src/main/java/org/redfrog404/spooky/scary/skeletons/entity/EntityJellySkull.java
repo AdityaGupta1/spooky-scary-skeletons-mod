@@ -1,6 +1,7 @@
 package org.redfrog404.spooky.scary.skeletons.entity;
 
 import org.redfrog404.spooky.scary.skeletons.biomes.BiomeRegistry;
+import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -305,7 +306,7 @@ public class EntityJellySkull extends EntityLiving implements IMob
 
     protected Item getDropItem()
     {
-        return this.getSlimeSize() == 1 ? Items.slime_ball : null;
+        return this.getSlimeSize() == 1 ? Spooky.gray_gel : null;
     }
 
     /**
