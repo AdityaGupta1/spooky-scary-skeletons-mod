@@ -1,5 +1,7 @@
 package org.redfrog404.spooky.scary.skeletons.generic;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +27,12 @@ import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import org.redfrog404.spooky.scary.skeletons.armor.GenericArmor;
@@ -46,6 +51,12 @@ import org.redfrog404.spooky.scary.skeletons.dimensions.DimensionRegistry;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentArrowFast;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentBones;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentPoison;
+import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
+import org.redfrog404.spooky.scary.skeletons.entity.EntitySkeletonCow;
+import org.redfrog404.spooky.scary.skeletons.entity.ModelJellySkull;
+import org.redfrog404.spooky.scary.skeletons.entity.ModelSkeletonCow;
+import org.redfrog404.spooky.scary.skeletons.entity.RenderJellySkull;
+import org.redfrog404.spooky.scary.skeletons.entity.RenderSkeletonCow;
 import org.redfrog404.spooky.scary.skeletons.guns.GenericGun;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericAxe;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericBow;
@@ -56,10 +67,20 @@ import org.redfrog404.spooky.scary.skeletons.tools.GenericSword;
 @Mod(modid = Spooky.MODID, version = Spooky.VERSION)
 public class Spooky {
 
+	/*
+	 * ========================================================================================================================================================================
+	 * Enchantments, Creative Tabs, Tool/Armor Materials, Misc.
+	 * ========================================================================================================================================================================
+	 */
+
 	public static final String MODID = "Spooky";
 	public static final String VERSION = "2.0.0";
 
+	private int modEntityId = 163;
+
 	public static final List<String> spooky_text = new ArrayList();
+
+	ItemModelMesher mesher;
 
 	public static final Enchantment haste = new EnchantmentArrowFast(150,
 			new ResourceLocation("haste"), 2);
@@ -101,6 +122,12 @@ public class Spooky {
 	public static ArmorMaterial MOSSARMOR = EnumHelper.addArmorMaterial(
 			"MOSSARMOR", "spooky:moss_armor", 20, new int[] { 5, 6, 4, 5 }, 18);
 
+	/*
+	 * ========================================================================================================================================================================
+	 * Item/Block Variables
+	 * ========================================================================================================================================================================
+	 */
+
 	// Bones, Bone Cores, and Bone Keys
 	public static Item bone1;
 	public static Item bone2;
@@ -120,10 +147,11 @@ public class Spooky {
 	public static Block dimension_gateway;
 	public static Block dim8_ore;
 
-	// Miscellaneous
+	// Misc.ellaneous
 	public static Item spookyscaryskeletons;
 	public static Item guardians_eye;
 	public static Item bone_marrow;
+	public static Item gray_gel;
 
 	// Tools and Swords
 	public static Item fire_sword;
@@ -160,39 +188,74 @@ public class Spooky {
 	public static GenericBow ender_bow;
 	public static Item ender_arrow;
 
+	// Potions
+	public static Potion curse = new GenericPotion(26, new ResourceLocation(
+			"curse"), true, 0).setIconIndex(7, 1).setPotionName("potion.curse");
+
+	/*
+	 * ========================================================================================================================================================================
+	 * Potion Reflection
+	 * ========================================================================================================================================================================
+	 */
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		Potion[] potionTypes = null;
+
+		for (Field f : Potion.class.getDeclaredFields()) {
+			f.setAccessible(true);
+			try {
+				if (f.getName().equals("potionTypes")
+						|| f.getName().equals("field_76425_a")) {
+					Field modfield = Field.class.getDeclaredField("modifiers");
+					modfield.setAccessible(true);
+					modfield.setInt(f, f.getModifiers() & ~Modifier.FINAL);
+
+					potionTypes = (Potion[]) f.get(null);
+					final Potion[] newPotionTypes = new Potion[256];
+					System.arraycopy(potionTypes, 0, newPotionTypes, 0,
+							potionTypes.length);
+					f.set(null, newPotionTypes);
+				}
+			} catch (Exception e) {
+				System.err
+						.println("Severe error, please report this to the mod author:");
+				System.err.println(e);
+			}
+		}
+	}
+
+	/*
+	 * ========================================================================================================================================================================
+	 * Initialization
+	 * ========================================================================================================================================================================
+	 */
+
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 
-		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem()
-				.getItemModelMesher();
+		doMiscStuff1();
 
-		spooky_text
-				.add("Spooky, scary skeletons, send shivers down your spine. Shrieking skulls will shock your soul, seal your doom tonight.");
-		spooky_text
-				.add("Spooky, scary skeletons speak with such a screech. You'll shake and shudder in surprise when you hear these zombies shriek.");
-		spooky_text
-				.add("We're so sorry, skeletons, you're so misunderstood. You only want to socialize, (but I don't think we should!)");
-		spooky_text
-				.add("'Cause spooky, scary skeletons shout startling, shrilly screams. They'll sneak from their sarcophagus and just won't let you be.");
-		spooky_text
-				.add("Spirits supernatural are shy, what's all the fuss? But bags of bones seem so unsafe, it's semi-serious.");
-		spooky_text
-				.add("Spooky, scary skeletons are silly all the same. They'll smile and scrabble slowly by and drive you so insane!");
-		spooky_text
-				.add("Sticks and stones will break your bones; they seldom let you snooze. Spooky, scary skeletons will wake you with a BOO!");
+		registerItems();
 
-		GameRegistry.registerFuelHandler(new FuelHandler());
+		registerBlocks();
 
-		Enchantment.addToBookList(haste);
-		MinecraftForge.EVENT_BUS.register(haste);
+		registerSwordsToolsAndArmor();
 
-		Enchantment.addToBookList(poison);
-		MinecraftForge.EVENT_BUS.register(poison);
+		registerBowsAndGuns(event);
 
-		Enchantment.addToBookList(bones);
-		MinecraftForge.EVENT_BUS.register(bones);
+		registerMobs();
 
-		MinecraftForge.EVENT_BUS.register(new EventHandlers());
+		doMiscStuff2();
+
+	}
+
+	/*
+	 * ========================================================================================================================================================================
+	 * Items
+	 * ========================================================================================================================================================================
+	 */
+
+	private void registerItems() {
 
 		bone1 = new GenericItem("bone1");
 		GameRegistry.registerItem(bone1, "bone1");
@@ -219,6 +282,106 @@ public class Spooky {
 		mesher.register(bone_core1, 0, new ModelResourceLocation(
 				"spooky:bone_core1", "inventory"));
 
+		bone5 = new GenericItem("bone5");
+		GameRegistry.registerItem(bone5, "bone5");
+		mesher.register(bone5, 0, new ModelResourceLocation("spooky:bone5",
+				"inventory"));
+
+		bone6 = new GenericItem("bone6");
+		GameRegistry.registerItem(bone6, "bone6");
+		mesher.register(bone6, 0, new ModelResourceLocation("spooky:bone6",
+				"inventory"));
+
+		bone7 = new GenericItem("bone7");
+		GameRegistry.registerItem(bone7, "bone7");
+		mesher.register(bone7, 0, new ModelResourceLocation("spooky:bone7",
+				"inventory"));
+
+		bone8 = new GenericItem("bone8");
+		GameRegistry.registerItem(bone8, "bone8");
+		mesher.register(bone8, 0, new ModelResourceLocation("spooky:bone8",
+				"inventory"));
+
+		bone_core2 = new GenericItem("bone_core2");
+		GameRegistry.registerItem(bone_core2, "bone_core2");
+		mesher.register(bone_core2, 0, new ModelResourceLocation(
+				"spooky:bone_core2", "inventory"));
+
+		guardians_eye = new GenericItem("guardians_eye", misc);
+		GameRegistry.registerItem(guardians_eye, "guardians_eye");
+		mesher.register(guardians_eye, 0, new ModelResourceLocation(
+				"spooky:guardians_eye", "inventory"));
+
+		bone_key1 = new GenericItem("bone_key1").setMaxStackSize(1);
+		GameRegistry.registerItem(bone_key1, "bone_key1");
+		mesher.register(bone_key1, 0, new ModelResourceLocation(
+				"spooky:bone_key1", "inventory"));
+
+		spookyscaryskeletons = new GenericRecord("spookyscaryskeletons");
+		GameRegistry.registerItem(spookyscaryskeletons, "spookyscaryskeletons");
+		Minecraft
+				.getMinecraft()
+				.getRenderItem()
+				.getItemModelMesher()
+				.register(
+						spookyscaryskeletons,
+						0,
+						new ModelResourceLocation(
+								"spooky:spookyscaryskeletons", "inventory"));
+
+		bone_marrow = new GenericFoodItem("bone_marrow", 1, 0.3F, true)
+				.setPotionEffect(Potion.hunger.id, 6, 1, 0.25F);
+		GameRegistry.registerItem(bone_marrow, "bone_marrow");
+		mesher.register(bone_marrow, 0, new ModelResourceLocation(
+				"spooky:bone_marrow", "inventory"));
+
+		gray_gel = new GenericItem("gray_gel", misc);
+		GameRegistry.registerItem(gray_gel, "gray_gel");
+		mesher.register(gray_gel, 0, new ModelResourceLocation(
+				"spooky:gray_gel", "inventory"));
+
+	}
+
+	/*
+	 * ========================================================================================================================================================================
+	 * Blocks
+	 * ========================================================================================================================================================================
+	 */
+
+	private void registerBlocks() {
+		bone_box = new GenericBlock("bone_box", Material.rock, 50.0F, 100.0F,
+				"pickaxe", 4, Block.soundTypePiston);
+		GameRegistry.registerBlock(bone_box, "bone_box");
+		mesher.register(Item.getItemFromBlock(bone_box), 0,
+				new ModelResourceLocation("spooky:bone_box", "inventory"));
+
+		bone_ore = new GenericBlock("bone_ore", Material.rock, 25.0F, 20.0F,
+				"pickaxe", 2, Block.soundTypePiston, Items.bone, 2, 2);
+		GameRegistry.registerBlock(bone_ore, "bone_ore");
+		mesher.register(Item.getItemFromBlock(bone_ore), 0,
+				new ModelResourceLocation("spooky:bone_ore", "inventory"));
+
+		dimension_gateway = new DimensionGateway("dimension_gateway",
+				Material.rock, 50, 2000, "pickaxe", 4, Block.soundTypePiston);
+		GameRegistry.registerBlock(dimension_gateway, "dimension_gateway");
+		mesher.register(Item.getItemFromBlock(dimension_gateway), 0,
+				new ModelResourceLocation("spooky:dimension_gateway",
+						"inventory"));
+
+		dim8_ore = new GenericBlock("dim8_ore", Material.rock, 50, 100,
+				"pickaxe", 5, Block.soundTypePiston);
+		GameRegistry.registerBlock(dim8_ore, "dim8_ore");
+		mesher.register(Item.getItemFromBlock(dim8_ore), 0,
+				new ModelResourceLocation("spooky:dim8_ore", "inventory"));
+	}
+
+	/*
+	 * ========================================================================================================================================================================
+	 * Swords, Tools, and Armor
+	 * ========================================================================================================================================================================
+	 */
+
+	private void registerSwordsToolsAndArmor() {
 		fire_sword = new GenericSword("fire_sword", HELL);
 		GameRegistry.registerItem(fire_sword, "fire_sword");
 		mesher.register(fire_sword, 0, new ModelResourceLocation(
@@ -249,37 +412,6 @@ public class Spooky {
 		mesher.register(bc1_spade, 0, new ModelResourceLocation(
 				"spooky:bc1_spade", "inventory"));
 
-		bone_box = new GenericBlock("bone_box", Material.rock, 50.0F, 2000.0F,
-				"pickaxe", 4, Block.soundTypePiston);
-		GameRegistry.registerBlock(bone_box, "bone_box");
-		mesher.register(Item.getItemFromBlock(bone_box), 0,
-				new ModelResourceLocation("spooky:bone_box", "inventory"));
-
-		bone5 = new GenericItem("bone5");
-		GameRegistry.registerItem(bone5, "bone5");
-		mesher.register(bone5, 0, new ModelResourceLocation("spooky:bone5",
-				"inventory"));
-
-		bone6 = new GenericItem("bone6");
-		GameRegistry.registerItem(bone6, "bone6");
-		mesher.register(bone6, 0, new ModelResourceLocation("spooky:bone6",
-				"inventory"));
-
-		bone7 = new GenericItem("bone7");
-		GameRegistry.registerItem(bone7, "bone7");
-		mesher.register(bone7, 0, new ModelResourceLocation("spooky:bone7",
-				"inventory"));
-
-		bone8 = new GenericItem("bone8");
-		GameRegistry.registerItem(bone8, "bone8");
-		mesher.register(bone8, 0, new ModelResourceLocation("spooky:bone8",
-				"inventory"));
-
-		bone_core2 = new GenericItem("bone_core2");
-		GameRegistry.registerItem(bone_core2, "bone_core2");
-		mesher.register(bone_core2, 0, new ModelResourceLocation(
-				"spooky:bone_core2", "inventory"));
-
 		moss_sword = new GenericSword("moss_sword", MOSS);
 		GameRegistry.registerItem(moss_sword, "moss_sword");
 		mesher.register(moss_sword, 0, new ModelResourceLocation(
@@ -305,23 +437,6 @@ public class Spooky {
 		mesher.register(bc2_spade, 0, new ModelResourceLocation(
 				"spooky:bc2_spade", "inventory"));
 
-		bone_key1 = new GenericItem("bone_key1").setMaxStackSize(1);
-		GameRegistry.registerItem(bone_key1, "bone_key1");
-		mesher.register(bone_key1, 0, new ModelResourceLocation(
-				"spooky:bone_key1", "inventory"));
-
-		spookyscaryskeletons = new GenericRecord("spookyscaryskeletons");
-		GameRegistry.registerItem(spookyscaryskeletons, "spookyscaryskeletons");
-		Minecraft
-				.getMinecraft()
-				.getRenderItem()
-				.getItemModelMesher()
-				.register(
-						spookyscaryskeletons,
-						0,
-						new ModelResourceLocation(
-								"spooky:spookyscaryskeletons", "inventory"));
-
 		GameRegistry.registerItem(moss_helmet = new GenericArmor("moss_helmet",
 				MOSSARMOR, 1, 0, "moss"), "moss_helmet");
 		mesher.register(moss_helmet, 0, new ModelResourceLocation(
@@ -341,12 +456,15 @@ public class Spooky {
 				MOSSARMOR, 1, 3, "moss"), "moss_boots");
 		mesher.register(moss_boots, 0, new ModelResourceLocation(
 				"spooky:moss_boots", "inventory"));
+	}
+	
+	/*
+	 * ========================================================================================================================================================================
+	 * Bows and Guns
+	 * ========================================================================================================================================================================
+	 */
 
-		guardians_eye = new GenericItem("guardians_eye", misc);
-		GameRegistry.registerItem(guardians_eye, "guardians_eye");
-		mesher.register(guardians_eye, 0, new ModelResourceLocation(
-				"spooky:guardians_eye", "inventory"));
-
+	private void registerBowsAndGuns(FMLInitializationEvent event) {
 		prismarine_pistol = new GenericGun("prismarine_pistol", 1234,
 				Items.prismarine_shard, (byte) 6);
 		GameRegistry.registerItem(prismarine_pistol, "prismarine_pistol");
@@ -374,12 +492,6 @@ public class Spooky {
 		double_bow = new GenericBow(double_bow, "double_bow", 512, Items.arrow,
 				1.0D, 2);
 		GameRegistry.registerItem(double_bow, "double_bow");
-
-		bone_ore = new GenericBlock("bone_ore", Material.rock, 25.0F, 20.0F,
-				"pickaxe", 2, Block.soundTypePiston, Items.bone, 2, 2);
-		GameRegistry.registerBlock(bone_ore, "bone_ore");
-		mesher.register(Item.getItemFromBlock(bone_ore), 0,
-				new ModelResourceLocation("spooky:bone_ore", "inventory"));
 
 		if (event.getSide().isClient()) {
 			ModelBakery.addVariantName(double_bow, new String[] {
@@ -430,33 +542,15 @@ public class Spooky {
 		GameRegistry.registerItem(compressed_redstone, "compressed_redstone");
 		mesher.register(compressed_redstone, 0, new ModelResourceLocation(
 				"spooky:compressed_redstone", "inventory"));
+	}
 
-		bone_marrow = new GenericFoodItem("bone_marrow", 1, 0.3F, true)
-				.setPotionEffect(Potion.hunger.id, 6, 1, 0.25F);
-		GameRegistry.registerItem(bone_marrow, "bone_marrow");
-		mesher.register(bone_marrow, 0, new ModelResourceLocation(
-				"spooky:bone_marrow", "inventory"));
+	/*
+	 * ========================================================================================================================================================================
+	 * Recipes
+	 * ========================================================================================================================================================================
+	 */
 
-		dimension_gateway = new DimensionGateway("dimension_gateway",
-				Material.rock, 50, 2000, "pickaxe", 4, Block.soundTypePiston);
-		GameRegistry.registerBlock(dimension_gateway, "dimension_gateway");
-		mesher.register(Item.getItemFromBlock(dimension_gateway), 0,
-				new ModelResourceLocation("spooky:dimension_gateway",
-						"inventory"));
-		
-		dim8_ore = new GenericBlock("dim8_ore",
-				Material.rock, 50, 100, "pickaxe", 5, Block.soundTypePiston);
-		GameRegistry.registerBlock(dim8_ore, "dim8_ore");
-		mesher.register(Item.getItemFromBlock(dim8_ore), 0,
-				new ModelResourceLocation("spooky:dim8_ore",
-						"inventory"));
-
-		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
-				new WeightedRandomChestContent(new ItemStack(
-						spookyscaryskeletons), 1, 1, 50));
-
-		GameRegistry.registerWorldGenerator(new OreGenerator(), 0);
-
+	private void addRecipes() {
 		GameRegistry.addRecipe(new ItemStack(bone1), "ggg", "gbg", "ggg", 'g',
 				Items.gold_nugget, 'b', Items.bone);
 
@@ -631,12 +725,97 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(bone_marrow, 16), "bbb", "bBb",
 				"bbb", 'B', Items.bone, 'b', new ItemStack(Items.dye, 1, 15));
-		
-		GameRegistry.addRecipe(new ItemStack(dimension_gateway), "bbb", "bBb", "bbb", 'b',
-				bone_box, 'B', bone4);
-		
+
+		GameRegistry.addRecipe(new ItemStack(dimension_gateway), "bbb", "bBb",
+				"bbb", 'b', bone_box, 'B', bone4);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.dye, 2, 8),
+				new ItemStack(gray_gel, 1), new ItemStack(Items.dye, 1, 15));
+
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.dye, 2, 8),
+				new ItemStack(gray_gel, 1), new ItemStack(Items.dye, 1, 15));
+
+		GameRegistry.addRecipe(new ItemStack(spookyscaryskeletons), "ctc",
+				"tbt", "ctc", 'b', bone_box, 'c', Items.record_cat, 't',
+				Items.record_13);
+
+		GameRegistry.addRecipe(new ItemStack(spookyscaryskeletons), "tct",
+				"cbc", "tct", 'b', bone_box, 'c', Items.record_cat, 't',
+				Items.record_13);
+	}
+
+	/*
+	 * ========================================================================================================================================================================
+	 * Mobs
+	 * ========================================================================================================================================================================
+	 */
+
+	private void registerMobs() {
+		RenderingRegistry.registerEntityRenderingHandler(
+				EntitySkeletonCow.class, new RenderSkeletonCow(
+						new ModelSkeletonCow(), 0.7F));
+		registerModEntity(EntitySkeletonCow.class, "skeletoncow", modEntityId++);
+
+		RenderingRegistry.registerEntityRenderingHandler(
+				EntityJellySkull.class, new RenderJellySkull(
+						new ModelJellySkull(16), 0.7F));
+		registerModEntity(EntityJellySkull.class, "jellyskull", modEntityId++);
+	}
+
+	/*
+	 * ========================================================================================================================================================================
+	 * Misc. Methods
+	 * ========================================================================================================================================================================
+	 */
+
+	public void registerModEntity(Class parEntityClass, String parEntityName,
+			int entityId) {
+		EntityRegistry.registerModEntity(parEntityClass, parEntityName,
+				entityId, this, 80, 1, false);
+	}
+
+	private void doMiscStuff1() {
+		mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+
+		spooky_text
+				.add("Spooky, scary skeletons, send shivers down your spine. Shrieking skulls will shock your soul, seal your doom tonight.");
+		spooky_text
+				.add("Spooky, scary skeletons speak with such a screech. You'll shake and shudder in surprise when you hear these zombies shriek.");
+		spooky_text
+				.add("We're so sorry, skeletons, you're so misunderstood. You only want to socialize, (but I don't think we should!)");
+		spooky_text
+				.add("'Cause spooky, scary skeletons shout startling, shrilly screams. They'll sneak from their sarcophagus and just won't let you be.");
+		spooky_text
+				.add("Spirits supernatural are shy, what's all the fuss? But bags of bones seem so unsafe, it's semi-serious!");
+		spooky_text
+				.add("Spooky, scary skeletons are silly all the same. They'll smile and scrabble slowly by and drive you so insane!");
+		spooky_text
+				.add("Sticks and stones will break your bones; they seldom let you snooze. Spooky, scary skeletons will wake you with a BOO!");
+
+		GameRegistry.registerFuelHandler(new FuelHandler());
+
+		Enchantment.addToBookList(haste);
+		MinecraftForge.EVENT_BUS.register(haste);
+
+		Enchantment.addToBookList(poison);
+		MinecraftForge.EVENT_BUS.register(poison);
+
+		Enchantment.addToBookList(bones);
+		MinecraftForge.EVENT_BUS.register(bones);
+
+		MinecraftForge.EVENT_BUS.register(new EventHandlers());
+	}
+
+	private void doMiscStuff2() {
+		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
+				new WeightedRandomChestContent(new ItemStack(
+						spookyscaryskeletons), 1, 1, 50));
+
+		GameRegistry.registerWorldGenerator(new OreGenerator(), 0);
+
 		DimensionRegistry.mainRegistry();
 		BiomeRegistry.mainRegistry();
-		
+
+		addRecipes();
 	}
 }

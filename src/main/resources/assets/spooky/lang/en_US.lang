@@ -52,3 +52,7 @@ item.bone_marrow.name=Bone Marrow
 itemGroup.foodTab=Spooky Scary Skeletons: Food
 tile.dimension_gateway.name=Dimensional Gateway
 tile.dim8_ore.name=Calcified Stone
+entity.Spooky.skeletoncow.name=Skeletal Cow
+potion.curse=Curse
+entity.Spooky.jellyskull.name=Jelly Skull
+item.gray_gel.name=Gray Gel

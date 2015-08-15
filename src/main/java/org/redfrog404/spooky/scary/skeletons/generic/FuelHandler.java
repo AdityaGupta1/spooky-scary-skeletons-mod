@@ -28,6 +28,8 @@ public class FuelHandler implements IFuelHandler {
 			return 1200;
 		} else if (fuelObject == Item.getItemFromBlock(Blocks.netherrack)) {
 			return 50;
+		} else if (fuelObject == Spooky.gray_gel) {
+			return 600;
 		} else {
 			return 0;
 		}

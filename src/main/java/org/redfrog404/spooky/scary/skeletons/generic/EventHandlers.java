@@ -2,10 +2,17 @@ package org.redfrog404.spooky.scary.skeletons.generic;
 
 import java.util.Random;
 
+import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EventHandlers {
@@ -36,7 +43,7 @@ public class EventHandlers {
 	@SubscribeEvent
 	public void dropItemsFromMobs(LivingDeathEvent event) {
 		Random random = new Random();
-		
+
 		if (event.entityLiving instanceof EntityGuardian) {
 			if (random.nextInt(25) == 1) {
 				if (!event.entityLiving.worldObj.isRemote) {
@@ -46,4 +53,37 @@ public class EventHandlers {
 		}
 	}
 
+	@SubscribeEvent
+	public void onEntityUpdate(LivingUpdateEvent event) {
+		if (event.entityLiving.isPotionActive(Spooky.curse)) {
+			PotionEffect curse = event.entityLiving
+					.getActivePotionEffect(Spooky.curse);
+			int level = curse == null ? 0 : curse.getAmplifier();
+
+			if (level == 0) {
+				return;
+			}
+
+			if (event.entityLiving.worldObj.rand.nextInt(5) == 0) {
+				event.entityLiving
+						.attackEntityFrom(DamageSource.generic, level);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void applyCurseOnJellySkullAttack(LivingAttackEvent event) {
+		Entity entity = event.source.getEntity();
+		
+		if (entity == null) {
+			return;
+		}
+
+		if (!(entity instanceof EntityJellySkull)) {
+			return;
+		}
+
+		event.entityLiving.addPotionEffect(new PotionEffect(32, 3,
+				((EntityJellySkull) entity).getSlimeSize()));
+	}
 }
