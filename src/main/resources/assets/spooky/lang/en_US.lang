@@ -56,3 +56,7 @@ entity.Spooky.skeletoncow.name=Skeletal Cow
 potion.curse=Curse
 entity.Spooky.jellyskull.name=Jelly Skull
 item.gray_gel.name=Gray Gel
+item.slime_helmet.name=Slimy Helm
+item.slime_chestplate.name=Gelatinous Covering
+item.slime_leggings.name=Pants o' Slime
+item.slime_boots.name=Bouncy Boots

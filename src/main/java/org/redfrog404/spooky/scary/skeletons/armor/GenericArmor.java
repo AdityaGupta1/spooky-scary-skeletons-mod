@@ -28,6 +28,12 @@ public class GenericArmor extends ItemArmor {
 			} else {
 				return "spooky:models/armor/moss_armor_1.png";
 			}
+		} else if (name == "slime") {
+			if (armor.getItem() == Spooky.slime_leggings) {
+				return "spooky:models/armor/slime_armor_2.png";
+			} else {
+				return "spooky:models/armor/slime_armor_1.png";
+			}
 		}
 		
 		return null;
@@ -37,6 +43,8 @@ public class GenericArmor extends ItemArmor {
     {
         if (name == "moss") {
         	return Spooky.bone6 == repair.getItem() ? true : super.getIsRepairable(toRepair, repair);
+        } else if (name == "slime") {
+        	return Spooky.gray_gel == repair.getItem() ? true : super.getIsRepairable(toRepair, repair);
         }
         
         return false;

@@ -121,6 +121,9 @@ public class Spooky {
 
 	public static ArmorMaterial MOSSARMOR = EnumHelper.addArmorMaterial(
 			"MOSSARMOR", "spooky:moss_armor", 20, new int[] { 5, 6, 4, 5 }, 18);
+	
+	public static ArmorMaterial SLIMEARMOR = EnumHelper.addArmorMaterial(
+			"SLIMEARMOR", "spooky:slime_armor", 27, new int[] { 6, 6, 5, 5 }, 14);
 
 	/*
 	 * ========================================================================================================================================================================
@@ -175,6 +178,11 @@ public class Spooky {
 	public static Item moss_chestplate;
 	public static Item moss_leggings;
 	public static Item moss_boots;
+	
+	public static Item slime_helmet;
+	public static Item slime_chestplate;
+	public static Item slime_leggings;
+	public static Item slime_boots;
 
 	// Guns and Bullets
 	public static GenericGun prismarine_pistol;
@@ -456,6 +464,26 @@ public class Spooky {
 				MOSSARMOR, 1, 3, "moss"), "moss_boots");
 		mesher.register(moss_boots, 0, new ModelResourceLocation(
 				"spooky:moss_boots", "inventory"));
+		
+		GameRegistry.registerItem(slime_helmet = new GenericArmor("slime_helmet",
+				SLIMEARMOR, 1, 0, "slime"), "slime_helmet");
+		mesher.register(slime_helmet, 0, new ModelResourceLocation(
+				"spooky:slime_helmet", "inventory"));
+
+		GameRegistry.registerItem(slime_chestplate = new GenericArmor(
+				"slime_chestplate", SLIMEARMOR, 1, 1, "slime"), "slime_chestplate");
+		mesher.register(slime_chestplate, 0, new ModelResourceLocation(
+				"spooky:slime_chestplate", "inventory"));
+
+		GameRegistry.registerItem(slime_leggings = new GenericArmor(
+				"slime_leggings", SLIMEARMOR, 2, 2, "slime"), "slime_leggings");
+		mesher.register(slime_leggings, 0, new ModelResourceLocation(
+				"spooky:slime_leggings", "inventory"));
+
+		GameRegistry.registerItem(slime_boots = new GenericArmor("slime_boots",
+				SLIMEARMOR, 1, 3, "slime"), "slime_boots");
+		mesher.register(slime_boots, 0, new ModelResourceLocation(
+				"spooky:slime_boots", "inventory"));
 	}
 	
 	/*
@@ -668,6 +696,20 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(moss_boots), "c c", "b b", 'b',
 				bone6, 'c', bone_core2);
+		
+		//TODO Change Bone Core Tier II to Bone Core Tier III in the slime armor recipes, once it is added.
+		
+		GameRegistry.addRecipe(new ItemStack(slime_helmet), "bcb", "b b", 'b',
+				gray_gel, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(slime_chestplate), "c c", "bcb",
+				"bbb", 'b', gray_gel, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(slime_leggings), "bcb", "b b",
+				"b b", 'b', gray_gel, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(slime_boots), "c c", "b b", 'b',
+				gray_gel, 'c', bone_core2);
 
 		ItemStack spooky_book = new ItemStack(Items.writable_book);
 		NBTTagList bookPages = new NBTTagList();

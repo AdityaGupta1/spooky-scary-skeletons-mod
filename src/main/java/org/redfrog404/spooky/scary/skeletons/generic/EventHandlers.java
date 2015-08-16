@@ -2,8 +2,6 @@ package org.redfrog404.spooky.scary.skeletons.generic;
 
 import java.util.Random;
 
-import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,9 +9,12 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+
+import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
 
 public class EventHandlers {
 
@@ -85,5 +86,24 @@ public class EventHandlers {
 
 		event.entityLiving.addPotionEffect(new PotionEffect(32, 3,
 				((EntityJellySkull) entity).getSlimeSize()));
+	}
+	
+	@SubscribeEvent
+	public void makeJumpHigher(LivingJumpEvent event){
+		if (!(event.entityLiving instanceof EntityPlayer)) {
+			return;
+		}
+		
+		EntityPlayer player = (EntityPlayer) event.entityLiving;
+		
+		if (player.getEquipmentInSlot(1) == null) {
+			return;
+		}
+		
+		if (player.getEquipmentInSlot(1).getItem() != Spooky.slime_boots) {
+			return;
+		}
+		
+		player.motionY += 0.5;
 	}
 }
