@@ -1,0 +1,41 @@
+body {
+     background-image: url("minecraft.jpg");
+}
+
+h1 {
+    color: orange;
+    text-align: center;
+    font-family: "Trebuchet MS";
+    font-size: 50px;
+}
+
+h2 {
+    color: aqua;
+    text-align: center;
+    font-family: "Trebuchet MS";
+    font-size: 40px;
+}
+
+div {
+    font-family: "Trebuchet MS";
+    font-size: 20px;
+    color: white;
+    background-color: black;
+    width: 900px;
+    padding: 25px;
+    margin: 25px;
+    opacity: 0.85;
+    margin: auto;
+}
+
+a:link {
+    color: lime;
+}
+
+a:visited {
+    color: lime;
+}
+
+p.goal{
+    font-size: 25px;
+}
