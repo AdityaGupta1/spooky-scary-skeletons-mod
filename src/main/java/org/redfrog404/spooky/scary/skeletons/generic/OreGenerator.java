@@ -16,11 +16,19 @@ public class OreGenerator implements IWorldGenerator {
 	private WorldGenerator bone_box_generator;
 	private WorldGenerator fossil_generator;
 	private WorldGenerator dim8_generator;
+	private WorldGenerator jade_generator;
+	private WorldGenerator indium_generator;
+	private WorldGenerator zinc_generator;
+	private WorldGenerator purplonium_generator;
 
 	public OreGenerator() {
 	    this.bone_box_generator = new WorldGenMinable(Spooky.bone_box.getDefaultState(), 4, BlockHelper.forBlock(Blocks.end_stone));
 	    this.fossil_generator = new WorldGenMinable(Spooky.bone_ore.getDefaultState(), 8, BlockHelper.forBlock(Blocks.netherrack));
 	    this.dim8_generator = new WorldGenMinable(Spooky.dim8_ore.getDefaultState(), 3, BlockHelper.forBlock(Blocks.stone));
+	    this.jade_generator = new WorldGenMinable(Spooky.jade_ore.getDefaultState(), 4, BlockHelper.forBlock(Blocks.stone));
+	    this.indium_generator = new WorldGenMinable(Spooky.indium_ore.getDefaultState(), 4, BlockHelper.forBlock(Blocks.stone));
+	    this.zinc_generator = new WorldGenMinable(Spooky.zinc_ore.getDefaultState(), 4, BlockHelper.forBlock(Blocks.stone));
+	    this.purplonium_generator = new WorldGenMinable(Spooky.purplonium_ore.getDefaultState(), 8, BlockHelper.forBlock(Blocks.stone));
 	}
 
 	@Override
@@ -29,6 +37,10 @@ public class OreGenerator implements IWorldGenerator {
 
 		switch (world.provider.getDimensionId()) {
 		case 0: // Overworld
+			this.runGenerator(this.jade_generator, world, random, chunkX, chunkZ, 10, 0, 32);
+			this.runGenerator(this.indium_generator, world, random, chunkX, chunkZ, 8, 0, 32);
+			this.runGenerator(this.zinc_generator, world, random, chunkX, chunkZ, 8, 0, 32);
+			this.runGenerator(this.purplonium_generator, world, random, chunkX, chunkZ, 6, 0, 40);
 			break;
 		case -1: // Nether
 			this.runGenerator(this.fossil_generator, world, random, chunkX, chunkZ, 20, 0, 128);

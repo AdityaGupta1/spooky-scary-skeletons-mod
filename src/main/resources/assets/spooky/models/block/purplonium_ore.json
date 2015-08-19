@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube", 
+	"textures": { 
+		"down": "spooky:blocks/purplonium_ore",
+		"up": "spooky:blocks/purplonium_ore",
+		"north": "spooky:blocks/purplonium_ore",
+		"south": "spooky:blocks/purplonium_ore",
+		"west": "spooky:blocks/purplonium_ore",
+		"east": "spooky:blocks/purplonium_ore",
+		"particle": "spooky:blocks/purplonium_ore"
+	}
+}

@@ -28,7 +28,6 @@ public class GenericBlock extends Block {
         this.setResistance(resistance);
         this.setHarvestLevel(tool, harvestLevel);
         this.setStepSound(sound);
-        droppedItem = Item.getItemFromBlock(this);
         baseQuantity = 1;
         randomQuantity = 0;
     }
@@ -90,7 +89,11 @@ public class GenericBlock extends Block {
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
-        return droppedItem;
+		if (droppedItem == null) {
+			return Item.getItemFromBlock(this);
+		}
+		
+		return droppedItem;
     }
 	
 	@Override

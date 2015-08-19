@@ -3,16 +3,18 @@ package org.redfrog404.spooky.scary.skeletons.generic;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
 
@@ -105,5 +107,21 @@ public class EventHandlers {
 		}
 		
 		player.motionY += 0.5;
+	}
+	
+	@SubscribeEvent
+	public void dropCadmiumDust(BreakEvent event){
+		if (event.state.getBlock() != Spooky.zinc_ore) {
+			return;
+		}
+		
+		Random random = new Random();
+		
+		ItemStack stack = new ItemStack(Spooky.cadmium_dust);
+		EntityItem item = new EntityItem(event.world, event.pos.getX(), event.pos.getY(), event.pos.getZ(), stack);
+		
+		if (random.nextInt(2) == 0) {
+			event.world.spawnEntityInWorld(item);
+		}
 	}
 }
