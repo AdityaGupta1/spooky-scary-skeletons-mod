@@ -1,4 +1,4 @@
-package org.redfrog404.spooky.scary.skeletons.generic;
+	package org.redfrog404.spooky.scary.skeletons.generic;
 
 import java.util.Random;
 
@@ -11,11 +11,15 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import org.redfrog404.spooky.scary.skeletons.entity.EntityIncinerator;
 import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
 
 public class EventHandlers {
@@ -110,6 +114,25 @@ public class EventHandlers {
 	}
 	
 	@SubscribeEvent
+	public void negateFallDamage(LivingFallEvent event){
+		if (!(event.entityLiving instanceof EntityPlayer)) {
+			return;
+		}
+		
+		EntityPlayer player = (EntityPlayer) event.entityLiving;
+		
+		if (player.getEquipmentInSlot(1) == null) {
+			return;
+		}
+		
+		if (player.getEquipmentInSlot(1).getItem() != Spooky.slime_boots) {
+			return;
+		}
+		
+		event.setCanceled(true);
+	}
+	
+	@SubscribeEvent
 	public void dropCadmiumDust(BreakEvent event){
 		if (event.state.getBlock() != Spooky.zinc_ore) {
 			return;
@@ -122,6 +145,49 @@ public class EventHandlers {
 		
 		if (random.nextInt(2) == 0) {
 			event.world.spawnEntityInWorld(item);
+		}
+	}
+	
+	@SubscribeEvent
+	public void applyFireAmulet(LivingAttackEvent event){
+		if (event.source.getEntity() == null) {
+			return;
+		}
+		
+		if (!(event.source.getEntity() instanceof EntityPlayer)) {
+			return;
+		}
+		
+		if (!((EntityPlayer) event.source.getEntity()).inventory.hasItem(Spooky.fire_amulet)) {
+			return;
+		}
+		
+		event.entity.setFire(3);
+	}
+	
+	@SubscribeEvent
+	public void summonIncinerator(PlayerInteractEvent event) {
+		if (event.action != Action.RIGHT_CLICK_BLOCK) {
+			return;
+		}
+		
+		if (event.entityPlayer.getHeldItem() == null) {
+			return;
+		}
+		
+		if (event.entityPlayer.getHeldItem().getItem() != Spooky.incinerator_summon) {
+			return;
+		}
+		
+		EntityIncinerator incinerator = new EntityIncinerator(event.world);
+		incinerator.setLocationAndAngles(event.pos.getX(), event.pos.getY() + 1, event.pos.getZ(), 0, 0);
+		
+		if (!event.world.isRemote) {
+			event.world.spawnEntityInWorld(incinerator);
+		}
+		
+		if (!event.entityPlayer.capabilities.isCreativeMode) {
+			event.entityPlayer.inventory.consumeInventoryItem(Spooky.incinerator_summon);
 		}
 	}
 }

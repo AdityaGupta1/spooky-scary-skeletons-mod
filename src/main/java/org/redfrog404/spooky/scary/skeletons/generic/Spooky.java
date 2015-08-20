@@ -32,6 +32,7 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -48,6 +49,7 @@ import org.redfrog404.spooky.scary.skeletons.creativetab.FoodTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.GunsTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.MaterialsTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.MiscTab;
+import org.redfrog404.spooky.scary.skeletons.creativetab.StavesTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.ToolsTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.WeaponsTab;
 import org.redfrog404.spooky.scary.skeletons.dimensions.DimensionGateway;
@@ -55,16 +57,20 @@ import org.redfrog404.spooky.scary.skeletons.dimensions.DimensionRegistry;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentArrowFast;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentBones;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentPoison;
+import org.redfrog404.spooky.scary.skeletons.entity.EntityIncinerator;
 import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
 import org.redfrog404.spooky.scary.skeletons.entity.EntityRisenDead;
 import org.redfrog404.spooky.scary.skeletons.entity.EntitySkeletonCow;
+import org.redfrog404.spooky.scary.skeletons.entity.ModelIncinerator;
 import org.redfrog404.spooky.scary.skeletons.entity.ModelJellySkull;
 import org.redfrog404.spooky.scary.skeletons.entity.ModelRisenDead;
 import org.redfrog404.spooky.scary.skeletons.entity.ModelSkeletonCow;
+import org.redfrog404.spooky.scary.skeletons.entity.RenderIncinerator;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderJellySkull;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderRisenDead;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderSkeletonCow;
 import org.redfrog404.spooky.scary.skeletons.guns.GenericGun;
+import org.redfrog404.spooky.scary.skeletons.staves.IncineratorStaff;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericAxe;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericBow;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericPickaxe;
@@ -110,6 +116,8 @@ public class Spooky {
 			CreativeTabs.getNextID(), "bowsTab");
 	public static final CreativeTabs guns = new GunsTab(
 			CreativeTabs.getNextID(), "gunsTab");
+	public static final CreativeTabs staves = new StavesTab(
+			CreativeTabs.getNextID(), "stavesTab");
 	public static final CreativeTabs armor = new ArmorTab(
 			CreativeTabs.getNextID(), "armorTab");
 	public static final CreativeTabs misc = new MiscTab(
@@ -184,6 +192,10 @@ public class Spooky {
 	public static Item cadmium_dust;
 	public static Item cadmium_ingot;
 	public static Item purplonium_ingot;
+	public static Item fire_amulet;
+	public static Item fire_crystal;
+	public static Item bone_ingot;
+	public static Item incinerator_summon;
 
 	// Tools and Swords
 	public static Item fire_sword;
@@ -218,6 +230,11 @@ public class Spooky {
 	public static Item slime_leggings;
 	public static Item slime_boots;
 
+	// Bows and Arrows
+	public static GenericBow double_bow;
+	public static GenericBow ender_bow;
+	public static Item ender_arrow;
+
 	// Guns and Bullets
 	public static GenericGun prismarine_pistol;
 	public static GenericGun fire_gun;
@@ -225,10 +242,8 @@ public class Spooky {
 	public static GenericGun steampunk_gun;
 	public static Item compressed_redstone;
 
-	// Bows and Arrows
-	public static GenericBow double_bow;
-	public static GenericBow ender_bow;
-	public static Item ender_arrow;
+	// Staves
+	public static Item incinerator_staff;
 
 	// Potions
 	public static Potion curse = new GenericPotion(26, new ResourceLocation(
@@ -283,7 +298,7 @@ public class Spooky {
 
 		registerSwordsToolsAndArmor();
 
-		registerBowsAndGuns(event);
+		registerBowsGunsAndStaves(event);
 
 		registerMobs();
 
@@ -336,28 +351,16 @@ public class Spooky {
 		registerItem(bone_key1, "bone_key1");
 
 		spookyscaryskeletons = new GenericRecord("spookyscaryskeletons");
-		GameRegistry.registerItem(spookyscaryskeletons, "spookyscaryskeletons");
-		Minecraft
-				.getMinecraft()
-				.getRenderItem()
-				.getItemModelMesher()
-				.register(
-						spookyscaryskeletons,
-						0,
-						new ModelResourceLocation(
-								"spooky:spookyscaryskeletons", "inventory"));
+		registerItem(spookyscaryskeletons, "spookyscaryskeletons");
 
 		bone_marrow = new GenericFoodItem("bone_marrow", 1, 0.3F, true)
 				.setPotionEffect(Potion.hunger.id, 6, 1, 0.25F);
-		GameRegistry.registerItem(bone_marrow, "bone_marrow");
-		mesher.register(bone_marrow, 0, new ModelResourceLocation(
-				"spooky:bone_marrow", "inventory"));
+		registerItem(bone_marrow, "bone_marrow");
+		;
 
 		gray_gel = new GenericFoodItem("gray_gel", 2, 0.7F, false)
 				.setPotionEffect(Potion.jump.id, 15, 0, 0.4F);
-		GameRegistry.registerItem(gray_gel, "gray_gel");
-		mesher.register(gray_gel, 0, new ModelResourceLocation(
-				"spooky:gray_gel", "inventory"));
+		registerItem(gray_gel, "gray_gel");
 
 		cloth = new GenericItem("cloth", misc);
 		registerItem(cloth, "cloth");
@@ -394,6 +397,18 @@ public class Spooky {
 
 		bone12 = new GenericItem("bone12");
 		registerItem(bone12, "bone12");
+		
+		fire_crystal = new GenericItem("fire_crystal", misc);
+		registerItem(fire_crystal, "fire_crystal");
+
+		fire_amulet = new GenericItem("fire_amulet", misc).setMaxStackSize(1);
+		registerItem(fire_amulet, "fire_amulet");
+		
+		bone_ingot = new GenericItem("bone_ingot", misc);
+		registerItem(bone_ingot, "bone_ingot");
+		
+		incinerator_summon = new GenericItem("incinerator_summon", misc).setMaxStackSize(1);
+		registerItem(incinerator_summon, "incinerator_summon");
 
 	}
 
@@ -543,34 +558,21 @@ public class Spooky {
 	 * ========================================================================================================================================================================
 	 */
 
-	private void registerBowsAndGuns(FMLInitializationEvent event) {
+	private void registerBowsGunsAndStaves(FMLInitializationEvent event) {
 		prismarine_pistol = new GenericGun("prismarine_pistol", 1234,
 				Items.prismarine_shard, (byte) 6);
-		GameRegistry.registerItem(prismarine_pistol, "prismarine_pistol");
-		Minecraft
-				.getMinecraft()
-				.getRenderItem()
-				.getItemModelMesher()
-				.register(
-						prismarine_pistol,
-						0,
-						new ModelResourceLocation("spooky:prismarine_pistol",
-								"inventory"));
+		registerItem(prismarine_pistol, "prismarine_pistol");
 
 		fire_gun = new GenericGun("fire_gun", 666, Items.fire_charge, (byte) 9);
-		GameRegistry.registerItem(fire_gun, "fire_gun");
-		mesher.register(fire_gun, 0, new ModelResourceLocation(
-				"spooky:fire_gun", "inventory"));
+		registerItem(fire_gun, "fire_gun");
 
 		ender_rifle = new GenericGun("ender_rifle", 888, Items.ender_pearl,
 				(byte) 11);
-		GameRegistry.registerItem(ender_rifle, "ender_rifle");
-		mesher.register(ender_rifle, 0, new ModelResourceLocation(
-				"spooky:ender_rifle", "inventory"));
+		registerItem(ender_rifle, "ender_rifle");
 
 		double_bow = new GenericBow(double_bow, "double_bow", 512, Items.arrow,
 				1.0D, 2);
-		GameRegistry.registerItem(double_bow, "double_bow");
+		registerItem(double_bow, "double_bow");
 
 		if (event.getSide().isClient()) {
 			ModelBakery.addVariantName(double_bow, new String[] {
@@ -590,11 +592,9 @@ public class Spooky {
 
 		ender_bow = new GenericBow(ender_bow, "ender_bow", 999, ender_arrow,
 				2.0D);
-		GameRegistry.registerItem(ender_bow, "ender_bow");
+		registerItem(ender_bow, "ender_bow");
 
-		GameRegistry.registerItem(ender_arrow, "ender_arrow");
-		mesher.register(ender_arrow, 0, new ModelResourceLocation(
-				"spooky:ender_arrow", "inventory"));
+		registerItem(ender_arrow, "ender_arrow");
 
 		if (event.getSide().isClient()) {
 			ModelBakery.addVariantName(ender_bow, new String[] {
@@ -614,13 +614,12 @@ public class Spooky {
 
 		steampunk_gun = new GenericGun("steampunk_gun", 1280,
 				compressed_redstone, (byte) 10, 4);
-		GameRegistry.registerItem(steampunk_gun, "steampunk_gun");
-		mesher.register(steampunk_gun, 0, new ModelResourceLocation(
-				"spooky:steampunk_gun", "inventory"));
+		registerItem(steampunk_gun, "steampunk_gun");
 
-		GameRegistry.registerItem(compressed_redstone, "compressed_redstone");
-		mesher.register(compressed_redstone, 0, new ModelResourceLocation(
-				"spooky:compressed_redstone", "inventory"));
+		registerItem(compressed_redstone, "compressed_redstone");
+
+		incinerator_staff = new IncineratorStaff("incinerator_staff");
+		registerItem(incinerator_staff, "incinerator_staff");
 	}
 
 	/*
@@ -867,7 +866,7 @@ public class Spooky {
 				'j', jade_ingot);
 
 		GameRegistry.addShapelessRecipe(new ItemStack(jade_ingot, 9),
-				new ItemStack(jade_block, 1));
+				new ItemStack(jade_block));
 
 		GameRegistry.addRecipe(new ItemStack(bone11), "ggg", "gbg", "ggg", 'g',
 				gray_gel, 'b', bone_box);
@@ -890,6 +889,12 @@ public class Spooky {
 		GameRegistry.addRecipe(new ItemStack(radioactive_spade), "c", "b", "b",
 				'b', bone12, 'c', purplonium_ingot);
 
+		GameRegistry.addSmelting(dim8_ore, new ItemStack(bone_ingot, 1),
+				0.3F);
+		
+		GameRegistry.addRecipe(new ItemStack(incinerator_summon), "c", "i", "i",
+				'c', bone_core2, 'i', bone_ingot);
+
 	}
 
 	/*
@@ -898,7 +903,7 @@ public class Spooky {
 	 * ========================================================================================================================================================================
 	 */
 
-	private void registerMobs() { // TODO Add a new boss mob.
+	private void registerMobs() {
 
 		registerModEntity(EntitySkeletonCow.class, new RenderSkeletonCow(
 				new ModelSkeletonCow(), 0.7F), "skeletoncow",
@@ -916,6 +921,10 @@ public class Spooky {
 				EnumCreatureType.MONSTER, BiomeGenBase.jungle,
 				BiomeGenBase.plains, BiomeGenBase.desert,
 				BiomeGenBase.extremeHills);
+
+		registerModEntity(EntityIncinerator.class, new RenderIncinerator(
+				new ModelIncinerator(), 0.5F), "incinerator",
+				EntityRegistry.findGlobalUniqueEntityId());
 	}
 
 	/*
@@ -929,6 +938,14 @@ public class Spooky {
 			int backgroundColor) {
 		EntityRegistry.registerGlobalEntityID(parEntityClass, parEntityName,
 				entityId, foregroundColor, backgroundColor);
+		EntityRegistry.registerModEntity(parEntityClass, parEntityName,
+				entityId, this, 80, 1, false);
+		RenderingRegistry
+				.registerEntityRenderingHandler(parEntityClass, render);
+	}
+	
+	public void registerModEntity(Class parEntityClass, RenderLiving render,
+			String parEntityName, int entityId){
 		EntityRegistry.registerModEntity(parEntityClass, parEntityName,
 				entityId, this, 80, 1, false);
 		RenderingRegistry
@@ -965,6 +982,7 @@ public class Spooky {
 		MinecraftForge.EVENT_BUS.register(bones);
 
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
+		FMLCommonHandler.instance().bus().register(new EventHandlers());
 	}
 
 	private void doMiscStuff2() {
