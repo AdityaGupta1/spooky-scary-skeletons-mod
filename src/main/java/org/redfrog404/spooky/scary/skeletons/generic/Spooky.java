@@ -90,7 +90,7 @@ public class Spooky {
 	 */
 
 	public static final String MODID = "Spooky";
-	public static final String VERSION = "2.1.0";
+	public static final String VERSION = "2.2.0";
 
 	public static final List<String> spooky_text = new ArrayList();
 
