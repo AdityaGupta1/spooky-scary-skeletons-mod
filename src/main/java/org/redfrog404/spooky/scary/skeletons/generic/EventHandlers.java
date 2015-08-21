@@ -167,15 +167,17 @@ public class EventHandlers {
 	
 	@SubscribeEvent
 	public void summonIncinerator(PlayerInteractEvent event) {
+		EntityPlayer player = event.entityPlayer;
+		
 		if (event.action != Action.RIGHT_CLICK_BLOCK) {
 			return;
 		}
 		
-		if (event.entityPlayer.getHeldItem() == null) {
+		if (player.getHeldItem() == null) {
 			return;
 		}
 		
-		if (event.entityPlayer.getHeldItem().getItem() != Spooky.incinerator_summon) {
+		if (player.getHeldItem().getItem() != Spooky.incinerator_summon) {
 			return;
 		}
 		
@@ -186,8 +188,40 @@ public class EventHandlers {
 			event.world.spawnEntityInWorld(incinerator);
 		}
 		
-		if (!event.entityPlayer.capabilities.isCreativeMode) {
+		if (!player.capabilities.isCreativeMode) {
 			event.entityPlayer.inventory.consumeInventoryItem(Spooky.incinerator_summon);
 		}
+	}
+	
+	@SubscribeEvent
+	public void transformBlock(PlayerInteractEvent event) {
+		EntityPlayer player = event.entityPlayer;
+		
+		if (event.action != Action.RIGHT_CLICK_BLOCK) {
+			return;
+		}
+		
+		if (player.getHeldItem() == null) {
+			return;
+		}
+		
+		if (player.getHeldItem().getItem() != Spooky.fire_staff) {
+			return;
+		}
+		
+		if (player.worldObj.getBlockState(event.pos).getBlock() != Spooky.jade_block) {
+			return;
+		}
+		
+		if (!player.capabilities.isCreativeMode) {
+			if (!player.inventory.hasItem(Spooky.fire_crystal)) {
+				return;
+			}
+			
+			player.inventory.consumeInventoryItem(Spooky.fire_crystal);
+		}
+		
+		player.worldObj.setBlockState(event.pos, Spooky.fire_block.getBlockState().getBaseState());
+		player.worldObj.createExplosion(player, event.pos.getX() + 0.5, event.pos.getY() + 0.5, event.pos.getZ() + 0.5, 1.5F, false);
 	}
 }

@@ -70,6 +70,7 @@ import org.redfrog404.spooky.scary.skeletons.entity.RenderJellySkull;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderRisenDead;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderSkeletonCow;
 import org.redfrog404.spooky.scary.skeletons.guns.GenericGun;
+import org.redfrog404.spooky.scary.skeletons.staves.FireStaff;
 import org.redfrog404.spooky.scary.skeletons.staves.IncineratorStaff;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericAxe;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericBow;
@@ -137,6 +138,8 @@ public class Spooky {
 			23.0F, 10.0F, 25);
 	public static ToolMaterial RADIOACTIVE = EnumHelper.addToolMaterial(
 			"RADIOACTIVE", 5, 3000, 30.0F, 10.0F, 30);
+	public static ToolMaterial BC3 = EnumHelper.addToolMaterial("BC3", 6, 8500,
+			25.0F, 13.0F, 27);
 
 	public static ArmorMaterial MOSSARMOR = EnumHelper.addArmorMaterial(
 			"MOSSARMOR", "spooky:moss_armor", 20, new int[] { 5, 6, 4, 5 }, 18);
@@ -167,6 +170,7 @@ public class Spooky {
 	public static Item bone10;
 	public static Item bone11;
 	public static Item bone12;
+	public static Item bone_core3;
 
 	// Blocks
 	public static Block bone_box;
@@ -178,6 +182,7 @@ public class Spooky {
 	public static Block indium_ore;
 	public static Block zinc_ore;
 	public static Block purplonium_ore;
+	public static Block fire_block;
 
 	// Miscellaneous
 	public static Item spookyscaryskeletons;
@@ -196,6 +201,7 @@ public class Spooky {
 	public static Item fire_crystal;
 	public static Item bone_ingot;
 	public static Item incinerator_summon;
+	public static Item fire_ingot;
 
 	// Tools and Swords
 	public static Item fire_sword;
@@ -218,6 +224,11 @@ public class Spooky {
 	public static Item radioactive_pickaxe;
 	public static Item radioactive_axe;
 	public static Item radioactive_spade;
+	
+	public static Item bc3_sword;
+	public static Item bc3_pickaxe;
+	public static Item bc3_axe;
+	public static Item bc3_spade;
 
 	// Armor
 	public static Item moss_helmet;
@@ -244,6 +255,7 @@ public class Spooky {
 
 	// Staves
 	public static Item incinerator_staff;
+	public static Item fire_staff;
 
 	// Potions
 	public static Potion curse = new GenericPotion(26, new ResourceLocation(
@@ -409,6 +421,12 @@ public class Spooky {
 		
 		incinerator_summon = new GenericItem("incinerator_summon", misc).setMaxStackSize(1);
 		registerItem(incinerator_summon, "incinerator_summon");
+		
+		fire_ingot = new GenericItem("fire_ingot", misc);
+		registerItem(fire_ingot, "fire_ingot");
+		
+		bone_core3 = new GenericItem("bone_core3");
+		registerItem(bone_core3, "bone_core3");
 
 	}
 
@@ -446,7 +464,7 @@ public class Spooky {
 		registerBlock(jade_ore, "jade_ore");
 
 		jade_block = new GenericBlock("jade_block", Material.rock, 15, 30,
-				"pickaxe", 3, Block.soundTypePiston);
+				"pickaxe", 3, Block.soundTypeMetal);
 		registerBlock(jade_block, "jade_block");
 
 		indium_ore = new GenericBlock("indium_ore", Material.rock, 17, 34,
@@ -460,6 +478,10 @@ public class Spooky {
 		purplonium_ore = new GenericBlock("purplonium_ore", Material.rock, 20,
 				40, "pickaxe", 4, Block.soundTypePiston);
 		registerBlock(purplonium_ore, "purplonium_ore");
+		
+		fire_block = new GenericBlock("fire_block", Material.rock, 50,
+				100, "pickaxe", 5, Block.soundTypeMetal);
+		registerBlock(fire_block, "fire_block");
 	}
 
 	private void registerBlock(Block block, String name) {
@@ -549,6 +571,18 @@ public class Spooky {
 
 		slime_boots = new GenericArmor("slime_boots", SLIMEARMOR, 1, 3, "slime");
 		registerItem(slime_boots, "slime_boots");
+		
+		bc3_sword = new GenericSword("bc3_sword", BC3);
+		registerItem(bc3_sword, "bc3_sword");
+
+		bc3_pickaxe = new GenericPickaxe("bc3_pickaxe", BC3);
+		registerItem(bc3_pickaxe, "bc3_pickaxe");
+
+		bc3_axe = new GenericAxe("bc3_axe", BC3);
+		registerItem(bc3_axe, "bc3_axe");
+
+		bc3_spade = new GenericSpade("bc3_spade", BC3);
+		registerItem(bc3_spade, "bc3_spade");
 
 	}
 
@@ -620,6 +654,9 @@ public class Spooky {
 
 		incinerator_staff = new IncineratorStaff("incinerator_staff");
 		registerItem(incinerator_staff, "incinerator_staff");
+		
+		fire_staff = new FireStaff("fire_staff");
+		registerItem(fire_staff, "fire_staff");
 	}
 
 	/*
@@ -747,20 +784,17 @@ public class Spooky {
 		GameRegistry.addRecipe(new ItemStack(moss_boots), "c c", "b b", 'b',
 				bone6, 'c', bone_core2);
 
-		// TODO Change Bone Core Tier II to Bone Core Tier III in the slime
-		// armor recipes, once it is added.
-
 		GameRegistry.addRecipe(new ItemStack(slime_helmet), "bcb", "b b", 'b',
-				gray_gel, 'c', bone_core2);
+				gray_gel, 'c', bone_core3);
 
 		GameRegistry.addRecipe(new ItemStack(slime_chestplate), "c c", "bcb",
-				"bbb", 'b', gray_gel, 'c', bone_core2);
+				"bbb", 'b', gray_gel, 'c', bone_core3);
 
 		GameRegistry.addRecipe(new ItemStack(slime_leggings), "bcb", "b b",
-				"b b", 'b', gray_gel, 'c', bone_core2);
+				"b b", 'b', gray_gel, 'c', bone_core3);
 
 		GameRegistry.addRecipe(new ItemStack(slime_boots), "c c", "b b", 'b',
-				gray_gel, 'c', bone_core2);
+				gray_gel, 'c', bone_core3);
 
 		ItemStack spooky_book = new ItemStack(Items.writable_book);
 		NBTTagList bookPages = new NBTTagList();
@@ -894,6 +928,27 @@ public class Spooky {
 		
 		GameRegistry.addRecipe(new ItemStack(incinerator_summon), "c", "i", "i",
 				'c', bone_core2, 'i', bone_ingot);
+		
+		GameRegistry.addRecipe(new ItemStack(fire_block), "ff", "ff",
+				'f', fire_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(fire_ingot, 4),
+				new ItemStack(fire_block));
+		
+		GameRegistry.addRecipe(new ItemStack(bc3_sword), "c", "c", "b", 'b',
+				bone12, 'c', bone_core3);
+
+		GameRegistry.addRecipe(new ItemStack(bc3_pickaxe), "ccc", " b ", " b ",
+				'b', bone12, 'c', bone_core3);
+
+		GameRegistry.addRecipe(new ItemStack(bc3_axe), "cc", "cb", " b", 'b',
+				bone12, 'c', bone_core3);
+
+		GameRegistry.addRecipe(new ItemStack(bc3_axe), "cc", "bc", "b ", 'b',
+				bone12, 'c', bone_core3);
+
+		GameRegistry.addRecipe(new ItemStack(bc3_spade), "c", "b", "b", 'b',
+				bone12, 'c', bone_core3);
 
 	}
 

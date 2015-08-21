@@ -14,28 +14,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
-public class IncineratorStaff extends Item {
+public class IncineratorStaff extends GenericStaff {
 
-	//TODO Set the ammo to something that drops from the Incinerator
 	private Item ammunition = Items.blaze_powder;
 
 	public IncineratorStaff(String name) {
-		super();
-		this.setUnlocalizedName(name);
-		this.setCreativeTab(Spooky.staves);
-		this.setMaxStackSize(1);
+		super(name, Items.blaze_powder);
 	}
 
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
 		
-		if (!player.capabilities.isCreativeMode) {
-			if (!player.inventory.hasItem(Items.blaze_powder)) {
-				return stack;
-			}
-			
-			player.inventory.consumeInventoryItem(Items.blaze_powder);
-		}
+		super.onItemRightClick(stack, world, player);
 		
 		double yaw = Math.toRadians(player.rotationYaw);
 		double pitch = Math.toRadians(player.rotationPitch);
@@ -64,7 +54,7 @@ public class IncineratorStaff extends Item {
 		tooltip.add(EnumChatFormatting.DARK_RED
 				+ "Usage: Summons a fireball that spawns a floating");
 		tooltip.add(EnumChatFormatting.DARK_RED +  "lava orb when it contacts an entity or the ground");
-		tooltip.add(EnumChatFormatting.GOLD + "Ammunition: "
-				+ ammunition.getItemStackDisplayName(new ItemStack(ammunition)));
+		
+		super.addInformation(stack, playerIn, tooltip, advanced);
 	}
 }

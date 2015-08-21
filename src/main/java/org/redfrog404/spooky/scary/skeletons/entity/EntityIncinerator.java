@@ -28,6 +28,8 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.IBossDisplayData;
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityPigZombie;
@@ -56,13 +58,13 @@ import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 import org.redfrog404.spooky.scary.skeletons.staves.EntityIncineratorFireball;
 
 public class EntityIncinerator extends EntityMob implements IBossDisplayData {
-	
+
 	@Override
-	public IChatComponent getDisplayName(){
+	public IChatComponent getDisplayName() {
 		super.getDisplayName();
 		return new ChatComponentText("The Incinerator");
 	}
-	
+
 	/**
 	 * The attribute which determines the chance that this mob will spawn
 	 * reinforcements
@@ -94,10 +96,12 @@ public class EntityIncinerator extends EntityMob implements IBossDisplayData {
 		this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
 		this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(7, new EntityIncinerator.AIFireballAttack());
+		this.tasks.addTask(7, new EntityIncinerator.AILightningAttack());
 		this.tasks.addTask(7, new EntityAIWatchClosest(this,
 				EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
-		this.tasks.addTask(8, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
+		this.tasks.addTask(8, new EntityAIAttackOnCollide(this,
+				EntityPlayer.class, 1.0D, false));
 		this.applyEntityAI();
 		this.setSize(1.2F, 3.9F);
 		this.isImmuneToFire = true;
@@ -123,7 +127,7 @@ public class EntityIncinerator extends EntityMob implements IBossDisplayData {
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
 				.setBaseValue(12.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth)
-				.setBaseValue(400.0F);
+				.setBaseValue(600.0F);
 		this.getAttributeMap()
 				.registerAttribute(reinforcementChance)
 				.setBaseValue(
@@ -207,7 +211,7 @@ public class EntityIncinerator extends EntityMob implements IBossDisplayData {
 	 */
 	public void onLivingUpdate() {
 		BossStatus.setBossStatus(this, true);
-		
+
 		if (this.worldObj.isDaytime() && !this.worldObj.isRemote
 				&& !this.isChild()) {
 			float f = this.getBrightness(1.0F);
@@ -339,11 +343,13 @@ public class EntityIncinerator extends EntityMob implements IBossDisplayData {
 		}
 
 		j = this.rand.nextInt(3);
-		
+
 		if (j == 0) {
 			this.dropItem(Spooky.incinerator_staff, 1);
 		} else if (j == 1) {
 			this.dropItem(Spooky.fire_amulet, 1);
+		} else if (j == 2) {
+			this.dropItem(Spooky.fire_staff, 1);
 		}
 	}
 
@@ -398,7 +404,8 @@ public class EntityIncinerator extends EntityMob implements IBossDisplayData {
 				return;
 			}
 
-			EntityIncinerator entityzombie = new EntityIncinerator(this.worldObj);
+			EntityIncinerator entityzombie = new EntityIncinerator(
+					this.worldObj);
 			entityzombie.copyLocationAndAnglesFrom(entityLivingIn);
 			this.worldObj.removeEntity(entityLivingIn);
 			entityzombie.func_180482_a(this.worldObj
@@ -683,72 +690,149 @@ public class EntityIncinerator extends EntityMob implements IBossDisplayData {
 			this(p_i2349_2_, p_i2349_3_);
 		}
 	}
-	
-	public int getStrength()
-    {
-        return 4;
-    }
-	
-	class AIFireballAttack extends EntityAIBase
-	{
-	    private EntityIncinerator field_179470_b = EntityIncinerator.this;
-	    public int field_179471_a;
 
-	    /**
-	     * Returns whether the EntityAIBase should begin execution.
-	     */
-	    public boolean shouldExecute()
-	    {
-	        return this.field_179470_b.getAttackTarget() != null;
-	    }
+	public int getStrength() {
+		return 4;
+	}
 
-	    /**
-	     * Execute a one shot task or start executing a continuous task
-	     */
-	    public void startExecuting()
-	    {
-	        this.field_179471_a = 0;
-	    }
+	class AIFireballAttack extends EntityAIBase {
+		private EntityIncinerator field_179470_b = EntityIncinerator.this;
+		public int field_179471_a;
 
-	    /**
-	     * Updates the task
-	     */
-	    public void updateTask()
-	    {
-	        EntityLivingBase entitylivingbase = this.field_179470_b.getAttackTarget();
-	        double d0 = 64.0D;
+		/**
+		 * Returns whether the EntityAIBase should begin execution.
+		 */
+		public boolean shouldExecute() {
+			return this.field_179470_b.getAttackTarget() != null;
+		}
 
-	        if (entitylivingbase.getDistanceSqToEntity(this.field_179470_b) < d0 * d0 && this.field_179470_b.canEntityBeSeen(entitylivingbase))
-	        {
-	            World world = this.field_179470_b.worldObj;
-	            ++this.field_179471_a;
+		/**
+		 * Execute a one shot task or start executing a continuous task
+		 */
+		public void startExecuting() {
+			this.field_179471_a = 0;
+		}
 
-	            if (this.field_179471_a == 10)
-	            {
-	                world.playAuxSFXAtEntity((EntityPlayer)null, 1007, new BlockPos(this.field_179470_b), 0);
-	            }
+		/**
+		 * Updates the task
+		 */
+		public void updateTask() {
+			EntityLivingBase entitylivingbase = this.field_179470_b
+					.getAttackTarget();
+			double d0 = 64.0D;
 
-	            if (this.field_179471_a == 20)
-	            {
-	                double d1 = 4.0D;
-	                Vec3 vec3 = this.field_179470_b.getLook(1.0F);
-	                double d2 = entitylivingbase.posX - (this.field_179470_b.posX + vec3.xCoord * d1);
-	                double d3 = entitylivingbase.getEntityBoundingBox().minY + (double)(entitylivingbase.height / 2.0F) - (0.5D + this.field_179470_b.posY + (double)(this.field_179470_b.height / 2.0F));
-	                double d4 = entitylivingbase.posZ - (this.field_179470_b.posZ + vec3.zCoord * d1);
-	                world.playAuxSFXAtEntity((EntityPlayer)null, 1008, new BlockPos(this.field_179470_b), 0);
-	                EntityIncineratorFireball fireball = new EntityIncineratorFireball(world, this.field_179470_b, d2, d3, d4);
-	                fireball.explosionPower = this.field_179470_b.getStrength();
-	                fireball.posX = this.field_179470_b.posX + vec3.xCoord * d1;
-	                fireball.posY = this.field_179470_b.posY + (double)(this.field_179470_b.height / 2.0F) + 0.5D;
-	                fireball.posZ = this.field_179470_b.posZ + vec3.zCoord * d1;
-	                world.spawnEntityInWorld(fireball);
-	                this.field_179471_a = -40;
-	            }
-	        }
-	        else if (this.field_179471_a > 0)
-	        {
-	            --this.field_179471_a;
-	        }
-	    }
+			if (entitylivingbase.getDistanceSqToEntity(this.field_179470_b) < d0
+					* d0
+					&& this.field_179470_b.canEntityBeSeen(entitylivingbase)) {
+				World world = this.field_179470_b.worldObj;
+				++this.field_179471_a;
+
+				if (this.field_179471_a == 10) {
+					world.playAuxSFXAtEntity((EntityPlayer) null, 1007,
+							new BlockPos(this.field_179470_b), 0);
+				}
+
+				if (this.field_179471_a == 20) {
+					double d1 = 4.0D;
+					Vec3 vec3 = this.field_179470_b.getLook(1.0F);
+					double d2 = entitylivingbase.posX
+							- (this.field_179470_b.posX + vec3.xCoord * d1);
+					double d3 = entitylivingbase.getEntityBoundingBox().minY
+							+ (double) (entitylivingbase.height / 2.0F)
+							- (0.5D + this.field_179470_b.posY + (double) (this.field_179470_b.height / 2.0F));
+					double d4 = entitylivingbase.posZ
+							- (this.field_179470_b.posZ + vec3.zCoord * d1);
+					world.playAuxSFXAtEntity((EntityPlayer) null, 1008,
+							new BlockPos(this.field_179470_b), 0);
+					EntityIncineratorFireball fireball = new EntityIncineratorFireball(
+							world, this.field_179470_b, d2, d3, d4);
+					fireball.explosionPower = this.field_179470_b.getStrength();
+					fireball.posX = this.field_179470_b.posX + vec3.xCoord * d1;
+					fireball.posY = this.field_179470_b.posY
+							+ (double) (this.field_179470_b.height / 2.0F)
+							+ 0.5D;
+					fireball.posZ = this.field_179470_b.posZ + vec3.zCoord * d1;
+					world.spawnEntityInWorld(fireball);
+					this.field_179471_a = -40;
+				}
+			} else if (this.field_179471_a > 0) {
+				--this.field_179471_a;
+			}
+		}
+	}
+
+	class AILightningAttack extends EntityAIBase {
+		private EntityIncinerator incinerator = EntityIncinerator.this;
+		private int field_179455_b;
+
+		public AILightningAttack() {
+			this.setMutexBits(3);
+		}
+
+		/**
+		 * Returns whether the EntityAIBase should begin execution.
+		 */
+		public boolean shouldExecute() {
+			EntityLivingBase entitylivingbase = this.incinerator
+					.getAttackTarget();
+			return entitylivingbase != null && entitylivingbase.isEntityAlive();
+		}
+
+		/**
+		 * Returns whether an in-progress EntityAIBase should continue executing
+		 */
+		public boolean continueExecuting() {
+			return super.continueExecuting();
+		}
+
+		/**
+		 * Execute a one shot task or start executing a continuous task
+		 */
+		public void startExecuting() {
+			this.field_179455_b = -10;
+			this.incinerator.getNavigator().clearPathEntity();
+			this.incinerator.getLookHelper().setLookPositionWithEntity(
+					this.incinerator.getAttackTarget(), 90.0F, 90.0F);
+			this.incinerator.isAirBorne = true;
+		}
+
+		/**
+		 * Updates the task
+		 */
+		public void updateTask() {
+			EntityLivingBase entitylivingbase = this.incinerator
+					.getAttackTarget();
+			this.incinerator.getNavigator().clearPathEntity();
+			this.incinerator.getLookHelper().setLookPositionWithEntity(
+					entitylivingbase, 90.0F, 90.0F);
+
+			if (!this.incinerator.canEntityBeSeen(entitylivingbase)) {
+				this.incinerator.setAttackTarget((EntityLivingBase) null);
+			} else {
+				++this.field_179455_b;
+
+				if (this.field_179455_b == 0) {
+					this.incinerator.worldObj.setEntityState(this.incinerator,
+							(byte) 21);
+				} else if (this.field_179455_b >= 60) {
+					float f = 1.0F;
+
+					if (this.incinerator.worldObj.getDifficulty() == EnumDifficulty.HARD) {
+						f += 2.0F;
+					}
+
+					EntityLightningBolt bolt = new EntityLightningBolt(
+							incinerator.worldObj, entitylivingbase.posX,
+							entitylivingbase.posY, entitylivingbase.posZ);
+					incinerator.worldObj.spawnEntityInWorld(bolt);
+					this.incinerator.setAttackTarget((EntityLivingBase) null);
+				} else if (this.field_179455_b >= 60
+						&& this.field_179455_b % 20 == 0) {
+					;
+				}
+
+				super.updateTask();
+			}
+		}
 	}
 }
