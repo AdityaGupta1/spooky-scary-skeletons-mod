@@ -27,6 +27,14 @@ public class IncineratorStaff extends GenericStaff {
 		
 		super.onItemRightClick(stack, world, player);
 		
+		if (!player.capabilities.isCreativeMode) {
+			if (!player.inventory.hasItem(Items.blaze_powder)) {
+				return stack;
+			}
+			
+			player.inventory.consumeInventoryItem(Items.blaze_powder);
+		}
+		
 		double yaw = Math.toRadians(player.rotationYaw);
 		double pitch = Math.toRadians(player.rotationPitch);
 		double dx = -Math.sin(yaw);

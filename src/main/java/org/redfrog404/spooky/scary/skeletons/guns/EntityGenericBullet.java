@@ -16,6 +16,12 @@ public class EntityGenericBullet extends EntitySnowball
         super(worldIn, p_i1774_2_);
         this.damage = damage;
     }
+    
+    public EntityGenericBullet(World worldIn, double x, double y, double z, byte damage)
+    {
+        super(worldIn, x, y, z);
+        this.damage = damage;
+    }
 
     /**
      * Called when this EntityThrowable hits a block or entity.

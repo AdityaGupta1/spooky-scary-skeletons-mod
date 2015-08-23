@@ -15,9 +15,8 @@ public class RenderSkeletonCow extends RenderCow {
 	private static final ResourceLocation cowTextures = new ResourceLocation(
 			"spooky:textures/entity/dim8/skeletoncow.png");
 
-	public RenderSkeletonCow(ModelBase p_i46187_2_,
-			float p_i46187_3_) {
-		super(Minecraft.getMinecraft().getRenderManager(), p_i46187_2_, p_i46187_3_);
+	public RenderSkeletonCow() {
+		super(Minecraft.getMinecraft().getRenderManager(), new ModelSkeletonCow(), 0.7F);
 	}
 
 	protected ResourceLocation func_180572_a(EntitySkeletonCow p_180572_1_) {

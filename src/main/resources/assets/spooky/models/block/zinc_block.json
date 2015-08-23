@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube", 
+	"textures": { 
+		"down": "spooky:blocks/zinc_block",
+		"up": "spooky:blocks/zinc_block",
+		"north": "spooky:blocks/zinc_block",
+		"south": "spooky:blocks/zinc_block",
+		"west": "spooky:blocks/zinc_block",
+		"east": "spooky:blocks/zinc_block",
+		"particle": "spooky:blocks/zinc_block"
+	}
+}

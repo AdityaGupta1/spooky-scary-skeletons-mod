@@ -19,12 +19,6 @@ public class FireStaff extends GenericStaff{
 		super(name, Spooky.fire_crystal);
 	}
 	
-	public ItemStack onItemRightClick(ItemStack stack, World world,
-			EntityPlayer player) {
-	 //Do nothing, item consume is done in event handler
-		return stack;
-	}
-	
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn,
 			List tooltip, boolean advanced) {

@@ -128,11 +128,6 @@ public class EntityIncinerator extends EntityMob implements IBossDisplayData {
 				.setBaseValue(12.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth)
 				.setBaseValue(600.0F);
-		this.getAttributeMap()
-				.registerAttribute(reinforcementChance)
-				.setBaseValue(
-						this.rand.nextDouble()
-								* net.minecraftforge.common.ForgeModContainer.zombieSummonBaseChance);
 	}
 
 	protected void entityInit() {
@@ -163,12 +158,7 @@ public class EntityIncinerator extends EntityMob implements IBossDisplayData {
 	public void func_146070_a(boolean p_146070_1_) {
 		if (this.field_146076_bu != p_146070_1_) {
 			this.field_146076_bu = p_146070_1_;
-
-			if (p_146070_1_) {
-				this.tasks.addTask(1, this.breakDoor);
-			} else {
-				this.tasks.removeTask(this.breakDoor);
-			}
+			this.tasks.removeTask(this.breakDoor);
 		}
 	}
 

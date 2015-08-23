@@ -10,7 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -57,16 +57,20 @@ import org.redfrog404.spooky.scary.skeletons.dimensions.DimensionRegistry;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentArrowFast;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentBones;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentPoison;
+import org.redfrog404.spooky.scary.skeletons.entity.EntityFrost;
+import org.redfrog404.spooky.scary.skeletons.entity.EntityFrostBall;
+import org.redfrog404.spooky.scary.skeletons.entity.EntityIceGolem;
 import org.redfrog404.spooky.scary.skeletons.entity.EntityIncinerator;
 import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
+import org.redfrog404.spooky.scary.skeletons.entity.EntityJuggernaut;
 import org.redfrog404.spooky.scary.skeletons.entity.EntityRisenDead;
 import org.redfrog404.spooky.scary.skeletons.entity.EntitySkeletonCow;
-import org.redfrog404.spooky.scary.skeletons.entity.ModelIncinerator;
-import org.redfrog404.spooky.scary.skeletons.entity.ModelJellySkull;
-import org.redfrog404.spooky.scary.skeletons.entity.ModelRisenDead;
-import org.redfrog404.spooky.scary.skeletons.entity.ModelSkeletonCow;
+import org.redfrog404.spooky.scary.skeletons.entity.RenderFrost;
+import org.redfrog404.spooky.scary.skeletons.entity.RenderFrostBall;
+import org.redfrog404.spooky.scary.skeletons.entity.RenderIceGolem;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderIncinerator;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderJellySkull;
+import org.redfrog404.spooky.scary.skeletons.entity.RenderJuggernaut;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderRisenDead;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderSkeletonCow;
 import org.redfrog404.spooky.scary.skeletons.guns.GenericGun;
@@ -145,8 +149,11 @@ public class Spooky {
 			"MOSSARMOR", "spooky:moss_armor", 20, new int[] { 5, 6, 4, 5 }, 18);
 
 	public static ArmorMaterial SLIMEARMOR = EnumHelper.addArmorMaterial(
-			"SLIMEARMOR", "spooky:slime_armor", 27, new int[] { 6, 6, 5, 5 },
+			"SLIMEARMOR", "spooky:slime_armor", 27, new int[] { 5, 6, 4, 5 },
 			14);
+
+	public static ArmorMaterial FIREARMOR = EnumHelper.addArmorMaterial(
+			"FIREARMOR", "spooky:fire_armor", 35, new int[] { 5, 6, 4, 5 }, 18);
 
 	/*
 	 * ========================================================================================================================================================================
@@ -171,6 +178,7 @@ public class Spooky {
 	public static Item bone11;
 	public static Item bone12;
 	public static Item bone_core3;
+	public static Item bone_key2;
 
 	// Blocks
 	public static Block bone_box;
@@ -183,6 +191,10 @@ public class Spooky {
 	public static Block zinc_ore;
 	public static Block purplonium_ore;
 	public static Block fire_block;
+	public static Block zinc_block;
+	public static Block indium_block;
+	public static Block cadmium_block;
+	public static Block purplonium_block;
 
 	// Miscellaneous
 	public static Item spookyscaryskeletons;
@@ -202,6 +214,8 @@ public class Spooky {
 	public static Item bone_ingot;
 	public static Item incinerator_summon;
 	public static Item fire_ingot;
+	public static Item ice_ingot;
+	public static Item ice_charge;
 
 	// Tools and Swords
 	public static Item fire_sword;
@@ -224,7 +238,7 @@ public class Spooky {
 	public static Item radioactive_pickaxe;
 	public static Item radioactive_axe;
 	public static Item radioactive_spade;
-	
+
 	public static Item bc3_sword;
 	public static Item bc3_pickaxe;
 	public static Item bc3_axe;
@@ -241,10 +255,17 @@ public class Spooky {
 	public static Item slime_leggings;
 	public static Item slime_boots;
 
+	public static Item fire_helmet;
+	public static Item fire_chestplate;
+	public static Item fire_leggings;
+	public static Item fire_boots;
+
 	// Bows and Arrows
 	public static GenericBow double_bow;
 	public static GenericBow ender_bow;
 	public static Item ender_arrow;
+	public static GenericBow fire_bow;
+	public static Item fire_arrow;
 
 	// Guns and Bullets
 	public static GenericGun prismarine_pistol;
@@ -252,6 +273,8 @@ public class Spooky {
 	public static GenericGun ender_rifle;
 	public static GenericGun steampunk_gun;
 	public static Item compressed_redstone;
+	public static GenericGun incinerator_gun;
+	public static Item fire_bullet;
 
 	// Staves
 	public static Item incinerator_staff;
@@ -302,7 +325,7 @@ public class Spooky {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 
-		doMiscStuff1();
+		preRegister();
 
 		registerItems();
 
@@ -314,7 +337,7 @@ public class Spooky {
 
 		registerMobs();
 
-		doMiscStuff2();
+		postRegister();
 
 	}
 
@@ -325,6 +348,16 @@ public class Spooky {
 	 */
 
 	private void registerItems() {
+
+		registerBones();
+
+		registerFoodItems();
+
+		registerMiscItems();
+
+	}
+
+	private void registerBones() {
 
 		bone1 = new GenericItem("bone1");
 		registerItem(bone1, "bone1");
@@ -356,23 +389,48 @@ public class Spooky {
 		bone_core2 = new GenericItem("bone_core2");
 		registerItem(bone_core2, "bone_core2");
 
-		guardians_eye = new GenericItem("guardians_eye", misc);
-		registerItem(guardians_eye, "guardians_eye");
-
 		bone_key1 = new GenericItem("bone_key1").setMaxStackSize(1);
 		registerItem(bone_key1, "bone_key1");
 
-		spookyscaryskeletons = new GenericRecord("spookyscaryskeletons");
-		registerItem(spookyscaryskeletons, "spookyscaryskeletons");
+		bone9 = new GenericItem("bone9");
+		registerItem(bone9, "bone9");
+
+		bone10 = new GenericItem("bone10");
+		registerItem(bone10, "bone10");
+
+		bone11 = new GenericItem("bone11");
+		registerItem(bone11, "bone11");
+
+		bone12 = new GenericItem("bone12");
+		registerItem(bone12, "bone12");
+
+		bone_core3 = new GenericItem("bone_core3");
+		registerItem(bone_core3, "bone_core3");
+
+		bone_key2 = new GenericItem("bone_key2").setMaxStackSize(1);
+		registerItem(bone_key2, "bone_key2");
+
+	}
+
+	private void registerFoodItems() {
 
 		bone_marrow = new GenericFoodItem("bone_marrow", 1, 0.3F, true)
 				.setPotionEffect(Potion.hunger.id, 6, 1, 0.25F);
 		registerItem(bone_marrow, "bone_marrow");
-		;
 
 		gray_gel = new GenericFoodItem("gray_gel", 2, 0.7F, false)
 				.setPotionEffect(Potion.jump.id, 15, 0, 0.4F);
 		registerItem(gray_gel, "gray_gel");
+
+	}
+
+	private void registerMiscItems() {
+
+		guardians_eye = new GenericItem("guardians_eye", misc);
+		registerItem(guardians_eye, "guardians_eye");
+
+		spookyscaryskeletons = new GenericRecord("spookyscaryskeletons");
+		registerItem(spookyscaryskeletons, "spookyscaryskeletons");
 
 		cloth = new GenericItem("cloth", misc);
 		registerItem(cloth, "cloth");
@@ -380,14 +438,8 @@ public class Spooky {
 		jade_ingot = new GenericItem("jade_ingot", misc);
 		registerItem(jade_ingot, "jade_ingot");
 
-		bone9 = new GenericItem("bone9");
-		registerItem(bone9, "bone9");
-
 		canopic_jar = new GenericItem("canopic_jar", misc);
 		registerItem(canopic_jar, "canopic_jar");
-
-		bone10 = new GenericItem("bone10");
-		registerItem(bone10, "bone10");
 
 		indium_ingot = new GenericItem("indium_ingot", misc);
 		registerItem(indium_ingot, "indium_ingot");
@@ -404,30 +456,28 @@ public class Spooky {
 		purplonium_ingot = new GenericItem("purplonium_ingot", misc);
 		registerItem(purplonium_ingot, "purplonium_ingot");
 
-		bone11 = new GenericItem("bone11");
-		registerItem(bone11, "bone11");
-
-		bone12 = new GenericItem("bone12");
-		registerItem(bone12, "bone12");
-		
 		fire_crystal = new GenericItem("fire_crystal", misc);
 		registerItem(fire_crystal, "fire_crystal");
 
 		fire_amulet = new GenericItem("fire_amulet", misc).setMaxStackSize(1);
 		registerItem(fire_amulet, "fire_amulet");
-		
+
 		bone_ingot = new GenericItem("bone_ingot", misc);
 		registerItem(bone_ingot, "bone_ingot");
-		
-		incinerator_summon = new GenericItem("incinerator_summon", misc).setMaxStackSize(1);
+
+		incinerator_summon = new GenericItem("incinerator_summon", misc)
+				.setMaxStackSize(1);
 		registerItem(incinerator_summon, "incinerator_summon");
-		
+
 		fire_ingot = new GenericItem("fire_ingot", misc);
 		registerItem(fire_ingot, "fire_ingot");
-		
-		bone_core3 = new GenericItem("bone_core3");
-		registerItem(bone_core3, "bone_core3");
 
+		ice_ingot = new GenericItem("ice_ingot", misc);
+		registerItem(ice_ingot, "ice_ingot");
+
+		ice_charge = new GenericItem("ice_charge", misc);
+		registerItem(ice_charge, "ice_charge");
+		
 	}
 
 	private void registerItem(Item item, String name) {
@@ -478,10 +528,26 @@ public class Spooky {
 		purplonium_ore = new GenericBlock("purplonium_ore", Material.rock, 20,
 				40, "pickaxe", 4, Block.soundTypePiston);
 		registerBlock(purplonium_ore, "purplonium_ore");
-		
-		fire_block = new GenericBlock("fire_block", Material.rock, 50,
-				100, "pickaxe", 5, Block.soundTypeMetal);
+
+		fire_block = new GenericBlock("fire_block", Material.rock, 50, 100,
+				"pickaxe", 5, Block.soundTypeMetal);
 		registerBlock(fire_block, "fire_block");
+
+		purplonium_block = new GenericBlock("purplonium_block", Material.rock,
+				15, 30, "pickaxe", 4, Block.soundTypeMetal);
+		registerBlock(purplonium_block, "purplonium_block");
+
+		indium_block = new GenericBlock("indium_block", Material.rock, 15, 30,
+				"pickaxe", 4, Block.soundTypeMetal);
+		registerBlock(indium_block, "indium_block");
+
+		cadmium_block = new GenericBlock("cadmium_block", Material.rock, 15,
+				30, "pickaxe", 4, Block.soundTypeMetal);
+		registerBlock(cadmium_block, "cadmium_block");
+
+		zinc_block = new GenericBlock("zinc_block", Material.rock, 15, 30,
+				"pickaxe", 4, Block.soundTypeMetal);
+		registerBlock(zinc_block, "zinc_block");
 	}
 
 	private void registerBlock(Block block, String name) {
@@ -497,11 +563,16 @@ public class Spooky {
 	 */
 
 	private void registerSwordsToolsAndArmor() {
-		fire_sword = new GenericSword("fire_sword", HELL);
-		registerItem(fire_sword, "fire_sword");
 
-		vorpal_sword = new GenericSword("vorpal_sword", ENDER);
-		registerItem(vorpal_sword, "vorpal_sword");
+		registerInfusedTools();
+
+		registerArmor();
+
+		registerMiscTools();
+
+	}
+
+	private void registerInfusedTools() {
 
 		bc1_sword = new GenericSword("bc1_sword", BC1);
 		registerItem(bc1_sword, "bc1_sword");
@@ -515,9 +586,6 @@ public class Spooky {
 		bc1_spade = new GenericSpade("bc1_spade", BC1);
 		registerItem(bc1_spade, "bc1_spade");
 
-		moss_sword = new GenericSword("moss_sword", MOSS);
-		registerItem(moss_sword, "moss_sword");
-
 		bc2_sword = new GenericSword("bc2_sword", BC2);
 		registerItem(bc2_sword, "bc2_sword");
 
@@ -530,18 +598,21 @@ public class Spooky {
 		bc2_spade = new GenericSpade("bc2_spade", BC2);
 		registerItem(bc2_spade, "bc2_spade");
 
-		radioactive_sword = new GenericSword("radioactive_sword", RADIOACTIVE);
-		registerItem(radioactive_sword, "radioactive_sword");
+		bc3_sword = new GenericSword("bc3_sword", BC3);
+		registerItem(bc3_sword, "bc3_sword");
 
-		radioactive_pickaxe = new GenericPickaxe("radioactive_pickaxe",
-				RADIOACTIVE);
-		registerItem(radioactive_pickaxe, "radioactive_pickaxe");
+		bc3_pickaxe = new GenericPickaxe("bc3_pickaxe", BC3);
+		registerItem(bc3_pickaxe, "bc3_pickaxe");
 
-		radioactive_axe = new GenericAxe("radioactive_axe", RADIOACTIVE);
-		registerItem(radioactive_axe, "radioactive_axe");
+		bc3_axe = new GenericAxe("bc3_axe", BC3);
+		registerItem(bc3_axe, "bc3_axe");
 
-		radioactive_spade = new GenericSpade("radioactive_spade", RADIOACTIVE);
-		registerItem(radioactive_spade, "radioactive_spade");
+		bc3_spade = new GenericSpade("bc3_spade", BC3);
+		registerItem(bc3_spade, "bc3_spade");
+
+	}
+
+	private void registerArmor() {
 
 		moss_helmet = new GenericArmor("moss_helmet", MOSSARMOR, 1, 0, "moss");
 		registerItem(moss_helmet, "moss_helmet");
@@ -571,56 +642,66 @@ public class Spooky {
 
 		slime_boots = new GenericArmor("slime_boots", SLIMEARMOR, 1, 3, "slime");
 		registerItem(slime_boots, "slime_boots");
-		
-		bc3_sword = new GenericSword("bc3_sword", BC3);
-		registerItem(bc3_sword, "bc3_sword");
 
-		bc3_pickaxe = new GenericPickaxe("bc3_pickaxe", BC3);
-		registerItem(bc3_pickaxe, "bc3_pickaxe");
+		fire_helmet = new GenericArmor("fire_helmet", FIREARMOR, 1, 0, "fire");
+		registerItem(fire_helmet, "fire_helmet");
 
-		bc3_axe = new GenericAxe("bc3_axe", BC3);
-		registerItem(bc3_axe, "bc3_axe");
+		fire_chestplate = new GenericArmor("fire_chestplate", FIREARMOR, 1, 1,
+				"fire");
+		registerItem(fire_chestplate, "fire_chestplate");
 
-		bc3_spade = new GenericSpade("bc3_spade", BC3);
-		registerItem(bc3_spade, "bc3_spade");
+		fire_leggings = new GenericArmor("fire_leggings", FIREARMOR, 2, 2,
+				"fire");
+		registerItem(fire_leggings, "fire_leggings");
+
+		fire_boots = new GenericArmor("fire_boots", FIREARMOR, 1, 3, "fire");
+		registerItem(fire_boots, "fire_boots");
+
+	}
+
+	private void registerMiscTools() {
+
+		fire_sword = new GenericSword("fire_sword", HELL);
+		registerItem(fire_sword, "fire_sword");
+
+		vorpal_sword = new GenericSword("vorpal_sword", ENDER);
+		registerItem(vorpal_sword, "vorpal_sword");
+
+		moss_sword = new GenericSword("moss_sword", MOSS);
+		registerItem(moss_sword, "moss_sword");
+
+		radioactive_sword = new GenericSword("radioactive_sword", RADIOACTIVE);
+		registerItem(radioactive_sword, "radioactive_sword");
+
+		radioactive_pickaxe = new GenericPickaxe("radioactive_pickaxe",
+				RADIOACTIVE);
+		registerItem(radioactive_pickaxe, "radioactive_pickaxe");
+
+		radioactive_axe = new GenericAxe("radioactive_axe", RADIOACTIVE);
+		registerItem(radioactive_axe, "radioactive_axe");
+
+		radioactive_spade = new GenericSpade("radioactive_spade", RADIOACTIVE);
+		registerItem(radioactive_spade, "radioactive_spade");
 
 	}
 
 	/*
 	 * ========================================================================================================================================================================
-	 * Bows and Guns
+	 * Bows, Guns, and Staves
 	 * ========================================================================================================================================================================
 	 */
 
 	private void registerBowsGunsAndStaves(FMLInitializationEvent event) {
-		prismarine_pistol = new GenericGun("prismarine_pistol", 1234,
-				Items.prismarine_shard, (byte) 6);
-		registerItem(prismarine_pistol, "prismarine_pistol");
 
-		fire_gun = new GenericGun("fire_gun", 666, Items.fire_charge, (byte) 9);
-		registerItem(fire_gun, "fire_gun");
+		registerBowsAndArrows(event);
 
-		ender_rifle = new GenericGun("ender_rifle", 888, Items.ender_pearl,
-				(byte) 11);
-		registerItem(ender_rifle, "ender_rifle");
+		registerGuns();
 
-		double_bow = new GenericBow(double_bow, "double_bow", 512, Items.arrow,
-				1.0D, 2);
-		registerItem(double_bow, "double_bow");
+		registerStaves();
 
-		if (event.getSide().isClient()) {
-			ModelBakery.addVariantName(double_bow, new String[] {
-					"spooky:double_bow", "spooky:double_bow_0",
-					"spooky:double_bow_1", "spooky:double_bow_2" });
-			mesher.register(double_bow, 0, new ModelResourceLocation(
-					"spooky:double_bow", "inventory"));
-			mesher.register(double_bow, 1, new ModelResourceLocation(
-					"spooky:double_bow_0", "inventory"));
-			mesher.register(double_bow, 2, new ModelResourceLocation(
-					"spooky:double_bow_1", "inventory"));
-			mesher.register(double_bow, 3, new ModelResourceLocation(
-					"spooky:double_bow_2", "inventory"));
-		}
+	}
+
+	private void registerBowsAndArrows(FMLInitializationEvent event) {
 
 		ender_arrow = new GenericItem("ender_arrow", bows);
 
@@ -644,6 +725,59 @@ public class Spooky {
 					"spooky:ender_bow_2", "inventory"));
 		}
 
+		double_bow = new GenericBow(double_bow, "double_bow", 512, Items.arrow,
+				1.0D, 2);
+		registerItem(double_bow, "double_bow");
+
+		if (event.getSide().isClient()) {
+			ModelBakery.addVariantName(double_bow, new String[] {
+					"spooky:double_bow", "spooky:double_bow_0",
+					"spooky:double_bow_1", "spooky:double_bow_2" });
+			mesher.register(double_bow, 0, new ModelResourceLocation(
+					"spooky:double_bow", "inventory"));
+			mesher.register(double_bow, 1, new ModelResourceLocation(
+					"spooky:double_bow_0", "inventory"));
+			mesher.register(double_bow, 2, new ModelResourceLocation(
+					"spooky:double_bow_1", "inventory"));
+			mesher.register(double_bow, 3, new ModelResourceLocation(
+					"spooky:double_bow_2", "inventory"));
+		}
+
+		fire_arrow = new GenericItem("fire_arrow", bows);
+
+		fire_bow = new GenericBow(fire_bow, "fire_bow", 1500, fire_arrow, 4.0D);
+		registerItem(fire_bow, "fire_bow");
+
+		registerItem(fire_arrow, "fire_arrow");
+
+		if (event.getSide().isClient()) {
+			ModelBakery.addVariantName(fire_bow, new String[] {
+					"spooky:fire_bow", "spooky:fire_bow_0",
+					"spooky:fire_bow_1", "spooky:fire_bow_2" });
+			mesher.register(fire_bow, 0, new ModelResourceLocation(
+					"spooky:fire_bow", "inventory"));
+			mesher.register(fire_bow, 1, new ModelResourceLocation(
+					"spooky:fire_bow_0", "inventory"));
+			mesher.register(fire_bow, 2, new ModelResourceLocation(
+					"spooky:fire_bow_1", "inventory"));
+			mesher.register(fire_bow, 3, new ModelResourceLocation(
+					"spooky:fire_bow_2", "inventory"));
+		}
+
+	}
+
+	private void registerGuns() {
+		prismarine_pistol = new GenericGun("prismarine_pistol", 1234,
+				Items.prismarine_shard, (byte) 6);
+		registerItem(prismarine_pistol, "prismarine_pistol");
+
+		fire_gun = new GenericGun("fire_gun", 666, Items.fire_charge, (byte) 9);
+		registerItem(fire_gun, "fire_gun");
+
+		ender_rifle = new GenericGun("ender_rifle", 888, Items.ender_pearl,
+				(byte) 11);
+		registerItem(ender_rifle, "ender_rifle");
+
 		compressed_redstone = new GenericItem("compressed_redstone", guns);
 
 		steampunk_gun = new GenericGun("steampunk_gun", 1280,
@@ -652,11 +786,23 @@ public class Spooky {
 
 		registerItem(compressed_redstone, "compressed_redstone");
 
+		fire_bullet = new GenericItem("fire_bullet", guns);
+
+		incinerator_gun = new GenericGun("incinerator_gun", 1500, fire_bullet,
+				(byte) 14);
+		registerItem(incinerator_gun, "incinerator_gun");
+
+		registerItem(fire_bullet, "fire_bullet");
+	}
+
+	private void registerStaves() {
+
 		incinerator_staff = new IncineratorStaff("incinerator_staff");
 		registerItem(incinerator_staff, "incinerator_staff");
-		
+
 		fire_staff = new FireStaff("fire_staff");
 		registerItem(fire_staff, "fire_staff");
+
 	}
 
 	/*
@@ -666,11 +812,26 @@ public class Spooky {
 	 */
 
 	private void addRecipes() {
+
+		addBoneRecipes();
+
+		addIngotAndMineralRecipes();
+
+		addInfusedSwordsAndToolsRecipes();
+
+		addToolAndSwordRecipes();
+
+		addArmorRecipes();
+
+		addBowsGunsAndStavesRecipes();
+
+		addMiscRecipes();
+
+	}
+
+	private void addBoneRecipes() {
 		GameRegistry.addRecipe(new ItemStack(bone1), "ggg", "gbg", "ggg", 'g',
 				Items.gold_nugget, 'b', Items.bone);
-
-		GameRegistry.addRecipe(new ItemStack(Items.golden_sword), "b", "b",
-				"s", 'b', bone1, 's', Items.stick);
 
 		GameRegistry.addRecipe(new ItemStack(bone2), "rer", "rbr", "rdr", 'r',
 				Items.redstone, 'e', Items.emerald, 'd', Items.diamond, 'b',
@@ -692,34 +853,6 @@ public class Spooky {
 						Blocks.coal_block), new ItemStack(Blocks.coal_block),
 				new ItemStack(Blocks.coal_block), new ItemStack(
 						Blocks.coal_block), new ItemStack(Blocks.coal_block));
-
-		GameRegistry.addRecipe(new ItemStack(Blocks.beacon), "ggg", "gcg",
-				"eee", 'g', Blocks.glass, 'e', Blocks.end_stone, 'c',
-				bone_core1);
-
-		GameRegistry.addRecipe(new ItemStack(fire_sword), "b", "b", "s", 'b',
-				bone3, 's', Items.blaze_rod);
-
-		GameRegistry.addRecipe(new ItemStack(vorpal_sword), "b", "b", "B", 'b',
-				bone4, 'B', bone3);
-
-		GameRegistry.addRecipe(new ItemStack(bc1_sword), "c", "c", "b", 'b',
-				bone4, 'c', bone_core1);
-
-		GameRegistry.addRecipe(new ItemStack(bc1_pickaxe), "ccc", " b ", " b ",
-				'b', bone4, 'c', bone_core1);
-
-		GameRegistry.addRecipe(new ItemStack(bc1_axe), "cc", "cb", " b", 'b',
-				bone4, 'c', bone_core1);
-
-		GameRegistry.addRecipe(new ItemStack(bc1_axe), "cc", "bc", "b ", 'b',
-				bone4, 'c', bone_core1);
-
-		GameRegistry.addRecipe(new ItemStack(bc1_spade), "c", "b", "b", 'b',
-				bone4, 'c', bone_core1);
-
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.bone, 32),
-				new ItemStack(bone_box));
 
 		GameRegistry.addRecipe(new ItemStack(bone5), "ttt", "tbt", "ttt", 'b',
 				bone_box, 't', Blocks.tnt);
@@ -748,8 +881,113 @@ public class Spooky {
 						Blocks.redstone_block), new ItemStack(
 						Blocks.redstone_block));
 
-		GameRegistry.addRecipe(new ItemStack(moss_sword), "b", "b", "s", 's',
-				Items.stick, 'b', bone6);
+		GameRegistry.addRecipe(new ItemStack(bone_key1), "bb ", " b ", "cbc",
+				'b', bone8, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(bone_key1), " bb", " b ", "cbc",
+				'b', bone8, 'c', bone_core2);
+
+		GameRegistry.addRecipe(new ItemStack(bone9), "bbb", "bjb", "bbb", 'j',
+				jade_ingot, 'b', Items.bone);
+
+		GameRegistry.addRecipe(new ItemStack(bone10), "oeo", "ebe", "oeo", 'o',
+				canopic_jar, 'e', cloth, 'b', bone2);
+
+		GameRegistry.addRecipe(new ItemStack(bone10), "eoe", "obo", "eoe", 'o',
+				canopic_jar, 'e', cloth, 'b', bone2);
+
+		GameRegistry.addRecipe(new ItemStack(bone11), "ggg", "gbg", "ggg", 'g',
+				gray_gel, 'b', bone_box);
+
+		GameRegistry.addRecipe(new ItemStack(bone12), "ici", "ici", "ici", 'i',
+				indium_ingot, 'c', cadmium_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(bone_core3),
+				new ItemStack(bone9), new ItemStack(bone10), new ItemStack(
+						bone11), new ItemStack(bone12), new ItemStack(
+						Blocks.iron_block), new ItemStack(Blocks.iron_block),
+				new ItemStack(Blocks.iron_block), new ItemStack(
+						Blocks.iron_block), new ItemStack(Blocks.iron_block));
+
+		GameRegistry.addRecipe(new ItemStack(bone_key1), "bb ", " b ", "cbc",
+				'b', bone12, 'c', bone_core3);
+
+		GameRegistry.addRecipe(new ItemStack(bone_key1), " bb", " b ", "cbc",
+				'b', bone12, 'c', bone_core3);
+
+	}
+
+	private void addIngotAndMineralRecipes() {
+
+		GameRegistry.addSmelting(jade_ore, new ItemStack(jade_ingot, 1), 0.3F);
+
+		GameRegistry.addRecipe(new ItemStack(zinc_block), "jjj", "jjj", "jjj",
+				'j', zinc_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(zinc_ingot, 9),
+				new ItemStack(zinc_block));
+
+		GameRegistry.addRecipe(new ItemStack(cadmium_block), "jjj", "jjj",
+				"jjj", 'j', cadmium_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(cadmium_ingot, 9),
+				new ItemStack(cadmium_block));
+
+		GameRegistry.addRecipe(new ItemStack(indium_block), "jjj", "jjj",
+				"jjj", 'j', indium_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(indium_ingot, 9),
+				new ItemStack(indium_block));
+
+		GameRegistry.addRecipe(new ItemStack(purplonium_block), "jjj", "jjj",
+				"jjj", 'j', purplonium_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(purplonium_ingot, 9),
+				new ItemStack(purplonium_block));
+
+		GameRegistry.addSmelting(dim8_ore, new ItemStack(bone_ingot, 1), 0.3F);
+
+		GameRegistry.addRecipe(new ItemStack(fire_block), "ff", "ff", 'f',
+				fire_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(fire_ingot, 4),
+				new ItemStack(fire_block));
+
+		GameRegistry.addSmelting(indium_ore, new ItemStack(indium_ingot, 1),
+				0.3F);
+
+		GameRegistry.addSmelting(zinc_ore, new ItemStack(zinc_ingot, 1), 0.3F);
+
+		GameRegistry.addSmelting(purplonium_ore, new ItemStack(
+				purplonium_ingot, 1), 0.3F);
+
+		GameRegistry.addSmelting(cadmium_dust, new ItemStack(cadmium_ingot, 1),
+				0.1F);
+
+		GameRegistry.addRecipe(new ItemStack(jade_block), "jjj", "jjj", "jjj",
+				'j', jade_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(jade_ingot, 9),
+				new ItemStack(jade_block));
+
+	}
+
+	private void addInfusedSwordsAndToolsRecipes() {
+
+		GameRegistry.addRecipe(new ItemStack(bc1_sword), "c", "c", "b", 'b',
+				bone4, 'c', bone_core1);
+
+		GameRegistry.addRecipe(new ItemStack(bc1_pickaxe), "ccc", " b ", " b ",
+				'b', bone4, 'c', bone_core1);
+
+		GameRegistry.addRecipe(new ItemStack(bc1_axe), "cc", "cb", " b", 'b',
+				bone4, 'c', bone_core1);
+
+		GameRegistry.addRecipe(new ItemStack(bc1_axe), "cc", "bc", "b ", 'b',
+				bone4, 'c', bone_core1);
+
+		GameRegistry.addRecipe(new ItemStack(bc1_spade), "c", "b", "b", 'b',
+				bone4, 'c', bone_core1);
 
 		GameRegistry.addRecipe(new ItemStack(bc2_sword), "c", "c", "b", 'b',
 				bone8, 'c', bone_core2);
@@ -766,11 +1004,55 @@ public class Spooky {
 		GameRegistry.addRecipe(new ItemStack(bc2_spade), "c", "b", "b", 'b',
 				bone8, 'c', bone_core2);
 
-		GameRegistry.addRecipe(new ItemStack(bone_key1), "bb ", " b ", "cbc",
-				'b', bone8, 'c', bone_core2);
+		GameRegistry.addRecipe(new ItemStack(bc3_sword), "c", "c", "b", 'b',
+				bone12, 'c', bone_core3);
 
-		GameRegistry.addRecipe(new ItemStack(bone_key1), " bb", " b ", "cbc",
-				'b', bone8, 'c', bone_core2);
+		GameRegistry.addRecipe(new ItemStack(bc3_pickaxe), "ccc", " b ", " b ",
+				'b', bone12, 'c', bone_core3);
+
+		GameRegistry.addRecipe(new ItemStack(bc3_axe), "cc", "cb", " b", 'b',
+				bone12, 'c', bone_core3);
+
+		GameRegistry.addRecipe(new ItemStack(bc3_axe), "cc", "bc", "b ", 'b',
+				bone12, 'c', bone_core3);
+
+		GameRegistry.addRecipe(new ItemStack(bc3_spade), "c", "b", "b", 'b',
+				bone12, 'c', bone_core3);
+
+	}
+
+	private void addToolAndSwordRecipes() {
+
+		GameRegistry.addRecipe(new ItemStack(Items.golden_sword), "b", "b",
+				"s", 'b', bone1, 's', Items.stick);
+
+		GameRegistry.addRecipe(new ItemStack(fire_sword), "b", "b", "s", 'b',
+				bone3, 's', Items.blaze_rod);
+
+		GameRegistry.addRecipe(new ItemStack(vorpal_sword), "b", "b", "B", 'b',
+				bone4, 'B', bone3);
+
+		GameRegistry.addRecipe(new ItemStack(moss_sword), "b", "b", "s", 's',
+				Items.stick, 'b', bone6);
+
+		GameRegistry.addRecipe(new ItemStack(radioactive_sword), "c", "c", "b",
+				'b', bone12, 'c', purplonium_ingot);
+
+		GameRegistry.addRecipe(new ItemStack(radioactive_pickaxe), "ccc",
+				" b ", " b ", 'b', bone12, 'c', purplonium_ingot);
+
+		GameRegistry.addRecipe(new ItemStack(radioactive_axe), "cc", "cb",
+				" b", 'b', bone12, 'c', purplonium_ingot);
+
+		GameRegistry.addRecipe(new ItemStack(radioactive_axe), "cc", "bc",
+				"b ", 'b', bone12, 'c', purplonium_ingot);
+
+		GameRegistry.addRecipe(new ItemStack(radioactive_spade), "c", "b", "b",
+				'b', bone12, 'c', purplonium_ingot);
+
+	}
+
+	private void addArmorRecipes() {
 
 		GameRegistry.addRecipe(new ItemStack(moss_helmet), "bcb", "b b", 'b',
 				bone6, 'c', bone_core2);
@@ -795,6 +1077,76 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(slime_boots), "c c", "b b", 'b',
 				gray_gel, 'c', bone_core3);
+
+		GameRegistry.addRecipe(new ItemStack(fire_helmet), "bcb", "b b", 'b',
+				fire_ingot, 'c', fire_crystal);
+
+		GameRegistry.addRecipe(new ItemStack(fire_chestplate), "c c", "bcb",
+				"bbb", 'b', fire_ingot, 'c', fire_crystal);
+
+		GameRegistry.addRecipe(new ItemStack(fire_leggings), "bcb", "b b",
+				"b b", 'b', fire_ingot, 'c', fire_crystal);
+
+		GameRegistry.addRecipe(new ItemStack(fire_boots), "c c", "b b", 'b',
+				fire_ingot, 'c', fire_crystal);
+
+	}
+
+	private void addBowsGunsAndStavesRecipes() {
+
+		GameRegistry.addRecipe(new ItemStack(prismarine_pistol), "epp", "  d",
+				'e', guardians_eye, 'p', Items.prismarine_shard, 'd',
+				Items.diamond);
+
+		GameRegistry.addRecipe(new ItemStack(ender_rifle), "eoo", " bb", 'e',
+				Items.ender_eye, 'o', Blocks.end_stone, 'b', bone4);
+
+		GameRegistry.addSmelting(bone4, new ItemStack(Items.ender_pearl, 6),
+				0.1F);
+
+		GameRegistry.addRecipe(new ItemStack(fire_gun), "pnn", " bb", 'p',
+				Items.blaze_powder, 'n', Blocks.netherrack, 'b', bone3);
+
+		GameRegistry.addRecipe(new ItemStack(ender_bow), "b b", " B ", "b b",
+				'b', bone4, 'B', Items.bow);
+
+		GameRegistry.addRecipe(new ItemStack(ender_bow), " b ", "bBb", " b ",
+				'b', bone4, 'B', Items.bow);
+
+		GameRegistry.addRecipe(new ItemStack(ender_arrow, 48), "o", "b", "f",
+				'b', bone4, 'o', Blocks.obsidian, 'f', Items.feather);
+
+		GameRegistry.addRecipe(new ItemStack(compressed_redstone, 16), "rrr",
+				"rRr", "rrr", 'r', Items.redstone, 'R', Blocks.redstone_block);
+
+		GameRegistry.addRecipe(new ItemStack(steampunk_gun), "hpr", " tr",
+				"  t", 'r', Items.redstone, 'p', Blocks.piston, 'h',
+				Blocks.hopper, 't', Blocks.redstone_torch);
+
+		GameRegistry.addRecipe(new ItemStack(double_bow), "aba", "aea", "aba",
+				'a', Items.arrow, 'b', Items.bow, 'e', Items.ender_eye);
+
+		GameRegistry.addRecipe(new ItemStack(incinerator_summon), "c", "i",
+				"i", 'c', bone_core2, 'i', bone_ingot);
+
+		GameRegistry.addRecipe(new ItemStack(fire_bow), "iii", "ibi", "iii",
+				'b', ender_bow, 'i', fire_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(fire_arrow, 8),
+				new ItemStack(Items.arrow), new ItemStack(Items.blaze_powder));
+
+		GameRegistry.addShapelessRecipe(new ItemStack(fire_bullet, 8),
+				new ItemStack(fire_ingot));
+
+		GameRegistry.addRecipe(new ItemStack(incinerator_gun), "eoo", " bb",
+				'e', bone3, 'o', fire_ingot, 'b', fire_crystal);
+
+	}
+
+	private void addMiscRecipes() {
+
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.bone, 32),
+				new ItemStack(bone_box));
 
 		ItemStack spooky_book = new ItemStack(Items.writable_book);
 		NBTTagList bookPages = new NBTTagList();
@@ -821,35 +1173,6 @@ public class Spooky {
 				new ItemStack(Items.prismarine_shard, 8), new ItemStack(
 						Blocks.prismarine, 1, 2));
 
-		GameRegistry.addRecipe(new ItemStack(prismarine_pistol), "epp", "  d",
-				'e', guardians_eye, 'p', Items.prismarine_shard, 'd',
-				Items.diamond);
-
-		GameRegistry.addRecipe(new ItemStack(ender_rifle), "eoo", " bb", 'e',
-				Items.ender_eye, 'o', Blocks.end_stone, 'b', bone4);
-
-		GameRegistry.addSmelting(bone4, new ItemStack(Items.ender_pearl, 6),
-				0.1F);
-
-		GameRegistry.addRecipe(new ItemStack(fire_gun), "pnn", " bb", 'p',
-				Items.blaze_powder, 'n', Blocks.netherrack, 'b', bone3);
-
-		GameRegistry.addRecipe(new ItemStack(ender_bow), "b b", " B ", "b b",
-				'b', bone4, 'B', Items.bow);
-
-		GameRegistry.addRecipe(new ItemStack(ender_arrow, 48), "o", "b", "f",
-				'b', bone4, 'o', Blocks.obsidian, 'f', Items.feather);
-
-		GameRegistry.addRecipe(new ItemStack(compressed_redstone, 16), "rrr",
-				"rRr", "rrr", 'r', Items.redstone, 'R', Blocks.redstone_block);
-
-		GameRegistry.addRecipe(new ItemStack(steampunk_gun), "hpr", " tr",
-				"  t", 'r', Items.redstone, 'p', Blocks.piston, 'h',
-				Blocks.hopper, 't', Blocks.redstone_torch);
-
-		GameRegistry.addRecipe(new ItemStack(double_bow), "aba", "aea", "aba",
-				'a', Items.arrow, 'b', Items.bow, 'e', Items.ender_eye);
-
 		GameRegistry.addRecipe(new ItemStack(bone_marrow, 16), "bbb", "bBb",
 				"bbb", 'B', Items.bone, 'b', new ItemStack(Items.dye, 1, 15));
 
@@ -870,85 +1193,9 @@ public class Spooky {
 				"cbc", "tct", 'b', bone_box, 'c', Items.record_cat, 't',
 				Items.record_13);
 
-		GameRegistry.addSmelting(jade_ore, new ItemStack(jade_ingot, 1), 0.3F);
-
-		GameRegistry.addRecipe(new ItemStack(bone9), "bbb", "bjb", "bbb", 'j',
-				jade_ingot, 'b', Items.bone);
-
 		GameRegistry.addRecipe(new ItemStack(canopic_jar), " i ", "g g", "gGg",
 				'g', Blocks.glass_pane, 'G', Items.gold_ingot, 'i',
 				Items.iron_ingot);
-
-		GameRegistry.addRecipe(new ItemStack(bone10), "oeo", "ebe", "oeo", 'o',
-				canopic_jar, 'e', cloth, 'b', bone2);
-
-		GameRegistry.addRecipe(new ItemStack(bone10), "eoe", "obo", "eoe", 'o',
-				canopic_jar, 'e', cloth, 'b', bone2);
-
-		GameRegistry.addSmelting(indium_ore, new ItemStack(indium_ingot, 1),
-				0.3F);
-
-		GameRegistry.addSmelting(zinc_ore, new ItemStack(zinc_ingot, 1), 0.3F);
-
-		GameRegistry.addSmelting(purplonium_ore, new ItemStack(
-				purplonium_ingot, 1), 0.3F);
-
-		GameRegistry.addSmelting(cadmium_dust, new ItemStack(cadmium_ingot, 1),
-				0.1F);
-
-		GameRegistry.addRecipe(new ItemStack(jade_block), "jjj", "jjj", "jjj",
-				'j', jade_ingot);
-
-		GameRegistry.addShapelessRecipe(new ItemStack(jade_ingot, 9),
-				new ItemStack(jade_block));
-
-		GameRegistry.addRecipe(new ItemStack(bone11), "ggg", "gbg", "ggg", 'g',
-				gray_gel, 'b', bone_box);
-
-		GameRegistry.addRecipe(new ItemStack(bone12), "ici", "ici", "ici", 'i',
-				indium_ingot, 'c', cadmium_ingot);
-
-		GameRegistry.addRecipe(new ItemStack(radioactive_sword), "c", "c", "b",
-				'b', bone12, 'c', purplonium_ingot);
-
-		GameRegistry.addRecipe(new ItemStack(radioactive_pickaxe), "ccc",
-				" b ", " b ", 'b', bone12, 'c', purplonium_ingot);
-
-		GameRegistry.addRecipe(new ItemStack(radioactive_axe), "cc", "cb",
-				" b", 'b', bone12, 'c', purplonium_ingot);
-
-		GameRegistry.addRecipe(new ItemStack(radioactive_axe), "cc", "bc",
-				"b ", 'b', bone12, 'c', purplonium_ingot);
-
-		GameRegistry.addRecipe(new ItemStack(radioactive_spade), "c", "b", "b",
-				'b', bone12, 'c', purplonium_ingot);
-
-		GameRegistry.addSmelting(dim8_ore, new ItemStack(bone_ingot, 1),
-				0.3F);
-		
-		GameRegistry.addRecipe(new ItemStack(incinerator_summon), "c", "i", "i",
-				'c', bone_core2, 'i', bone_ingot);
-		
-		GameRegistry.addRecipe(new ItemStack(fire_block), "ff", "ff",
-				'f', fire_ingot);
-
-		GameRegistry.addShapelessRecipe(new ItemStack(fire_ingot, 4),
-				new ItemStack(fire_block));
-		
-		GameRegistry.addRecipe(new ItemStack(bc3_sword), "c", "c", "b", 'b',
-				bone12, 'c', bone_core3);
-
-		GameRegistry.addRecipe(new ItemStack(bc3_pickaxe), "ccc", " b ", " b ",
-				'b', bone12, 'c', bone_core3);
-
-		GameRegistry.addRecipe(new ItemStack(bc3_axe), "cc", "cb", " b", 'b',
-				bone12, 'c', bone_core3);
-
-		GameRegistry.addRecipe(new ItemStack(bc3_axe), "cc", "bc", "b ", 'b',
-				bone12, 'c', bone_core3);
-
-		GameRegistry.addRecipe(new ItemStack(bc3_spade), "c", "b", "b", 'b',
-				bone12, 'c', bone_core3);
 
 	}
 
@@ -959,36 +1206,53 @@ public class Spooky {
 	 */
 
 	private void registerMobs() {
+		
+		registerSpawnEggMobs();
+		
+		registerNoSpawnEggMobs();
+		
+	}
+	
+	private void registerSpawnEggMobs(){
+		registerModEntity(EntitySkeletonCow.class, new RenderSkeletonCow(),
+				"skeletoncow", EntityRegistry.findGlobalUniqueEntityId(),
+				0xEBEBD5, 0xC9C9A7);
 
-		registerModEntity(EntitySkeletonCow.class, new RenderSkeletonCow(
-				new ModelSkeletonCow(), 0.7F), "skeletoncow",
-				EntityRegistry.findGlobalUniqueEntityId(), 0xEBEBD5, 0xC9C9A7);
+		registerModEntity(EntityJellySkull.class, new RenderJellySkull(),
+				"jellyskull", EntityRegistry.findGlobalUniqueEntityId(),
+				0xC9CCBC, 0xE7F2AC);
 
-		registerModEntity(EntityJellySkull.class, new RenderJellySkull(
-				new ModelJellySkull(16), 0.7F), "jellyskull",
-				EntityRegistry.findGlobalUniqueEntityId(), 0xC9CCBC, 0xE7F2AC);
-
-		registerModEntity(EntityRisenDead.class, new RenderRisenDead(
-				new ModelRisenDead(), 0.5F), "risen_dead",
-				EntityRegistry.findGlobalUniqueEntityId(), 0xF0DD51, 0xF01D1D);
+		registerModEntity(EntityRisenDead.class, new RenderRisenDead(),
+				"risen_dead", EntityRegistry.findGlobalUniqueEntityId(),
+				0xF0DD51, 0xF01D1D);
 
 		EntityRegistry.addSpawn(EntityRisenDead.class, 100, 1, 2,
 				EnumCreatureType.MONSTER, BiomeGenBase.jungle,
 				BiomeGenBase.plains, BiomeGenBase.desert,
 				BiomeGenBase.extremeHills);
+		
+		registerModEntity(EntityIncinerator.class, new RenderIncinerator(),
+				"incinerator", EntityRegistry.findGlobalUniqueEntityId(),
+				0xE31B1B, 0xC51BE3);
 
-		registerModEntity(EntityIncinerator.class, new RenderIncinerator(
-				new ModelIncinerator(), 0.5F), "incinerator",
+		registerModEntity(EntityIceGolem.class, new RenderIceGolem(),
+				"ice_golem", EntityRegistry.findGlobalUniqueEntityId(),
+				0x6FBCD6, 0xA8DCED);
+
+		registerModEntity(EntityFrost.class, new RenderFrost(), "frost",
+				EntityRegistry.findGlobalUniqueEntityId(), 0x007BFF, 0x48CBF7);
+		
+		registerModEntity(EntityJuggernaut.class, new RenderJuggernaut(),
+				"juggernaut", EntityRegistry.findGlobalUniqueEntityId(),
+				0x404040, 0x9E9E9E);
+	}
+	
+	private void registerNoSpawnEggMobs(){
+		registerModEntity(EntityFrostBall.class, new RenderFrostBall(), "frost_ball",
 				EntityRegistry.findGlobalUniqueEntityId());
 	}
 
-	/*
-	 * ========================================================================================================================================================================
-	 * Misc. Methods
-	 * ========================================================================================================================================================================
-	 */
-
-	public void registerModEntity(Class parEntityClass, RenderLiving render,
+	public void registerModEntity(Class parEntityClass, Render render,
 			String parEntityName, int entityId, int foregroundColor,
 			int backgroundColor) {
 		EntityRegistry.registerGlobalEntityID(parEntityClass, parEntityName,
@@ -998,16 +1262,22 @@ public class Spooky {
 		RenderingRegistry
 				.registerEntityRenderingHandler(parEntityClass, render);
 	}
-	
-	public void registerModEntity(Class parEntityClass, RenderLiving render,
-			String parEntityName, int entityId){
+
+	public void registerModEntity(Class parEntityClass, Render render,
+			String parEntityName, int entityId) {
 		EntityRegistry.registerModEntity(parEntityClass, parEntityName,
 				entityId, this, 80, 1, false);
 		RenderingRegistry
 				.registerEntityRenderingHandler(parEntityClass, render);
 	}
 
-	private void doMiscStuff1() {
+	/*
+	 * ========================================================================================================================================================================
+	 * Misc. Methods
+	 * ========================================================================================================================================================================
+	 */
+
+	private void preRegister() {
 		mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
 		spooky_text
@@ -1040,7 +1310,7 @@ public class Spooky {
 		FMLCommonHandler.instance().bus().register(new EventHandlers());
 	}
 
-	private void doMiscStuff2() {
+	private void postRegister() {
 		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
 				new WeightedRandomChestContent(new ItemStack(
 						spookyscaryskeletons), 1, 1, 50));

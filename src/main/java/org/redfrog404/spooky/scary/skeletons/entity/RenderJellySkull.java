@@ -17,9 +17,9 @@ public class RenderJellySkull extends RenderLiving
     private static final ResourceLocation slimeTextures = new ResourceLocation("spooky:textures/entity/dim8/jellyskull.png");
     private static final String __OBFID = "CL_00001024";
 
-    public RenderJellySkull(ModelBase p_i46141_2_, float p_i46141_3_)
+    public RenderJellySkull()
     {
-        super(Minecraft.getMinecraft().getRenderManager(), p_i46141_2_, p_i46141_3_);
+        super(Minecraft.getMinecraft().getRenderManager(), new ModelJellySkull(16), 0.7F);
         this.addLayer(new LayerJellySkullGel(this));
     }
 

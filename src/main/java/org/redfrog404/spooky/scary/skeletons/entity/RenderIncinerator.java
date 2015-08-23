@@ -31,8 +31,8 @@ public class RenderIncinerator extends RenderBiped {
 	private final ModelBiped field_82434_o;
 	private final List field_177122_o;
 
-	public RenderIncinerator(ModelBiped par1, float par2) {
-		super(Minecraft.getMinecraft().getRenderManager(), par1, par2, 1.0F);
+	public RenderIncinerator() {
+		super(Minecraft.getMinecraft().getRenderManager(), new ModelIncinerator(), 0.5F, 1.0F);
 		LayerRenderer layerrenderer = (LayerRenderer) this.layerRenderers
 				.get(0);
 		this.field_82434_o = this.modelBipedMain;

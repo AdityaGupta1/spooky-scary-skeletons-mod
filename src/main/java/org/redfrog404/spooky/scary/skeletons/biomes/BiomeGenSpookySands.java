@@ -37,7 +37,7 @@ public class BiomeGenSpookySands extends BiomeGenBase {
 	}
 
 	public void decorate(World worldIn, Random p_180624_2_, BlockPos p_180624_3_) {
-		theBiomeDecorator.decorate(worldIn, p_180624_2_, this, p_180624_3_);
+		createBiomeDecorator().decorate(worldIn, p_180624_2_, this, p_180624_3_);
 	}
 	
 	public BiomeDecorator createBiomeDecorator()

@@ -3,24 +3,28 @@
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 import org.redfrog404.spooky.scary.skeletons.entity.EntityIncinerator;
 import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
+import org.redfrog404.spooky.scary.skeletons.entity.EntityRisenDead;
 
 public class EventHandlers {
 
@@ -30,17 +34,17 @@ public class EventHandlers {
 			return;
 		}
 
-		if (!(event.source.getEntity() instanceof EntityPlayer)) {
+		if (!(event.source.getEntity() instanceof EntityLivingBase)) {
 			return;
 		}
 
-		EntityPlayer player = (EntityPlayer) event.source.getEntity();
+		EntityLivingBase entity = (EntityLivingBase) event.source.getEntity();
 
-		if (player.getHeldItem() == null) {
+		if (entity.getHeldItem() == null) {
 			return;
 		}
 
-		if (player.getHeldItem().getItem() != Spooky.fire_sword) {
+		if (entity.getHeldItem().getItem() != Spooky.fire_sword) {
 			return;
 		}
 
@@ -95,37 +99,29 @@ public class EventHandlers {
 	}
 	
 	@SubscribeEvent
-	public void makeJumpHigher(LivingJumpEvent event){
-		if (!(event.entityLiving instanceof EntityPlayer)) {
+	public void makeJumpHigher(LivingJumpEvent event){		
+		EntityLivingBase entity = (EntityLivingBase) event.entityLiving;
+		
+		if (entity.getEquipmentInSlot(1) == null) {
 			return;
 		}
 		
-		EntityPlayer player = (EntityPlayer) event.entityLiving;
-		
-		if (player.getEquipmentInSlot(1) == null) {
+		if (entity.getEquipmentInSlot(1).getItem() != Spooky.slime_boots) {
 			return;
 		}
 		
-		if (player.getEquipmentInSlot(1).getItem() != Spooky.slime_boots) {
-			return;
-		}
-		
-		player.motionY += 0.5;
+		entity.motionY += 0.5;
 	}
 	
 	@SubscribeEvent
 	public void negateFallDamage(LivingFallEvent event){
-		if (!(event.entityLiving instanceof EntityPlayer)) {
+		EntityLivingBase entity = (EntityLivingBase) event.entityLiving;
+		
+		if (entity.getEquipmentInSlot(1) == null) {
 			return;
 		}
 		
-		EntityPlayer player = (EntityPlayer) event.entityLiving;
-		
-		if (player.getEquipmentInSlot(1) == null) {
-			return;
-		}
-		
-		if (player.getEquipmentInSlot(1).getItem() != Spooky.slime_boots) {
+		if (entity.getEquipmentInSlot(1).getItem() != Spooky.slime_boots) {
 			return;
 		}
 		
@@ -223,5 +219,76 @@ public class EventHandlers {
 		
 		player.worldObj.setBlockState(event.pos, Spooky.fire_block.getBlockState().getBaseState());
 		player.worldObj.createExplosion(player, event.pos.getX() + 0.5, event.pos.getY() + 0.5, event.pos.getZ() + 0.5, 1.5F, false);
+	}
+	
+	@SubscribeEvent
+	public void negateFireDamage(LivingUpdateEvent event){
+
+		EntityLivingBase entity = event.entityLiving;
+		
+		if (entity.getEquipmentInSlot(1) == null) {
+			return;
+		}
+		
+		if (entity.getEquipmentInSlot(1).getItem() != Spooky.fire_boots) {
+			return;
+		}
+		
+		if (entity.getEquipmentInSlot(2) == null) {
+			return;
+		}
+		
+		if (entity.getEquipmentInSlot(2).getItem() != Spooky.fire_leggings) {
+			return;
+		}
+		
+		if (entity.getEquipmentInSlot(3) == null) {
+			return;
+		}
+		
+		if (entity.getEquipmentInSlot(3).getItem() != Spooky.fire_chestplate) {
+			return;
+		}
+		
+		if (entity.getEquipmentInSlot(4) == null) {
+			return;
+		}
+		
+		if (entity.getEquipmentInSlot(4).getItem() != Spooky.fire_helmet) {
+			return;
+		}
+
+		entity.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 160));
+		entity.extinguish();
+		
+	}
+	
+	@SubscribeEvent
+	public void summonIncineratorMinions(LivingAttackEvent event){
+		if (!(event.entityLiving instanceof EntityIncinerator)) {
+			return;
+		}
+		
+		Random random = new Random();
+		
+		if (random.nextInt(5) != 0){
+			return;
+		}
+		
+		EntityLivingBase incinerator = event.entityLiving;
+		
+		EntityRisenDead minion = new EntityRisenDead(incinerator.worldObj);
+		minion.setLocationAndAngles(incinerator.posX, incinerator.posY,
+				incinerator.posZ, 0, 0);
+		minion.setCurrentItemOrArmor(0, new ItemStack(Spooky.fire_sword));
+		minion.setCurrentItemOrArmor(1, new ItemStack(Spooky.fire_boots));
+		minion.setCurrentItemOrArmor(2, new ItemStack(Spooky.fire_leggings));
+		minion.setCurrentItemOrArmor(3, new ItemStack(
+				Spooky.fire_chestplate));
+		minion.setCurrentItemOrArmor(4, new ItemStack(Spooky.fire_helmet));
+		
+		if (!incinerator.worldObj.isRemote) {
+			incinerator.worldObj.spawnEntityInWorld(minion);
+		}
 	}
 }

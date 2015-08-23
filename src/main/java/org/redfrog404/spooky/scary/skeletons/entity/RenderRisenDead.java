@@ -31,8 +31,8 @@ public class RenderRisenDead extends RenderBiped {
 	private final ModelBiped field_82434_o;
 	private final List field_177122_o;
 
-	public RenderRisenDead(ModelBiped par1, float par2) {
-		super(Minecraft.getMinecraft().getRenderManager(), par1, par2, 1.0F);
+	public RenderRisenDead() {
+		super(Minecraft.getMinecraft().getRenderManager(), new ModelRisenDead(), 0.5F, 1.0F);
 		LayerRenderer layerrenderer = (LayerRenderer) this.layerRenderers
 				.get(0);
 		this.field_82434_o = this.modelBipedMain;

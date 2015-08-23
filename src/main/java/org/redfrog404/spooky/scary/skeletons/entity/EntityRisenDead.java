@@ -116,7 +116,7 @@ public class EntityRisenDead extends EntityMob {
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed)
 				.setBaseValue(0.23000000417232513D);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
-				.setBaseValue(3.0D);
+				.setBaseValue(6.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth)
 				.setBaseValue(50.0F);
 		this.getAttributeMap()

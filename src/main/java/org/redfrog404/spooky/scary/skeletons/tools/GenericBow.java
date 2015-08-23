@@ -133,7 +133,7 @@ public class GenericBow extends ItemBow {
 				}
 			}
 		}
-		
+
 		if (!playerIn.capabilities.isCreativeMode) {
 			stack.damageItem(1, playerIn);
 		}
@@ -207,22 +207,23 @@ public class GenericBow extends ItemBow {
 	@Override
 	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player,
 			int useRemaining) {
-		
-		int usesRemaining = stack.getMaxItemUseDuration() - player.getItemInUseCount();
-		
-		ModelResourceLocation model = new ModelResourceLocation(
-				"spooky:" + name, "inventory");
+
+		int usesRemaining = stack.getMaxItemUseDuration()
+				- player.getItemInUseCount();
+
+		ModelResourceLocation model = new ModelResourceLocation("spooky:"
+				+ name, "inventory");
 
 		if (stack.getItem() == this && player.getItemInUse() != null) {
 			if (usesRemaining >= 18) {
-				model = new ModelResourceLocation("spooky:"
-						+ name + "_2", "inventory");
+				model = new ModelResourceLocation("spooky:" + name + "_2",
+						"inventory");
 			} else if (usesRemaining > 13) {
-				model = new ModelResourceLocation("spooky:"
-						+ name + "_1", "inventory");
+				model = new ModelResourceLocation("spooky:" + name + "_1",
+						"inventory");
 			} else if (usesRemaining > 0) {
-				model = new ModelResourceLocation("spooky:"
-						+ name + "_0", "inventory");
+				model = new ModelResourceLocation("spooky:" + name + "_0",
+						"inventory");
 			}
 		}
 		return model;

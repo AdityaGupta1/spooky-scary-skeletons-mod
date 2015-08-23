@@ -35,38 +35,57 @@ public class DimensionGateway extends Block {
 	public boolean onBlockActivated(World worldIn, BlockPos pos,
 			IBlockState state, EntityPlayer entityplayer, EnumFacing side,
 			float hitX, float hitY, float hitZ) {
-		if (entityplayer instanceof EntityPlayerMP) {
-			EntityPlayerMP player = (EntityPlayerMP) entityplayer;
-
-			if (player.getHeldItem() == null) {
-				return false;
-			}
-
-			if (player.getHeldItem().getItem() == Spooky.bone_key1) {
-				if (player.dimension == 0) {
-					player.mcServer
-							.getConfigurationManager()
-							.transferPlayerToDimension(
-									player,
-									DimensionRegistry.dimId8,
-									new TeleporterDim8(
-											player.mcServer
-													.worldServerForDimension(DimensionRegistry.dimId8)));
-				} else if (player.dimension == DimensionRegistry.dimId8) {
-					player.mcServer.getConfigurationManager()
-							.transferPlayerToDimension(
-									player,
-									0,
-									new TeleporterDim8(player.mcServer
-											.worldServerForDimension(0)));
-				} else {
-					return false;
-				}
-			}
-
-			return true;
-		} else {
+		if (!(entityplayer instanceof EntityPlayerMP)) {
 			return false;
 		}
+		EntityPlayerMP player = (EntityPlayerMP) entityplayer;
+
+		if (player.getHeldItem() == null) {
+			return false;
+		}
+
+		if (player.getHeldItem().getItem() == Spooky.bone_key1) {
+			if (player.dimension == 0) {
+				player.mcServer
+						.getConfigurationManager()
+						.transferPlayerToDimension(
+								player,
+								DimensionRegistry.dimId8,
+								new TeleporterDim8(
+										player.mcServer
+												.worldServerForDimension(DimensionRegistry.dimId8)));
+			} else if (player.dimension == DimensionRegistry.dimId8) {
+				player.mcServer.getConfigurationManager()
+						.transferPlayerToDimension(
+								player,
+								0,
+								new TeleporterDim8(player.mcServer
+										.worldServerForDimension(0)));
+			} else {
+				return false;
+			}
+		} else if (player.getHeldItem().getItem() == Spooky.bone_key2) {
+			if (player.dimension == 0) {
+				player.mcServer
+						.getConfigurationManager()
+						.transferPlayerToDimension(
+								player,
+								DimensionRegistry.dimId9,
+								new TeleporterDim9(
+										player.mcServer
+												.worldServerForDimension(DimensionRegistry.dimId9)));
+			} else if (player.dimension == DimensionRegistry.dimId9) {
+				player.mcServer.getConfigurationManager()
+						.transferPlayerToDimension(
+								player,
+								0,
+								new TeleporterDim9(player.mcServer
+										.worldServerForDimension(0)));
+			} else {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
