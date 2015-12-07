@@ -27,7 +27,7 @@ public class LayerJuggernautHead implements LayerRenderer
         if (!p_177151_1_.isInvisible())
         {
             GlStateManager.pushMatrix();
-            this.field_177152_a.func_177123_g().head.postRender(0.0625F);
+//            this.field_177152_a.func_177123_g().head.postRender(0.0625F);
             float f7 = 0.625F;
             GlStateManager.translate(0.0F, -0.34375F, 0.0F);
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);

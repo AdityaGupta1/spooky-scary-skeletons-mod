@@ -22,6 +22,8 @@ public class BiomeGenSpookySands extends BiomeGenBase {
 		super(p_i1977_1_);
 		this.theBiomeDecorator = createBiomeDecorator();
 		this.spawnableCreatureList.clear();
+		this.spawnableWaterCreatureList.clear();
+		this.spawnableMonsterList.clear();
 		this.topBlock = Blocks.soul_sand.getDefaultState();
 		this.fillerBlock = Spooky.bone_box.getDefaultState();
 		this.theBiomeDecorator.treesPerChunk = -999;
@@ -33,7 +35,6 @@ public class BiomeGenSpookySands extends BiomeGenBase {
 		this.waterColorMultiplier = 0xC28148;
 		this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntitySkeletonCow.class, 8, 3, 6));
 		this.spawnableMonsterList.add(new BiomeGenBase.SpawnListEntry(EntityJellySkull.class, 10, 4, 4));
-		this.spawnableWaterCreatureList.clear();
 	}
 
 	public void decorate(World worldIn, Random p_180624_2_, BlockPos p_180624_3_) {

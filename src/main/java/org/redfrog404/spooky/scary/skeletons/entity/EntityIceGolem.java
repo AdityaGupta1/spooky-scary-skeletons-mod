@@ -104,6 +104,10 @@ public class EntityIceGolem extends EntityGolem implements IMob {
 	 */
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
+		
+		if (!(this.getAttackTarget() instanceof EntityPlayer) && !(this.getAttackTarget() instanceof EntityIronGolem)) {
+			this.setAttackTarget(null);
+		}
 
 		if (this.attackTimer > 0) {
 			--this.attackTimer;

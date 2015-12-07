@@ -4,75 +4,83 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public class ModelJuggernaut extends ModelBase
-{
-    public ModelRenderer body;
-    public ModelRenderer bottomBody;
-    public ModelRenderer head;
-    public ModelRenderer rightHand;
-    public ModelRenderer leftHand;
+public class ModelJuggernaut extends ModelBase {
+	ModelRenderer Bottom;
+	ModelRenderer Arm1;
+	ModelRenderer Arm2;
+	ModelRenderer Thing1;
+	ModelRenderer Top;
+	ModelRenderer Side1;
+	ModelRenderer Side2;
 
-    public ModelJuggernaut()
-    {
-        float f = 4.0F;
-        float f1 = 0.0F;
-        this.head = (new ModelRenderer(this, 0, 0)).setTextureSize(64, 64);
-        this.head.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, f1 - 0.5F);
-        this.head.setRotationPoint(0.0F, 0.0F + f, 0.0F);
-        this.rightHand = (new ModelRenderer(this, 32, 0)).setTextureSize(64, 64);
-        this.rightHand.addBox(-1.0F, 0.0F, -1.0F, 12, 2, 2, f1 - 0.5F);
-        this.rightHand.setRotationPoint(0.0F, 0.0F + f + 9.0F - 7.0F, 0.0F);
-        this.leftHand = (new ModelRenderer(this, 32, 0)).setTextureSize(64, 64);
-        this.leftHand.addBox(-1.0F, 0.0F, -1.0F, 12, 2, 2, f1 - 0.5F);
-        this.leftHand.setRotationPoint(0.0F, 0.0F + f + 9.0F - 7.0F, 0.0F);
-        this.body = (new ModelRenderer(this, 0, 16)).setTextureSize(64, 64);
-        this.body.addBox(-5.0F, -10.0F, -5.0F, 10, 10, 10, f1 - 0.5F);
-        this.body.setRotationPoint(0.0F, 0.0F + f + 9.0F, 0.0F);
-        this.bottomBody = (new ModelRenderer(this, 0, 36)).setTextureSize(64, 64);
-        this.bottomBody.addBox(-6.0F, -12.0F, -6.0F, 12, 12, 12, f1 - 0.5F);
-        this.bottomBody.setRotationPoint(0.0F, 0.0F + f + 20.0F, 0.0F);
-    }
+	public ModelJuggernaut() {
+		textureWidth = 256;
+		textureHeight = 128;
 
-    /**
-     * Sets the model's various rotation angles. For bipeds, par1 and par2 are used for animating the movement of arms
-     * and legs, where par1 represents the time(so that arms and legs swing back and forth) and par2 represents how
-     * "far" arms and legs can swing at most.
-     */
-    public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity p_78087_7_)
-    {
-    	GlStateManager.scale(2.0F, 2.0F, 2.0F);
+		Bottom = new ModelRenderer(this, 0, 0);
+		Bottom.addBox(-8F, -32F, -8F, 16, 32, 16);
+		Bottom.setRotationPoint(0F, 24F, 0F);
+		Bottom.setTextureSize(256, 128);
+		Bottom.mirror = true;
+		setRotation(Bottom, 0F, 0F, 0F);
+		Arm1 = new ModelRenderer(this, 0, 48);
+		Arm1.addBox(-16F, -2F, -2F, 16, 4, 4);
+		Arm1.setRotationPoint(-6F, 9F, 0F);
+		Arm1.setTextureSize(256, 128);
+		Arm1.mirror = true;
+		setRotation(Arm1, 0F, 0F, 0.4537856F);
+		Arm2 = new ModelRenderer(this, 0, 48);
+		Arm2.addBox(0F, -2F, -2F, 16, 4, 4);
+		Arm2.setRotationPoint(6F, 8.5F, 0F);
+		Arm2.setTextureSize(256, 128);
+		Arm2.mirror = true;
+		setRotation(Arm2, 0F, 0F, -0.4537856F);
+		Thing1 = new ModelRenderer(this, 64, 0);
+		Thing1.addBox(-2F, -8F, -2F, 4, 8, 4);
+		Thing1.setRotationPoint(0F, -8F, 0F);
+		Thing1.setTextureSize(256, 128);
+		Thing1.mirror = true;
+		setRotation(Thing1, 0F, 0F, 0F);
+		Top = new ModelRenderer(this, 80, 0);
+		Top.addBox(-16F, -8F, -4F, 32, 8, 8);
+		Top.setRotationPoint(0F, -16F, 0F);
+		Top.setTextureSize(256, 128);
+		Top.mirror = true;
+		setRotation(Top, 0F, 0F, 0F);
+		Side1 = new ModelRenderer(this, 0, 56);
+		Side1.addBox(0F, -4F, -8F, 8, 8, 16);
+		Side1.setRotationPoint(20F, 1.5F, 0F);
+		Side1.setTextureSize(256, 128);
+		Side1.mirror = true;
+		setRotation(Side1, 0F, 0F, -0.4537856F);
+		Side2 = new ModelRenderer(this, 0, 56);
+		Side2.addBox(0F, -4F, -8F, 8, 8, 16);
+		Side2.setRotationPoint(-20F, 2F, 0F);
+		Side2.setTextureSize(256, 128);
+		Side2.mirror = true;
+		setRotation(Side2, 0F, 0F, -2.6529F);
+	}
+
+	public void render(Entity entity, float f, float f1, float f2, float f3,
+			float f4, float f5) {
+		super.render(entity, f, f1, f2, f3, f4, f5);
+		super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+		GlStateManager.scale(2.0F, 2.0F, 2.0F);
         GlStateManager.translate(0.0F, -0.75F, 0.0F);
-        super.setRotationAngles(p_78087_1_, p_78087_2_, p_78087_3_, p_78087_4_, p_78087_5_, p_78087_6_, p_78087_7_);
-        this.head.rotateAngleY = p_78087_4_ / (180F / (float)Math.PI);
-        this.head.rotateAngleX = p_78087_5_ / (180F / (float)Math.PI);
-        this.body.rotateAngleY = p_78087_4_ / (180F / (float)Math.PI) * 0.25F;
-        float f6 = MathHelper.sin(this.body.rotateAngleY);
-        float f7 = MathHelper.cos(this.body.rotateAngleY);
-        this.rightHand.rotateAngleZ = 1.0F;
-        this.leftHand.rotateAngleZ = -1.0F;
-        this.rightHand.rotateAngleY = 0.0F + this.body.rotateAngleY;
-        this.leftHand.rotateAngleY = (float)Math.PI + this.body.rotateAngleY;
-        this.rightHand.rotationPointX = f7 * 5.0F;
-        this.rightHand.rotationPointZ = -f6 * 5.0F;
-        this.leftHand.rotationPointX = -f7 * 5.0F;
-        this.leftHand.rotationPointZ = f6 * 5.0F;
-    }
+		Bottom.render(f5);
+		Arm1.render(f5);
+		Arm2.render(f5);
+		Thing1.render(f5);
+		Top.render(f5);
+		Side1.render(f5);
+		Side2.render(f5);
+	}
 
-    /**
-     * Sets the models various rotation angles then renders the model.
-     */
-    public void render(Entity p_78088_1_, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_)
-    {
-        this.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, p_78088_1_);
-        this.body.render(p_78088_7_);
-        this.bottomBody.render(p_78088_7_);
-        this.head.render(p_78088_7_);
-        this.rightHand.render(p_78088_7_);
-        this.leftHand.render(p_78088_7_);
-    }
+	private void setRotation(ModelRenderer model, float x, float y, float z) {
+		model.rotateAngleX = x;
+		model.rotateAngleY = y;
+		model.rotateAngleZ = z;
+	}
+
 }

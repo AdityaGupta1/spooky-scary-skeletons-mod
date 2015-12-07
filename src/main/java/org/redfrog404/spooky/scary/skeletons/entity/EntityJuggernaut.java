@@ -1,6 +1,5 @@
 package org.redfrog404.spooky.scary.skeletons.entity;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -28,8 +27,6 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.IBossDisplayData;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityPigZombie;
@@ -104,7 +101,7 @@ public class EntityJuggernaut extends EntityMob implements IBossDisplayData {
 		this.tasks.addTask(8, new EntityAIAttackOnCollide(this,
 				EntityPlayer.class, 1.0D, false));
 		this.applyEntityAI();
-		this.setSize(2.4F, 5.8F);
+		this.setSize(2.4F, 3.5F);
 		this.equipmentDropChances[0] = 0.0F;
 	}
 
@@ -194,6 +191,11 @@ public class EntityJuggernaut extends EntityMob implements IBossDisplayData {
 	 */
 	public void onLivingUpdate() {
 		BossStatus.setBossStatus(this, true);
+
+		if (!(this.getAttackTarget() instanceof EntityPlayer)
+				&& !(this.getAttackTarget() instanceof EntityIronGolem)) {
+			this.setAttackTarget(null);
+		}
 
 		if (this.getHealth() <= this.getMaxHealth() / 2) {
 			if (this.rand.nextInt(5) == 0) {
@@ -329,7 +331,7 @@ public class EntityJuggernaut extends EntityMob implements IBossDisplayData {
 		int k;
 
 		for (k = 0; k < j; ++k) {
-			this.dropItem(Spooky.fire_crystal, 1);
+			this.dropItem(Spooky.bedrock_shard, 1);
 		}
 
 		j = this.rand.nextInt(3);
@@ -748,13 +750,17 @@ public class EntityJuggernaut extends EntityMob implements IBossDisplayData {
 							+ (double) (this.juggernaut.height / 2.0F) + 0.5D;
 					fireball.posZ = this.juggernaut.posZ + vec3.zCoord * d1;
 
-					EntityIceGolem golem = new EntityIceGolem(
+					EntityIronGolem golem = new EntityIronGolem(
 							juggernaut.worldObj);
 					golem.setLocationAndAngles(fireball.posX, fireball.posY,
 							fireball.posZ, 0, 0);
 					golem.motionX = fireball.motionX * 2;
 					golem.motionY = fireball.motionY * 2;
 					golem.motionZ = fireball.motionZ * 2;
+
+					golem.targetTasks.addTask(1,
+							new EntityAINearestAttackableTarget(golem,
+									EntityPlayer.class, true));
 
 					world.spawnEntityInWorld(golem);
 					this.field_179471_a = -40;

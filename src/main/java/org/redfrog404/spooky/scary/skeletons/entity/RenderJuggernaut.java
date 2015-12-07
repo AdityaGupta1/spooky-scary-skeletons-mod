@@ -13,36 +13,33 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderJuggernaut extends RenderLiving
-{
-    private static final ResourceLocation snowManTextures = new ResourceLocation("spooky:textures/entity/dim9/juggernaut.png");
+public class RenderJuggernaut extends RenderLiving {
+	private static final ResourceLocation juggernautTextures = new ResourceLocation(
+			"spooky:textures/entity/dim9/juggernaut.png");
 
-    public RenderJuggernaut()
-    {
-        super(Minecraft.getMinecraft().getRenderManager(), new ModelJuggernaut(), 0.5F);
-        this.addLayer(new LayerJuggernautHead(this));
-    }
+	public RenderJuggernaut() {
+		super(Minecraft.getMinecraft().getRenderManager(),
+				new ModelJuggernaut(), 0.5F);
+//        this.addLayer(new LayerJuggernautHead(this));
+	}
 
-    protected ResourceLocation func_180587_a(EntityJuggernaut p_180587_1_)
-    {
-        return snowManTextures;
-    }
+	protected ResourceLocation func_180587_a(EntityJuggernaut p_180587_1_) {
+		return juggernautTextures;
+	}
 
-    public ModelJuggernaut func_177123_g()
-    {
-        return (ModelJuggernaut)super.getMainModel();
-    }
+	public ModelJuggernaut func_177123_g() {
+		return (ModelJuggernaut) super.getMainModel();
+	}
 
-    public ModelBase getMainModel()
-    {
-        return this.func_177123_g();
-    }
+	public ModelBase getMainModel() {
+		return this.func_177123_g();
+	}
 
-    /**
-     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-     */
-    protected ResourceLocation getEntityTexture(Entity entity)
-    {
-        return this.func_180587_a((EntityJuggernaut)entity);
-    }
+	/**
+	 * Returns the location of an entity's texture. Doesn't seem to be called
+	 * unless you call Render.bindEntityTexture.
+	 */
+	protected ResourceLocation getEntityTexture(Entity entity) {
+		return this.func_180587_a((EntityJuggernaut) entity);
+	}
 }

@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube", 
+	"textures": { 
+		"down": "spooky:blocks/obsidiron_block",
+		"up": "spooky:blocks/obsidiron_block",
+		"north": "spooky:blocks/obsidiron_block",
+		"south": "spooky:blocks/obsidiron_block",
+		"west": "spooky:blocks/obsidiron_block",
+		"east": "spooky:blocks/obsidiron_block",
+		"particle": "spooky:blocks/obsidiron_block"
+	}
+}

@@ -195,6 +195,7 @@ public class Spooky {
 	public static Block indium_block;
 	public static Block cadmium_block;
 	public static Block purplonium_block;
+	public static Block obsidiron_block;
 
 	// Miscellaneous
 	public static Item spookyscaryskeletons;
@@ -212,10 +213,15 @@ public class Spooky {
 	public static Item fire_amulet;
 	public static Item fire_crystal;
 	public static Item bone_ingot;
-	public static Item incinerator_summon;
 	public static Item fire_ingot;
 	public static Item ice_ingot;
 	public static Item ice_charge;
+	public static Item ice_plate;
+	public static Item obsidiron_ingot;
+	public static Item obsidiron_stick;
+	public static Item bedrock_shard;
+	public static Item molten_essence;
+	public static Item bedrockium_ingot;
 
 	// Tools and Swords
 	public static Item fire_sword;
@@ -277,18 +283,25 @@ public class Spooky {
 	public static Item fire_bullet;
 
 	// Staves
+	public static Item incinerator_summon;
 	public static Item incinerator_staff;
 	public static Item fire_staff;
+	public static Item juggernaut_summon;
 
 	// Potions
 	public static Potion curse = new GenericPotion(26, new ResourceLocation(
 			"curse"), true, 0).setIconIndex(7, 1).setPotionName("potion.curse");
+
+	public static Potion radioactive = new GenericPotion(27,
+			new ResourceLocation("radioactive"), true, 0).setIconIndex(6, 0)
+			.setPotionName("potion.radioactive");
 
 	/*
 	 * ========================================================================================================================================================================
 	 * Potion Reflection
 	 * ========================================================================================================================================================================
 	 */
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Potion[] potionTypes = null;
@@ -465,7 +478,7 @@ public class Spooky {
 		bone_ingot = new GenericItem("bone_ingot", misc);
 		registerItem(bone_ingot, "bone_ingot");
 
-		incinerator_summon = new GenericItem("incinerator_summon", misc)
+		incinerator_summon = new GenericItem("incinerator_summon", staves)
 				.setMaxStackSize(1);
 		registerItem(incinerator_summon, "incinerator_summon");
 
@@ -477,6 +490,28 @@ public class Spooky {
 
 		ice_charge = new GenericItem("ice_charge", misc);
 		registerItem(ice_charge, "ice_charge");
+
+		ice_plate = new GenericItem("ice_plate", misc);
+		registerItem(ice_plate, "ice_plate");
+
+		obsidiron_ingot = new GenericItem("obsidiron_ingot", misc);
+		registerItem(obsidiron_ingot, "obsidiron_ingot");
+
+		obsidiron_stick = new GenericItem("obsidiron_stick", misc);
+		registerItem(obsidiron_stick, "obsidiron_stick");
+
+		juggernaut_summon = new GenericItem("juggernaut_summon", staves)
+				.setMaxStackSize(1);
+		registerItem(juggernaut_summon, "juggernaut_summon");
+		
+		bedrock_shard = new GenericItem("bedrock_shard", misc);
+		registerItem(bedrock_shard, "bedrock_shard");
+		
+		molten_essence = new GenericItem("molten_essence", misc);
+		registerItem(molten_essence, "molten_essence");
+		
+		bedrockium_ingot = new GenericItem("bedrockium_ingot", misc);
+		registerItem(bedrockium_ingot, "bedrockium_ingot");
 		
 	}
 
@@ -548,6 +583,10 @@ public class Spooky {
 		zinc_block = new GenericBlock("zinc_block", Material.rock, 15, 30,
 				"pickaxe", 4, Block.soundTypeMetal);
 		registerBlock(zinc_block, "zinc_block");
+
+		obsidiron_block = new GenericBlock("obsidiron_block", Material.rock,
+				150, 3000, "pickaxe", 6, Block.soundTypeMetal);
+		registerBlock(obsidiron_block, "obsidiron_block");
 	}
 
 	private void registerBlock(Block block, String name) {
@@ -970,6 +1009,12 @@ public class Spooky {
 		GameRegistry.addShapelessRecipe(new ItemStack(jade_ingot, 9),
 				new ItemStack(jade_block));
 
+		GameRegistry.addRecipe(new ItemStack(obsidiron_block), "iii", "iii",
+				"iii", 'i', obsidiron_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(obsidiron_ingot, 9),
+				new ItemStack(obsidiron_block));
+
 	}
 
 	private void addInfusedSwordsAndToolsRecipes() {
@@ -1140,6 +1185,9 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(incinerator_gun), "eoo", " bb",
 				'e', bone3, 'o', fire_ingot, 'b', fire_crystal);
+		
+		GameRegistry.addRecipe(new ItemStack(juggernaut_summon), "o", "r",
+				"r", 'o', obsidiron_block, 'r', obsidiron_stick);
 
 	}
 
@@ -1197,6 +1245,31 @@ public class Spooky {
 				'g', Blocks.glass_pane, 'G', Items.gold_ingot, 'i',
 				Items.iron_ingot);
 
+		GameRegistry.addRecipe(new ItemStack(ice_plate, 1), "iii", "ici",
+				"iii", 'i', ice_ingot, 'c', ice_charge);
+
+		GameRegistry.addRecipe(new ItemStack(obsidiron_ingot, 2), "lil", "ioi",
+				"lil", 'i', Blocks.iron_block, 'o', Blocks.obsidian, 'l',
+				fire_block);
+
+		GameRegistry.addRecipe(new ItemStack(obsidiron_ingot, 2), "ili", "lol",
+				"ili", 'i', Blocks.iron_block, 'o', Blocks.obsidian, 'l',
+				fire_block);
+
+		GameRegistry.addRecipe(new ItemStack(obsidiron_stick, 4), "i", "i",
+				'i', obsidiron_ingot);
+		
+		GameRegistry.addRecipe(new ItemStack(molten_essence, 2), "iii", "ibi",
+				"iii", 'i', fire_ingot, 'b', fire_block);
+		
+		GameRegistry.addRecipe(new ItemStack(bedrockium_ingot, 4), "lil", "ioi",
+				"lil", 'i', bedrock_shard, 'o', obsidiron_block, 'l',
+				molten_essence);
+
+		GameRegistry.addRecipe(new ItemStack(bedrockium_ingot, 4), "ili", "lol",
+				"ili", 'i', bedrock_shard, 'o', obsidiron_block, 'l',
+				molten_essence);
+
 	}
 
 	/*
@@ -1206,14 +1279,14 @@ public class Spooky {
 	 */
 
 	private void registerMobs() {
-		
+
 		registerSpawnEggMobs();
-		
+
 		registerNoSpawnEggMobs();
-		
+
 	}
-	
-	private void registerSpawnEggMobs(){
+
+	private void registerSpawnEggMobs() {
 		registerModEntity(EntitySkeletonCow.class, new RenderSkeletonCow(),
 				"skeletoncow", EntityRegistry.findGlobalUniqueEntityId(),
 				0xEBEBD5, 0xC9C9A7);
@@ -1230,7 +1303,7 @@ public class Spooky {
 				EnumCreatureType.MONSTER, BiomeGenBase.jungle,
 				BiomeGenBase.plains, BiomeGenBase.desert,
 				BiomeGenBase.extremeHills);
-		
+
 		registerModEntity(EntityIncinerator.class, new RenderIncinerator(),
 				"incinerator", EntityRegistry.findGlobalUniqueEntityId(),
 				0xE31B1B, 0xC51BE3);
@@ -1241,15 +1314,15 @@ public class Spooky {
 
 		registerModEntity(EntityFrost.class, new RenderFrost(), "frost",
 				EntityRegistry.findGlobalUniqueEntityId(), 0x007BFF, 0x48CBF7);
-		
+
 		registerModEntity(EntityJuggernaut.class, new RenderJuggernaut(),
 				"juggernaut", EntityRegistry.findGlobalUniqueEntityId(),
 				0x404040, 0x9E9E9E);
 	}
-	
-	private void registerNoSpawnEggMobs(){
-		registerModEntity(EntityFrostBall.class, new RenderFrostBall(), "frost_ball",
-				EntityRegistry.findGlobalUniqueEntityId());
+
+	private void registerNoSpawnEggMobs() {
+		registerModEntity(EntityFrostBall.class, new RenderFrostBall(),
+				"frost_ball", EntityRegistry.findGlobalUniqueEntityId());
 	}
 
 	public void registerModEntity(Class parEntityClass, Render render,

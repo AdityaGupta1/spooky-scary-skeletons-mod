@@ -29,8 +29,9 @@ public class GenericGun extends Item {
 		ammunition = bullet;
 		this.bullets = 1;
 	}
-	
-	public GenericGun(String name, int durability, Item bullet, byte damage, int bullets) {
+
+	public GenericGun(String name, int durability, Item bullet, byte damage,
+			int bullets) {
 		super();
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(Spooky.guns);
@@ -43,18 +44,15 @@ public class GenericGun extends Item {
 
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
-		for (int bullets = 0 ; bullets < this.bullets ; bullets++) {
+		for (int bullets = 0; bullets < this.bullets; bullets++) {
 			if (!player.capabilities.isCreativeMode) {
 				if (!player.inventory.hasItem(ammunition)) {
 					return stack;
 				}
-
+				
 				player.inventory.consumeInventoryItem(ammunition);
 			}
-
-			world.playSoundAtEntity(player, "random.bow", 0.5F,
-					0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-
+			
 			if (!world.isRemote) {
 				EntityGenericBullet snowball = new EntityGenericBullet(world,
 						player, damage);
@@ -62,9 +60,13 @@ public class GenericGun extends Item {
 				snowball.motionY *= 2;
 				snowball.motionZ *= 2;
 				world.spawnEntityInWorld(snowball);
+
 			}
 		}
-		
+
+		world.playSoundAtEntity(player, "random.bow", 0.5F,
+				0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+
 		if (!player.capabilities.isCreativeMode) {
 			if (this.getDamage(new ItemStack(this)) == this.getMaxDamage()) {
 				--stack.stackSize;
@@ -72,18 +74,20 @@ public class GenericGun extends Item {
 				stack.damageItem(1, player);
 			}
 		}
-		
+
 		return stack;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn,
 			List tooltip, boolean advanced) {
-		tooltip.add(EnumChatFormatting.DARK_RED + "Damage: " + ((float) damage / 2) + " hearts");
+		tooltip.add(EnumChatFormatting.DARK_RED + "Damage: "
+				+ ((float) damage / 2) + " hearts");
 		tooltip.add(EnumChatFormatting.DARK_GREEN + "Bullets Shot: " + bullets);
-		tooltip.add(EnumChatFormatting.AQUA + "Durability: " + (this.getMaxDamage() + 1));
+		tooltip.add(EnumChatFormatting.AQUA + "Durability: "
+				+ (this.getMaxDamage() + 1));
 		tooltip.add(EnumChatFormatting.GOLD + "Ammunition: "
-				+ ammunition.getItemStackDisplayName(new ItemStack(ammunition))); 
+				+ ammunition.getItemStackDisplayName(new ItemStack(ammunition)));
 	}
 
 }

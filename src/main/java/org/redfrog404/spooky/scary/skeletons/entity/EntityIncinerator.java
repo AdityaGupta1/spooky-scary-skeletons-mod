@@ -201,6 +201,10 @@ public class EntityIncinerator extends EntityMob implements IBossDisplayData {
 	 */
 	public void onLivingUpdate() {
 		BossStatus.setBossStatus(this, true);
+		
+		if (!(this.getAttackTarget() instanceof EntityPlayer) && !(this.getAttackTarget() instanceof EntityIronGolem)) {
+			this.setAttackTarget(null);
+		}
 
 		if (this.worldObj.isDaytime() && !this.worldObj.isRemote
 				&& !this.isChild()) {
