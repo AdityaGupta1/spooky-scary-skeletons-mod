@@ -2,14 +2,19 @@ package org.redfrog404.spooky.scary.skeletons.generic;
 
 import java.util.Random;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityGuardian;
+import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -68,13 +73,13 @@ public class EventHandlers {
 			}
 		}
 	}
-	
+
 	/*
 	 * ========================================================================================================================================================================
 	 * Boss Summoners
 	 * ========================================================================================================================================================================
 	 */
-	
+
 	@SubscribeEvent
 	public void summonIncinerator(PlayerInteractEvent event) {
 		EntityPlayer player = event.entityPlayer;
@@ -137,10 +142,171 @@ public class EventHandlers {
 
 	/*
 	 * ========================================================================================================================================================================
+	 * Armor
+	 * ========================================================================================================================================================================
+	 */
+
+	@SubscribeEvent
+	public void makeJumpHigher(LivingJumpEvent event) {
+		EntityLivingBase entity = (EntityLivingBase) event.entityLiving;
+
+		if (entity.getEquipmentInSlot(1) == null) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(1).getItem() != Spooky.slime_boots) {
+			return;
+		}
+
+		entity.motionY += 0.5;
+	}
+
+	@SubscribeEvent
+	public void negateFallDamage(LivingFallEvent event) {
+		EntityLivingBase entity = (EntityLivingBase) event.entityLiving;
+
+		if (entity.getEquipmentInSlot(1) == null) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(1).getItem() != Spooky.slime_boots) {
+			return;
+		}
+
+		event.setCanceled(true);
+	}
+
+	@SubscribeEvent
+	public void negateFireDamage(LivingUpdateEvent event) {
+
+		EntityLivingBase entity = event.entityLiving;
+
+		if (entity.getEquipmentInSlot(1) == null) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(1).getItem() != Spooky.fire_boots) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(2) == null) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(2).getItem() != Spooky.fire_leggings) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(3) == null) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(3).getItem() != Spooky.fire_chestplate) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(4) == null) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(4).getItem() != Spooky.fire_helmet) {
+			return;
+		}
+
+		entity.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 160));
+		entity.extinguish();
+
+	}
+
+	@SubscribeEvent
+	public void turnWaterIntoIce(LivingUpdateEvent event) {
+
+		EntityLivingBase entity = event.entityLiving;
+
+		if (entity.getEquipmentInSlot(1) == null) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(1).getItem() != Spooky.ice_boots) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(2) == null) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(2).getItem() != Spooky.ice_leggings) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(3) == null) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(3).getItem() != Spooky.ice_chestplate) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(4) == null) {
+			return;
+		}
+
+		if (entity.getEquipmentInSlot(4).getItem() != Spooky.ice_helmet) {
+			return;
+		}
+
+		double x = entity.posX;
+		double y = entity.posY - 1;
+		double z = entity.posZ;
+
+		IBlockState water = Blocks.water.getBlockState().getBaseState();
+		IBlockState ice = Blocks.ice.getBlockState().getBaseState();
+
+		if (entity instanceof EntityPlayer) {
+			if (entity.isSneaking()) {
+				if (entity.worldObj.getBlockState(new BlockPos(x, y, z))
+						.getBlock() != Blocks.ice) {
+					return;
+				}
+
+				entity.worldObj.setBlockState(new BlockPos(x, y, z), water);
+				entity.worldObj.setBlockState(new BlockPos(x + 1, y, z), water);
+				entity.worldObj.setBlockState(new BlockPos(x, y, z + 1), water);
+				entity.worldObj.setBlockState(new BlockPos(x - 1, y, z), water);
+				entity.worldObj.setBlockState(new BlockPos(x, y, z - 1), water);
+				entity.worldObj.setBlockState(new BlockPos(x + 1, y, z + 1),
+						water);
+				entity.worldObj.setBlockState(new BlockPos(x - 1, y, z - 1),
+						water);
+				entity.worldObj.setBlockState(new BlockPos(x + 1, y, z - 1),
+						water);
+				entity.worldObj.setBlockState(new BlockPos(x - 1, y, z + 1),
+						water);
+			}
+		}
+
+		if (entity.worldObj.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.water) {
+			return;
+		}
+
+		entity.worldObj.setBlockState(new BlockPos(x, y, z), ice);
+		entity.worldObj.setBlockState(new BlockPos(x + 1, y, z), ice);
+		entity.worldObj.setBlockState(new BlockPos(x, y, z + 1), ice);
+		entity.worldObj.setBlockState(new BlockPos(x - 1, y, z), ice);
+		entity.worldObj.setBlockState(new BlockPos(x, y, z - 1), ice);
+		entity.worldObj.setBlockState(new BlockPos(x + 1, y, z + 1), ice);
+		entity.worldObj.setBlockState(new BlockPos(x - 1, y, z - 1), ice);
+		entity.worldObj.setBlockState(new BlockPos(x + 1, y, z - 1), ice);
+		entity.worldObj.setBlockState(new BlockPos(x - 1, y, z + 1), ice);
+
+	}
+
+	/*
+	 * ========================================================================================================================================================================
 	 * Other Stuff
 	 * ========================================================================================================================================================================
 	 */
-	
+
 	@SubscribeEvent
 	public void applyFireSword(LivingAttackEvent event) {
 		if (event.source.getEntity() == null) {
@@ -189,38 +355,8 @@ public class EventHandlers {
 			return;
 		}
 
-		event.entityLiving.addPotionEffect(new PotionEffect(Spooky.curse.getId(), 3,
-				((EntityJellySkull) entity).getSlimeSize()));
-	}
-
-	@SubscribeEvent
-	public void makeJumpHigher(LivingJumpEvent event) {
-		EntityLivingBase entity = (EntityLivingBase) event.entityLiving;
-
-		if (entity.getEquipmentInSlot(1) == null) {
-			return;
-		}
-
-		if (entity.getEquipmentInSlot(1).getItem() != Spooky.slime_boots) {
-			return;
-		}
-
-		entity.motionY += 0.5;
-	}
-
-	@SubscribeEvent
-	public void negateFallDamage(LivingFallEvent event) {
-		EntityLivingBase entity = (EntityLivingBase) event.entityLiving;
-
-		if (entity.getEquipmentInSlot(1) == null) {
-			return;
-		}
-
-		if (entity.getEquipmentInSlot(1).getItem() != Spooky.slime_boots) {
-			return;
-		}
-
-		event.setCanceled(true);
+		event.entityLiving.addPotionEffect(new PotionEffect(Spooky.curse
+				.getId(), 3, ((EntityJellySkull) entity).getSlimeSize()));
 	}
 
 	@SubscribeEvent
@@ -293,48 +429,6 @@ public class EventHandlers {
 	}
 
 	@SubscribeEvent
-	public void negateFireDamage(LivingUpdateEvent event) {
-
-		EntityLivingBase entity = event.entityLiving;
-
-		if (entity.getEquipmentInSlot(1) == null) {
-			return;
-		}
-
-		if (entity.getEquipmentInSlot(1).getItem() != Spooky.fire_boots) {
-			return;
-		}
-
-		if (entity.getEquipmentInSlot(2) == null) {
-			return;
-		}
-
-		if (entity.getEquipmentInSlot(2).getItem() != Spooky.fire_leggings) {
-			return;
-		}
-
-		if (entity.getEquipmentInSlot(3) == null) {
-			return;
-		}
-
-		if (entity.getEquipmentInSlot(3).getItem() != Spooky.fire_chestplate) {
-			return;
-		}
-
-		if (entity.getEquipmentInSlot(4) == null) {
-			return;
-		}
-
-		if (entity.getEquipmentInSlot(4).getItem() != Spooky.fire_helmet) {
-			return;
-		}
-
-		entity.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 160));
-		entity.extinguish();
-
-	}
-
-	@SubscribeEvent
 	public void summonIncineratorMinions(LivingAttackEvent event) {
 		if (!(event.entityLiving instanceof EntityIncinerator)) {
 			return;
@@ -389,5 +483,25 @@ public class EventHandlers {
 				random.nextInt(10) + 10);
 
 		event.entityLiving.addPotionEffect(radioactive);
+	}
+
+	@SubscribeEvent
+	public void noMetalFighting(LivingUpdateEvent event) {
+		EntityLivingBase entity = event.entityLiving;
+		if (entity instanceof EntityJuggernaut) {
+			if (!(((EntityJuggernaut) entity).getAttackTarget() instanceof EntityIronGolem)) {
+				return;
+			}
+
+			((EntityJuggernaut) entity).setAttackTarget(null);
+		} else if (entity instanceof EntityIronGolem) {
+			if (!(((EntityIronGolem) entity).getAttackTarget() instanceof EntityJuggernaut)) {
+				return;
+			}
+
+			((EntityIronGolem) entity).setAttackTarget(null);
+		} else {
+			return;
+		}
 	}
 }

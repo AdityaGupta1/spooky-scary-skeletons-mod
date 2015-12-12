@@ -40,6 +40,12 @@ public class GenericArmor extends ItemArmor {
 			} else {
 				return "spooky:textures/armor/fire_armor_1.png";
 			}
+		} else if (name == "ice") {
+			if (armor.getItem() == Spooky.ice_leggings) {
+				return "spooky:textures/armor/ice_armor_2.png";
+			} else {
+				return "spooky:textures/armor/ice_armor_1.png";
+			}
 		}
 		
 		return null;
@@ -53,6 +59,8 @@ public class GenericArmor extends ItemArmor {
         	return Spooky.gray_gel == repair.getItem() ? true : super.getIsRepairable(toRepair, repair);
         } else if (name == "fire") {
         	return Spooky.fire_ingot == repair.getItem() ? true : super.getIsRepairable(toRepair, repair);
+        } else if (name == "ice") {
+        	return Spooky.ice_plate == repair.getItem() ? true : super.getIsRepairable(toRepair, repair);
         }
         
         return false;

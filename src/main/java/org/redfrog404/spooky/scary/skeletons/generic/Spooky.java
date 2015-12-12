@@ -74,8 +74,8 @@ import org.redfrog404.spooky.scary.skeletons.entity.RenderJuggernaut;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderRisenDead;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderSkeletonCow;
 import org.redfrog404.spooky.scary.skeletons.guns.GenericGun;
-import org.redfrog404.spooky.scary.skeletons.staves.FireStaff;
 import org.redfrog404.spooky.scary.skeletons.staves.IncineratorStaff;
+import org.redfrog404.spooky.scary.skeletons.staves.TransformingStaff;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericAxe;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericBow;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericPickaxe;
@@ -144,6 +144,8 @@ public class Spooky {
 			"RADIOACTIVE", 5, 3000, 30.0F, 10.0F, 30);
 	public static ToolMaterial BC3 = EnumHelper.addToolMaterial("BC3", 6, 8500,
 			25.0F, 13.0F, 27);
+	public static ToolMaterial ICE = EnumHelper.addToolMaterial("ICE", 7, 5500,
+			35.0F, 16.0F, 20);
 
 	public static ArmorMaterial MOSSARMOR = EnumHelper.addArmorMaterial(
 			"MOSSARMOR", "spooky:moss_armor", 20, new int[] { 5, 6, 4, 5 }, 18);
@@ -154,6 +156,9 @@ public class Spooky {
 
 	public static ArmorMaterial FIREARMOR = EnumHelper.addArmorMaterial(
 			"FIREARMOR", "spooky:fire_armor", 35, new int[] { 5, 6, 4, 5 }, 18);
+
+	public static ArmorMaterial ICEARMOR = EnumHelper.addArmorMaterial(
+			"ICEARMOR", "spooky:ice_armor", 35, new int[] { 5, 6, 4, 5 }, 13);
 
 	/*
 	 * ========================================================================================================================================================================
@@ -196,6 +201,7 @@ public class Spooky {
 	public static Block cadmium_block;
 	public static Block purplonium_block;
 	public static Block obsidiron_block;
+	public static Block bedrockium_block;
 
 	// Miscellaneous
 	public static Item spookyscaryskeletons;
@@ -250,6 +256,11 @@ public class Spooky {
 	public static Item bc3_axe;
 	public static Item bc3_spade;
 
+	public static Item ice_sword;
+	public static Item ice_pickaxe;
+	public static Item ice_axe;
+	public static Item ice_spade;
+
 	// Armor
 	public static Item moss_helmet;
 	public static Item moss_chestplate;
@@ -265,6 +276,11 @@ public class Spooky {
 	public static Item fire_chestplate;
 	public static Item fire_leggings;
 	public static Item fire_boots;
+
+	public static Item ice_helmet;
+	public static Item ice_chestplate;
+	public static Item ice_leggings;
+	public static Item ice_boots;
 
 	// Bows and Arrows
 	public static GenericBow double_bow;
@@ -503,16 +519,16 @@ public class Spooky {
 		juggernaut_summon = new GenericItem("juggernaut_summon", staves)
 				.setMaxStackSize(1);
 		registerItem(juggernaut_summon, "juggernaut_summon");
-		
+
 		bedrock_shard = new GenericItem("bedrock_shard", misc);
 		registerItem(bedrock_shard, "bedrock_shard");
-		
+
 		molten_essence = new GenericItem("molten_essence", misc);
 		registerItem(molten_essence, "molten_essence");
-		
+
 		bedrockium_ingot = new GenericItem("bedrockium_ingot", misc);
 		registerItem(bedrockium_ingot, "bedrockium_ingot");
-		
+
 	}
 
 	private void registerItem(Item item, String name) {
@@ -587,6 +603,10 @@ public class Spooky {
 		obsidiron_block = new GenericBlock("obsidiron_block", Material.rock,
 				150, 3000, "pickaxe", 6, Block.soundTypeMetal);
 		registerBlock(obsidiron_block, "obsidiron_block");
+
+		bedrockium_block = new GenericBlock("bedrockium_block", Material.rock,
+				350, 100000, "pickaxe", 7, Block.soundTypeMetal);
+		registerBlock(bedrockium_block, "bedrockium_block");
 	}
 
 	private void registerBlock(Block block, String name) {
@@ -696,6 +716,19 @@ public class Spooky {
 		fire_boots = new GenericArmor("fire_boots", FIREARMOR, 1, 3, "fire");
 		registerItem(fire_boots, "fire_boots");
 
+		ice_helmet = new GenericArmor("ice_helmet", ICEARMOR, 1, 0, "ice");
+		registerItem(ice_helmet, "ice_helmet");
+
+		ice_chestplate = new GenericArmor("ice_chestplate", ICEARMOR, 1, 1,
+				"ice");
+		registerItem(ice_chestplate, "ice_chestplate");
+
+		ice_leggings = new GenericArmor("ice_leggings", ICEARMOR, 2, 2, "ice");
+		registerItem(ice_leggings, "ice_leggings");
+
+		ice_boots = new GenericArmor("ice_boots", ICEARMOR, 1, 3, "ice");
+		registerItem(ice_boots, "ice_boots");
+
 	}
 
 	private void registerMiscTools() {
@@ -721,6 +754,18 @@ public class Spooky {
 
 		radioactive_spade = new GenericSpade("radioactive_spade", RADIOACTIVE);
 		registerItem(radioactive_spade, "radioactive_spade");
+
+		ice_sword = new GenericSword("ice_sword", ICE);
+		registerItem(ice_sword, "ice_sword");
+
+		ice_pickaxe = new GenericPickaxe("ice_pickaxe", ICE);
+		registerItem(ice_pickaxe, "ice_pickaxe");
+
+		ice_axe = new GenericAxe("ice_axe", ICE);
+		registerItem(ice_axe, "ice_axe");
+
+		ice_spade = new GenericSpade("ice_spade", ICE);
+		registerItem(ice_spade, "ice_spade");
 
 	}
 
@@ -839,7 +884,7 @@ public class Spooky {
 		incinerator_staff = new IncineratorStaff("incinerator_staff");
 		registerItem(incinerator_staff, "incinerator_staff");
 
-		fire_staff = new FireStaff("fire_staff");
+		fire_staff = new TransformingStaff("fire_staff");
 		registerItem(fire_staff, "fire_staff");
 
 	}
@@ -1015,6 +1060,12 @@ public class Spooky {
 		GameRegistry.addShapelessRecipe(new ItemStack(obsidiron_ingot, 9),
 				new ItemStack(obsidiron_block));
 
+		GameRegistry.addRecipe(new ItemStack(bedrockium_block), "iii", "iii",
+				"iii", 'i', bedrockium_ingot);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(bedrockium_ingot, 9),
+				new ItemStack(bedrockium_block));
+
 	}
 
 	private void addInfusedSwordsAndToolsRecipes() {
@@ -1095,6 +1146,21 @@ public class Spooky {
 		GameRegistry.addRecipe(new ItemStack(radioactive_spade), "c", "b", "b",
 				'b', bone12, 'c', purplonium_ingot);
 
+		GameRegistry.addRecipe(new ItemStack(ice_sword), "c", "c", "b", 'b',
+				obsidiron_stick, 'c', ice_plate);
+
+		GameRegistry.addRecipe(new ItemStack(ice_pickaxe), "ccc", " b ", " b ",
+				'b', obsidiron_stick, 'c', ice_plate);
+
+		GameRegistry.addRecipe(new ItemStack(ice_axe), "cc", "cb", " b", 'b',
+				obsidiron_stick, 'c', ice_plate);
+
+		GameRegistry.addRecipe(new ItemStack(ice_axe), "cc", "bc", "b ", 'b',
+				obsidiron_stick, 'c', ice_plate);
+
+		GameRegistry.addRecipe(new ItemStack(ice_spade), "c", "b", "b", 'b',
+				obsidiron_stick, 'c', ice_plate);
+
 	}
 
 	private void addArmorRecipes() {
@@ -1134,6 +1200,18 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(fire_boots), "c c", "b b", 'b',
 				fire_ingot, 'c', fire_crystal);
+
+		GameRegistry.addRecipe(new ItemStack(ice_helmet), "bcb", "b b", 'b',
+				ice_plate, 'c', ice_charge);
+
+		GameRegistry.addRecipe(new ItemStack(ice_chestplate), "c c", "bcb",
+				"bbb", 'b', ice_plate, 'c', ice_charge);
+
+		GameRegistry.addRecipe(new ItemStack(ice_leggings), "bcb", "b b",
+				"b b", 'b', ice_plate, 'c', ice_charge);
+
+		GameRegistry.addRecipe(new ItemStack(ice_boots), "c c", "b b", 'b',
+				ice_plate, 'c', ice_charge);
 
 	}
 
@@ -1185,9 +1263,9 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(incinerator_gun), "eoo", " bb",
 				'e', bone3, 'o', fire_ingot, 'b', fire_crystal);
-		
-		GameRegistry.addRecipe(new ItemStack(juggernaut_summon), "o", "r",
-				"r", 'o', obsidiron_block, 'r', obsidiron_stick);
+
+		GameRegistry.addRecipe(new ItemStack(juggernaut_summon), "o", "r", "r",
+				'o', obsidiron_block, 'r', obsidiron_stick);
 
 	}
 
@@ -1258,16 +1336,16 @@ public class Spooky {
 
 		GameRegistry.addRecipe(new ItemStack(obsidiron_stick, 4), "i", "i",
 				'i', obsidiron_ingot);
-		
+
 		GameRegistry.addRecipe(new ItemStack(molten_essence, 2), "iii", "ibi",
 				"iii", 'i', fire_ingot, 'b', fire_block);
-		
-		GameRegistry.addRecipe(new ItemStack(bedrockium_ingot, 4), "lil", "ioi",
-				"lil", 'i', bedrock_shard, 'o', obsidiron_block, 'l',
+
+		GameRegistry.addRecipe(new ItemStack(bedrockium_ingot, 4), "lil",
+				"ioi", "lil", 'i', bedrock_shard, 'o', obsidiron_block, 'l',
 				molten_essence);
 
-		GameRegistry.addRecipe(new ItemStack(bedrockium_ingot, 4), "ili", "lol",
-				"ili", 'i', bedrock_shard, 'o', obsidiron_block, 'l',
+		GameRegistry.addRecipe(new ItemStack(bedrockium_ingot, 4), "ili",
+				"lol", "ili", 'i', bedrock_shard, 'o', obsidiron_block, 'l',
 				molten_essence);
 
 	}

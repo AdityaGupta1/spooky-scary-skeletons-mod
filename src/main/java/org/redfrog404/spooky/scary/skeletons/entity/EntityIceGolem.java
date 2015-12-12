@@ -63,8 +63,6 @@ public class EntityIceGolem extends EntityGolem implements IMob {
 				new Class[0]));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,
 				EntityPlayer.class, true));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,
-				EntityIronGolem.class, true));
 	}
 
 	protected void entityInit() {

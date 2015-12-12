@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube", 
+	"textures": { 
+		"down": "spooky:blocks/bedrockium_block",
+		"up": "spooky:blocks/bedrockium_block",
+		"north": "spooky:blocks/bedrockium_block",
+		"south": "spooky:blocks/bedrockium_block",
+		"west": "spooky:blocks/bedrockium_block",
+		"east": "spooky:blocks/bedrockium_block",
+		"particle": "spooky:blocks/bedrockium_block"
+	}
+}

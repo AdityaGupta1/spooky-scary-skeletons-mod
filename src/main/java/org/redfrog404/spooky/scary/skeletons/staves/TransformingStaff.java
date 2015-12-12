@@ -13,36 +13,30 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
-public class GenericStaff extends Item {
+public class TransformingStaff extends GenericStaff {
 
 	private Item ammunition;
 
-	public GenericStaff(String name, Item ammunition) {
-		super();
+	public TransformingStaff(String name) {
+		super(name, Spooky.fire_crystal);
 		this.setUnlocalizedName(name);
-		this.setCreativeTab(Spooky.staves);
-		this.setMaxStackSize(1);
-		this.ammunition = ammunition;
-	}
-
-	public ItemStack onItemRightClick(ItemStack stack, World world,
-			EntityPlayer player) {
-		if (!player.capabilities.isCreativeMode) {
-			if (!player.inventory.hasItem(ammunition)) {
-				return stack;
-			}
-
-			player.inventory.consumeInventoryItem(ammunition);
-		}
-
-		return stack;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn,
 			List tooltip, boolean advanced) {
-		tooltip.add(EnumChatFormatting.GOLD + "Ammunition: "
-				+ ammunition.getItemStackDisplayName(new ItemStack(ammunition)));
+		tooltip.add(EnumChatFormatting.DARK_RED
+				+ "Usage: Turns jade blocks into blocks of");
+		tooltip.add(EnumChatFormatting.DARK_RED
+				+ "pure flame, which can be mined and crafted");
+		tooltip.add(EnumChatFormatting.DARK_RED + "into ingots");
+
+		super.addInformation(stack, playerIn, tooltip, advanced);
+	}
+
+	public ItemStack onItemRightClick(ItemStack stack, World world,
+			EntityPlayer player) {
+		return stack;
 	}
 
 }
