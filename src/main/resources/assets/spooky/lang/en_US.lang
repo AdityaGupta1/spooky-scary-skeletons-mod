@@ -138,3 +138,7 @@ item.ice_helmet.name=Icy Helm
 item.ice_chestplate.name=Refrigerator Chestplate
 item.ice_leggings.name=Frigid Pants
 item.ice_boots.name=Arctic Boots
+item.juggernaut_gun.name=Oblivion Rifle of the Juggernaut
+item.greatsword.name=Greatsword of the Bedrock Guardian
+item.iron_summon.name=Shiny Staff of Golem Summoning
+enchantment.ammunition=Ammunition Saver

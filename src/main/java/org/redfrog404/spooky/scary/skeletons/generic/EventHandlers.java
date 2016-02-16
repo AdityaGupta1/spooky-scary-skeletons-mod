@@ -25,6 +25,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 import org.redfrog404.spooky.scary.skeletons.entity.EntityIncinerator;
 import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
@@ -329,6 +330,21 @@ public class EventHandlers {
 
 		event.entityLiving.setFire(10);
 	}
+	
+	@SubscribeEvent
+	public void applyFireSword(PlayerTickEvent event) {
+		EntityPlayer player = event.player;
+
+		if (player.getHeldItem() == null) {
+			return;
+		}
+
+		if (player.getHeldItem().getItem() != Spooky.greatsword) {
+			return;
+		}
+
+		player.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(), 10, 3));
+	}
 
 	@SubscribeEvent
 	public void dropItemsFromMobs(LivingDeathEvent event) {
@@ -356,7 +372,7 @@ public class EventHandlers {
 		}
 
 		event.entityLiving.addPotionEffect(new PotionEffect(Spooky.curse
-				.getId(), 3, ((EntityJellySkull) entity).getSlimeSize()));
+				.getId(), 60, ((EntityJellySkull) entity).getSlimeSize()));
 	}
 
 	@SubscribeEvent
@@ -458,31 +474,21 @@ public class EventHandlers {
 
 	@SubscribeEvent
 	public void applyRadioactiveEffect(LivingAttackEvent event) {
-		if (event.source.getEntity() == null) {
+		if (!(event.source.getEntity() instanceof EntityPlayer)) {
 			return;
 		}
 
-		if (!(event.source.getEntity() instanceof EntityLivingBase)) {
-			return;
-		}
-
-		EntityLivingBase entity = (EntityLivingBase) event.source.getEntity();
+		EntityPlayer entity = (EntityPlayer) event.source.getEntity();
 
 		if (entity.getHeldItem() == null) {
 			return;
 		}
-
-		if (entity.getHeldItem().getItem() != Spooky.radioactive_sword
-				|| entity.getHeldItem().getItem() != Spooky.radioactive_axe
-				|| entity.getHeldItem().getItem() != Spooky.radioactive_pickaxe
-				|| entity.getHeldItem().getItem() != Spooky.radioactive_spade) {
+		
+		if (entity.getHeldItem().getItem() != Spooky.radioactive_sword) {
 			return;
 		}
 
-		PotionEffect radioactive = new PotionEffect(Spooky.radioactive.getId(),
-				random.nextInt(10) + 10);
-
-		event.entityLiving.addPotionEffect(radioactive);
+		event.entityLiving.addPotionEffect(new PotionEffect(26, random.nextInt(200) + 200, 1));
 	}
 
 	@SubscribeEvent

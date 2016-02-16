@@ -1,8 +1,9 @@
 package org.redfrog404.spooky.scary.skeletons.guns;
 
 import java.util.List;
+import java.util.Random;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,6 +19,7 @@ public class GenericGun extends Item {
 	private byte damage;
 	private Item ammunition;
 	private int bullets;
+	private byte velocity = 2;
 
 	public GenericGun(String name, int durability, Item bullet, byte damage) {
 		super();
@@ -41,24 +43,58 @@ public class GenericGun extends Item {
 		ammunition = bullet;
 		this.bullets = bullets;
 	}
+	
+	public GenericGun(String name, int durability, Item bullet, byte damage, byte velocity) {
+		super();
+		this.setUnlocalizedName(name);
+		this.setCreativeTab(Spooky.guns);
+		this.setMaxStackSize(1);
+		this.setMaxDamage(durability - 1);
+		this.damage = damage;
+		ammunition = bullet;
+		this.bullets = 1;
+		this.velocity = velocity;
+	}
+	
+	public GenericGun(String name, int durability, Item bullet, byte damage,
+			int bullets, byte velocity) {
+		super();
+		this.setUnlocalizedName(name);
+		this.setCreativeTab(Spooky.guns);
+		this.setMaxStackSize(1);
+		this.setMaxDamage(durability - 1);
+		this.damage = damage;
+		ammunition = bullet;
+		this.bullets = bullets;
+		this.velocity = velocity;
+	}
 
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
+		
+		int level = EnchantmentHelper.getEnchantmentLevel(
+				Spooky.ammunition.effectId, player.getHeldItem());
+
+		Random random = new Random();
+		int consumeAmmo = random.nextInt(level + 1);
+		
 		for (int bullets = 0; bullets < this.bullets; bullets++) {
 			if (!player.capabilities.isCreativeMode) {
 				if (!player.inventory.hasItem(ammunition)) {
 					return stack;
 				}
 				
-				player.inventory.consumeInventoryItem(ammunition);
+				if (consumeAmmo == 0) {
+					player.inventory.consumeInventoryItem(ammunition);
+				}
 			}
 			
 			if (!world.isRemote) {
 				EntityGenericBullet snowball = new EntityGenericBullet(world,
 						player, damage);
-				snowball.motionX *= 2;
-				snowball.motionY *= 2;
-				snowball.motionZ *= 2;
+				snowball.motionX *= velocity;
+				snowball.motionY *= velocity;
+				snowball.motionZ *= velocity;
 				world.spawnEntityInWorld(snowball);
 
 			}

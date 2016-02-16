@@ -25,7 +25,7 @@ public class EnchantmentBones extends Enchantment {
 	 * level passed.
 	 */
 	public int getMinEnchantability(int enchantmentLevel) {
-		return 20;
+		return 1 + (enchantmentLevel * 10);
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class EnchantmentBones extends Enchantment {
 	 * level passed.
 	 */
 	public int getMaxEnchantability(int enchantmentLevel) {
-		return 50;
+		return this.getMinEnchantability(enchantmentLevel) + 10;
 	}
 
 	/**

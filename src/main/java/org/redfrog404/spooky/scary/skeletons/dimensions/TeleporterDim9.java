@@ -49,6 +49,10 @@ public class TeleporterDim9 extends Teleporter {
 		entity.setLocationAndAngles((double) i, ((double) j) + 2, (double) k,
 				entity.rotationYaw, 0.0F);
 		entity.motionX = entity.motionY = entity.motionZ = 0.0D;
+		
+		while (entity.worldObj.getBlockState(entity.getPosition()).getBlock().isSolidFullCube()) {
+			entity.moveEntity(0, 1, 0);
+		}
 
 	}
 

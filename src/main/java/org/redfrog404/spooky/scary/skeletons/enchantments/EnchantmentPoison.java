@@ -23,7 +23,7 @@ public class EnchantmentPoison extends Enchantment {
 	 * level passed.
 	 */
 	public int getMinEnchantability(int enchantmentLevel) {
-		return 10 + 20 * (enchantmentLevel - 1);
+		return 1 + (enchantmentLevel * 10);
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class EnchantmentPoison extends Enchantment {
 	 * level passed.
 	 */
 	public int getMaxEnchantability(int enchantmentLevel) {
-		return super.getMinEnchantability(enchantmentLevel) + 50;
+		return this.getMinEnchantability(enchantmentLevel) + 10;
 	}
 
 	/**

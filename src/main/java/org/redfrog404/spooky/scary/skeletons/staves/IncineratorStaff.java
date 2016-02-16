@@ -16,24 +16,14 @@ import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
 public class IncineratorStaff extends GenericStaff {
 
-	private Item ammunition = Items.blaze_powder;
-
-	public IncineratorStaff(String name) {
-		super(name, Items.blaze_powder);
+	public IncineratorStaff(String name, Item ammunition) {
+		super(name, ammunition);
 	}
 
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
 		
 		super.onItemRightClick(stack, world, player);
-		
-		if (!player.capabilities.isCreativeMode) {
-			if (!player.inventory.hasItem(Items.blaze_powder)) {
-				return stack;
-			}
-			
-			player.inventory.consumeInventoryItem(Items.blaze_powder);
-		}
 		
 		double yaw = Math.toRadians(player.rotationYaw);
 		double pitch = Math.toRadians(player.rotationPitch);

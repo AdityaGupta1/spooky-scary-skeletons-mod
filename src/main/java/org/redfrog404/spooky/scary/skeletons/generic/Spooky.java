@@ -1,7 +1,5 @@
 package org.redfrog404.spooky.scary.skeletons.generic;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +13,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -36,7 +35,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -54,6 +52,7 @@ import org.redfrog404.spooky.scary.skeletons.creativetab.ToolsTab;
 import org.redfrog404.spooky.scary.skeletons.creativetab.WeaponsTab;
 import org.redfrog404.spooky.scary.skeletons.dimensions.DimensionGateway;
 import org.redfrog404.spooky.scary.skeletons.dimensions.DimensionRegistry;
+import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentAmmunition;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentArrowFast;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentBones;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentPoison;
@@ -75,6 +74,7 @@ import org.redfrog404.spooky.scary.skeletons.entity.RenderRisenDead;
 import org.redfrog404.spooky.scary.skeletons.entity.RenderSkeletonCow;
 import org.redfrog404.spooky.scary.skeletons.guns.GenericGun;
 import org.redfrog404.spooky.scary.skeletons.staves.IncineratorStaff;
+import org.redfrog404.spooky.scary.skeletons.staves.IronSummonStaff;
 import org.redfrog404.spooky.scary.skeletons.staves.TransformingStaff;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericAxe;
 import org.redfrog404.spooky.scary.skeletons.tools.GenericBow;
@@ -94,7 +94,7 @@ public class Spooky {
 	 */
 
 	public static final String MODID = "Spooky";
-	public static final String VERSION = "2.3.0";
+	public static final String VERSION = "2.4.0";
 
 	public static final List<String> spooky_text = new ArrayList();
 
@@ -108,6 +108,8 @@ public class Spooky {
 			new ResourceLocation("poison"), 2);
 	public static final Enchantment bones = new EnchantmentBones(152,
 			new ResourceLocation("bones"), 2);
+	public static final Enchantment ammunition = new EnchantmentAmmunition(153,
+			new ResourceLocation("ammunition"), 2);
 
 	public static final CreativeTabs materials = new MaterialsTab(
 			CreativeTabs.getNextID(), "materialsTab");
@@ -146,6 +148,8 @@ public class Spooky {
 			25.0F, 13.0F, 27);
 	public static ToolMaterial ICE = EnumHelper.addToolMaterial("ICE", 7, 5500,
 			35.0F, 16.0F, 20);
+	public static ToolMaterial GREATSWORD = EnumHelper.addToolMaterial(
+			"GREATSWORD", 7, 10000, 10.0F, 26.0F, 10);
 
 	public static ArmorMaterial MOSSARMOR = EnumHelper.addArmorMaterial(
 			"MOSSARMOR", "spooky:moss_armor", 20, new int[] { 5, 6, 4, 5 }, 18);
@@ -261,6 +265,8 @@ public class Spooky {
 	public static Item ice_axe;
 	public static Item ice_spade;
 
+	public static Item greatsword;
+
 	// Armor
 	public static Item moss_helmet;
 	public static Item moss_chestplate;
@@ -297,53 +303,25 @@ public class Spooky {
 	public static Item compressed_redstone;
 	public static GenericGun incinerator_gun;
 	public static Item fire_bullet;
+	public static GenericGun juggernaut_gun;
 
 	// Staves
 	public static Item incinerator_summon;
 	public static Item incinerator_staff;
 	public static Item fire_staff;
 	public static Item juggernaut_summon;
+	public static Item iron_summon;
 
 	// Potions
-	public static Potion curse = new GenericPotion(26, new ResourceLocation(
-			"curse"), true, 0).setIconIndex(7, 1).setPotionName("potion.curse");
 
-	public static Potion radioactive = new GenericPotion(27,
-			new ResourceLocation("radioactive"), true, 0).setIconIndex(6, 0)
-			.setPotionName("potion.radioactive");
+	// For colors, do RED * 65536 + GREEN * 256 + BLUE
+	public static final Potion curse = new GenericPotion(26,
+			new ResourceLocation("curse"), true, 9211020).setIconIndex(7, 1)
+			.setPotionName("potion.curse");
 
-	/*
-	 * ========================================================================================================================================================================
-	 * Potion Reflection
-	 * ========================================================================================================================================================================
-	 */
-
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		Potion[] potionTypes = null;
-
-		for (Field f : Potion.class.getDeclaredFields()) {
-			f.setAccessible(true);
-			try {
-				if (f.getName().equals("potionTypes")
-						|| f.getName().equals("field_76425_a")) {
-					Field modfield = Field.class.getDeclaredField("modifiers");
-					modfield.setAccessible(true);
-					modfield.setInt(f, f.getModifiers() & ~Modifier.FINAL);
-
-					potionTypes = (Potion[]) f.get(null);
-					final Potion[] newPotionTypes = new Potion[256];
-					System.arraycopy(potionTypes, 0, newPotionTypes, 0,
-							potionTypes.length);
-					f.set(null, newPotionTypes);
-				}
-			} catch (Exception e) {
-				System.err
-						.println("Severe error, please report this to the mod author:");
-				System.err.println(e);
-			}
-		}
-	}
+	public static final Potion radioactive = new GenericPotion(27,
+			new ResourceLocation("radioactive"), true, 10040319).setIconIndex(
+			6, 0).setPotionName("potion.radioactive");
 
 	/*
 	 * ========================================================================================================================================================================
@@ -767,6 +745,9 @@ public class Spooky {
 		ice_spade = new GenericSpade("ice_spade", ICE);
 		registerItem(ice_spade, "ice_spade");
 
+		greatsword = new GenericSword("greatsword", GREATSWORD);
+		registerItem(greatsword, "greatsword");
+
 	}
 
 	/*
@@ -877,15 +858,24 @@ public class Spooky {
 		registerItem(incinerator_gun, "incinerator_gun");
 
 		registerItem(fire_bullet, "fire_bullet");
+
+		juggernaut_gun = new GenericGun("juggernaut_gun", 6666,
+				Items.iron_ingot, (byte) 40, (byte) 4);
+		registerItem(juggernaut_gun, "juggernaut_gun");
 	}
 
 	private void registerStaves() {
 
-		incinerator_staff = new IncineratorStaff("incinerator_staff");
+		incinerator_staff = new IncineratorStaff("incinerator_staff",
+				Items.blaze_powder);
 		registerItem(incinerator_staff, "incinerator_staff");
 
 		fire_staff = new TransformingStaff("fire_staff");
 		registerItem(fire_staff, "fire_staff");
+
+		iron_summon = new IronSummonStaff("iron_summon",
+				Item.getItemFromBlock(Blocks.iron_block));
+		registerItem(iron_summon, "iron_summon");
 
 	}
 
@@ -1252,8 +1242,11 @@ public class Spooky {
 		GameRegistry.addRecipe(new ItemStack(incinerator_summon), "c", "i",
 				"i", 'c', bone_core2, 'i', bone_ingot);
 
-		GameRegistry.addRecipe(new ItemStack(fire_bow), "iii", "ibi", "iii",
-				'b', ender_bow, 'i', fire_ingot);
+		ItemStack flame_bow = new ItemStack(fire_bow);
+		flame_bow.addEnchantment(Enchantment.flame, 1);
+
+		GameRegistry.addRecipe(flame_bow, "iii", "ibi", "iii", 'b', ender_bow,
+				'i', fire_ingot);
 
 		GameRegistry.addShapelessRecipe(new ItemStack(fire_arrow, 8),
 				new ItemStack(Items.arrow), new ItemStack(Items.blaze_powder));
@@ -1265,7 +1258,7 @@ public class Spooky {
 				'e', bone3, 'o', fire_ingot, 'b', fire_crystal);
 
 		GameRegistry.addRecipe(new ItemStack(juggernaut_summon), "o", "r", "r",
-				'o', obsidiron_block, 'r', obsidiron_stick);
+				'o', obsidiron_ingot, 'r', obsidiron_stick);
 
 	}
 
@@ -1347,6 +1340,17 @@ public class Spooky {
 		GameRegistry.addRecipe(new ItemStack(bedrockium_ingot, 4), "ili",
 				"lol", "ili", 'i', bedrock_shard, 'o', obsidiron_block, 'l',
 				molten_essence);
+
+		ItemStack ammunition_book = new ItemStack(Items.enchanted_book, 1);
+		EnchantmentData enchData = new EnchantmentData(ammunition, 1);
+		Items.enchanted_book.addEnchantment(ammunition_book, enchData);
+		GameRegistry.addRecipe(ammunition_book, "geg", "ibi", "geg", 'b',
+				Items.book, 'g', Items.gunpowder, 'e', Blocks.ender_chest, 'i',
+				Items.iron_ingot);
+		
+		GameRegistry.addRecipe(ammunition_book, "gig", "ebe", "gig", 'b',
+				Items.book, 'g', Items.gunpowder, 'e', Blocks.ender_chest, 'i',
+				Items.iron_ingot);
 
 	}
 
@@ -1456,6 +1460,8 @@ public class Spooky {
 
 		Enchantment.addToBookList(bones);
 		MinecraftForge.EVENT_BUS.register(bones);
+
+		Enchantment.addToBookList(ammunition);
 
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 		FMLCommonHandler.instance().bus().register(new EventHandlers());

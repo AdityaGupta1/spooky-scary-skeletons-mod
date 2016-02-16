@@ -22,7 +22,7 @@ public class EnchantmentArrowFast extends Enchantment {
 	 * level passed.
 	 */
 	public int getMinEnchantability(int enchantmentLevel) {
-		return 12 + (enchantmentLevel - 1) * 20;
+		return 1 + (enchantmentLevel * 10);
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class EnchantmentArrowFast extends Enchantment {
 	 * level passed.
 	 */
 	public int getMaxEnchantability(int enchantmentLevel) {
-		return this.getMinEnchantability(enchantmentLevel) + 25;
+		return this.getMinEnchantability(enchantmentLevel) + 10;
 	}
 
 	/**

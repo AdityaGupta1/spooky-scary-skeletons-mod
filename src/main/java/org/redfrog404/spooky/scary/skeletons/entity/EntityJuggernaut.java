@@ -38,6 +38,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigateGround;
@@ -46,6 +47,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -342,12 +344,14 @@ public class EntityJuggernaut extends EntityMob implements IBossDisplayData {
 		j = this.rand.nextInt(3);
 
 		if (j == 0) {
-			this.dropItem(Spooky.incinerator_staff, 1);
+			this.dropItem(Spooky.juggernaut_gun, 1);
 		} else if (j == 1) {
-			this.dropItem(Spooky.fire_amulet, 1);
+			this.dropItem(Spooky.greatsword, 1);
 		} else if (j == 2) {
-			this.dropItem(Spooky.fire_staff, 1);
+			this.dropItem(Spooky.iron_summon, 1);
 		}
+		
+		this.dropItem(Item.getItemFromBlock(Blocks.iron_block), 1);
 	}
 
 	/**
@@ -528,28 +532,7 @@ public class EntityJuggernaut extends EntityMob implements IBossDisplayData {
 	 * gets into the saddle on a pig.
 	 */
 	public boolean interact(EntityPlayer player) {
-		ItemStack itemstack = player.getCurrentEquippedItem();
-
-		if (itemstack != null && itemstack.getItem() == Items.golden_apple
-				&& itemstack.getMetadata() == 0 && this.isVillager()
-				&& this.isPotionActive(Potion.weakness)) {
-			if (!player.capabilities.isCreativeMode) {
-				--itemstack.stackSize;
-			}
-
-			if (itemstack.stackSize <= 0) {
-				player.inventory.setInventorySlotContents(
-						player.inventory.currentItem, (ItemStack) null);
-			}
-
-			if (!this.worldObj.isRemote) {
-				this.startConversion(this.rand.nextInt(2401) + 3600);
-			}
-
-			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
 
 	/**
@@ -775,104 +758,97 @@ public class EntityJuggernaut extends EntityMob implements IBossDisplayData {
 			}
 		}
 	}
-	
-	class AITNTThrow extends EntityAIBase
-    {
-        private EntityJuggernaut juggernaut
-        = EntityJuggernaut.this;
-        private int field_179467_b;
-        private int field_179468_c;
-        private static final String __OBFID = "CL_00002225";
 
-        public AITNTThrow()
-        {
-            this.setMutexBits(3);
-        }
+	class AITNTThrow extends EntityAIBase {
+		private EntityJuggernaut juggernaut = EntityJuggernaut.this;
+		private int field_179467_b;
+		private int field_179468_c;
+		private static final String __OBFID = "CL_00002225";
 
-        /**
-         * Returns whether the EntityAIBase should begin execution.
-         */
-        public boolean shouldExecute()
-        {
-            EntityLivingBase entitylivingbase = this.juggernaut.getAttackTarget();
-            return entitylivingbase != null && entitylivingbase.isEntityAlive();
-        }
+		public AITNTThrow() {
+			this.setMutexBits(3);
+		}
 
-        /**
-         * Execute a one shot task or start executing a continuous task
-         */
-        public void startExecuting()
-        {
-            this.field_179467_b = 0;
-        }
+		/**
+		 * Returns whether the EntityAIBase should begin execution.
+		 */
+		public boolean shouldExecute() {
+			EntityLivingBase entitylivingbase = this.juggernaut
+					.getAttackTarget();
+			return entitylivingbase != null && entitylivingbase.isEntityAlive();
+		}
 
-        /**
-         * Updates the task
-         */
-        public void updateTask()
-        {
-            --this.field_179468_c;
-            EntityLivingBase target = this.juggernaut.getAttackTarget();
-            double d0 = this.juggernaut.getDistanceSqToEntity(target);
+		/**
+		 * Execute a one shot task or start executing a continuous task
+		 */
+		public void startExecuting() {
+			this.field_179467_b = 0;
+		}
 
-            if (d0 < 4.0D)
-            {
-                if (this.field_179468_c <= 0)
-                {
-                    this.field_179468_c = 20;
-                    this.juggernaut.attackEntityAsMob(target);
-                }
+		/**
+		 * Updates the task
+		 */
+		public void updateTask() {
+			--this.field_179468_c;
+			EntityLivingBase target = this.juggernaut.getAttackTarget();
+			double d0 = this.juggernaut.getDistanceSqToEntity(target);
 
-                this.juggernaut.getMoveHelper().setMoveTo(target.posX, target.posY, target.posZ, 1.0D);
-            }
-            else if (d0 < 256.0D)
-            {
-                double d1 = target.posX - this.juggernaut.posX;
-                double d2 = target.getEntityBoundingBox().minY + (double)(target.height / 2.0F) - (this.juggernaut.posY + (double)(this.juggernaut.height / 2.0F));
-                double d3 = target.posZ - this.juggernaut.posZ;
+			if (d0 < 4.0D) {
+				if (this.field_179468_c <= 0) {
+					this.field_179468_c = 20;
+					this.juggernaut.attackEntityAsMob(target);
+				}
 
-                if (this.field_179468_c <= 0)
-                {
-                    ++this.field_179467_b;
+				this.juggernaut.getMoveHelper().setMoveTo(target.posX,
+						target.posY, target.posZ, 1.0D);
+			} else if (d0 < 256.0D) {
+				double d1 = target.posX - this.juggernaut.posX;
+				double d2 = target.getEntityBoundingBox().minY
+						+ (double) (target.height / 2.0F)
+						- (this.juggernaut.posY + (double) (this.juggernaut.height / 2.0F));
+				double d3 = target.posZ - this.juggernaut.posZ;
 
-                    if (this.field_179467_b == 1)
-                    {
-                        this.field_179468_c = 60;
-                    }
-                    else if (this.field_179467_b <= 4)
-                    {
-                        this.field_179468_c = 6;
-                    }
-                    else
-                    {
-                        this.field_179468_c = 100;
-                        this.field_179467_b = 0;
-                    }
+				if (this.field_179468_c <= 0) {
+					++this.field_179467_b;
 
-                    if (this.field_179467_b > 1)
-                    {
-                        float f = MathHelper.sqrt_float(MathHelper.sqrt_double(d0)) * 0.5F;
-                        this.juggernaut.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1009, new BlockPos((int)this.juggernaut.posX, (int)this.juggernaut.posY, (int)this.juggernaut.posZ), 0);
+					if (this.field_179467_b == 1) {
+						this.field_179468_c = 60;
+					} else if (this.field_179467_b <= 4) {
+						this.field_179468_c = 6;
+					} else {
+						this.field_179468_c = 100;
+						this.field_179467_b = 0;
+					}
 
-                        for (int i = 0; i < 1; ++i)
-                        {
-                            EntityTNTPrimed tnt = new EntityTNTPrimed(this.juggernaut.worldObj);
-                            tnt.setLocationAndAngles(target.posX, target.posY, target.posZ, 0, 0);
-                            tnt.fuse = 30;
-                            this.juggernaut.worldObj.spawnEntityInWorld(tnt);
-                        }
-                    }
-                }
+					if (this.field_179467_b > 1) {
+						float f = MathHelper.sqrt_float(MathHelper
+								.sqrt_double(d0)) * 0.5F;
+						this.juggernaut.worldObj.playAuxSFXAtEntity(
+								(EntityPlayer) null, 1009, new BlockPos(
+										(int) this.juggernaut.posX,
+										(int) this.juggernaut.posY,
+										(int) this.juggernaut.posZ), 0);
 
-                this.juggernaut.getLookHelper().setLookPositionWithEntity(target, 10.0F, 10.0F);
-            }
-            else
-            {
-                this.juggernaut.getNavigator().clearPathEntity();
-                this.juggernaut.getMoveHelper().setMoveTo(target.posX, target.posY, target.posZ, 1.0D);
-            }
+						for (int i = 0; i < 1; ++i) {
+							EntityTNTPrimed tnt = new EntityTNTPrimed(
+									this.juggernaut.worldObj);
+							tnt.setLocationAndAngles(target.posX, target.posY,
+									target.posZ, 0, 0);
+							tnt.fuse = 30;
+							this.juggernaut.worldObj.spawnEntityInWorld(tnt);
+						}
+					}
+				}
 
-            super.updateTask();
-        }
-    }
+				this.juggernaut.getLookHelper().setLookPositionWithEntity(
+						target, 10.0F, 10.0F);
+			} else {
+				this.juggernaut.getNavigator().clearPathEntity();
+				this.juggernaut.getMoveHelper().setMoveTo(target.posX,
+						target.posY, target.posZ, 1.0D);
+			}
+
+			super.updateTask();
+		}
+	}
 }

@@ -19,7 +19,6 @@ public class TransformingStaff extends GenericStaff {
 
 	public TransformingStaff(String name) {
 		super(name, Spooky.fire_crystal);
-		this.setUnlocalizedName(name);
 	}
 
 	@SideOnly(Side.CLIENT)
