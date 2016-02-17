@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -56,22 +57,25 @@ import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentAmmunition;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentArrowFast;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentBones;
 import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentPoison;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityFrost;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityFrostBall;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityIceGolem;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityIncinerator;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityJuggernaut;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityRisenDead;
-import org.redfrog404.spooky.scary.skeletons.entity.EntitySkeletonCow;
-import org.redfrog404.spooky.scary.skeletons.entity.RenderFrost;
-import org.redfrog404.spooky.scary.skeletons.entity.RenderFrostBall;
-import org.redfrog404.spooky.scary.skeletons.entity.RenderIceGolem;
-import org.redfrog404.spooky.scary.skeletons.entity.RenderIncinerator;
-import org.redfrog404.spooky.scary.skeletons.entity.RenderJellySkull;
-import org.redfrog404.spooky.scary.skeletons.entity.RenderJuggernaut;
-import org.redfrog404.spooky.scary.skeletons.entity.RenderRisenDead;
-import org.redfrog404.spooky.scary.skeletons.entity.RenderSkeletonCow;
+import org.redfrog404.spooky.scary.skeletons.enchantments.EnchantmentVelocity;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityEnderBat;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityFrost;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityFrostBall;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityIceGolem;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityIncinerator;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityJellySkull;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityJuggernaut;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityRisenDead;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntitySkeletonCow;
+import org.redfrog404.spooky.scary.skeletons.entity.render.RenderEnderBat;
+import org.redfrog404.spooky.scary.skeletons.entity.render.RenderFrost;
+import org.redfrog404.spooky.scary.skeletons.entity.render.RenderFrostBall;
+import org.redfrog404.spooky.scary.skeletons.entity.render.RenderIceGolem;
+import org.redfrog404.spooky.scary.skeletons.entity.render.RenderIncinerator;
+import org.redfrog404.spooky.scary.skeletons.entity.render.RenderJellySkull;
+import org.redfrog404.spooky.scary.skeletons.entity.render.RenderJuggernaut;
+import org.redfrog404.spooky.scary.skeletons.entity.render.RenderRisenDead;
+import org.redfrog404.spooky.scary.skeletons.entity.render.RenderSkeletonCow;
 import org.redfrog404.spooky.scary.skeletons.guns.GenericGun;
 import org.redfrog404.spooky.scary.skeletons.staves.IncineratorStaff;
 import org.redfrog404.spooky.scary.skeletons.staves.IronSummonStaff;
@@ -110,6 +114,8 @@ public class Spooky {
 			new ResourceLocation("bones"), 2);
 	public static final Enchantment ammunition = new EnchantmentAmmunition(153,
 			new ResourceLocation("ammunition"), 2);
+	public static final Enchantment velocity = new EnchantmentVelocity(154,
+			new ResourceLocation("velocity"), 2);
 
 	public static final CreativeTabs materials = new MaterialsTab(
 			CreativeTabs.getNextID(), "materialsTab");
@@ -210,8 +216,6 @@ public class Spooky {
 	// Miscellaneous
 	public static Item spookyscaryskeletons;
 	public static Item guardians_eye;
-	public static Item bone_marrow;
-	public static Item gray_gel;
 	public static Item cloth;
 	public static Item jade_ingot;
 	public static Item canopic_jar;
@@ -232,6 +236,14 @@ public class Spooky {
 	public static Item bedrock_shard;
 	public static Item molten_essence;
 	public static Item bedrockium_ingot;
+
+	// Food
+
+	public static Item bone_marrow;
+	public static Item gray_gel;
+	public static Item candy;
+	public static Item spicy_candy;
+	public static Item hard_candy;
 
 	// Tools and Swords
 	public static Item fire_sword;
@@ -421,13 +433,30 @@ public class Spooky {
 
 	private void registerFoodItems() {
 
-		bone_marrow = new GenericFoodItem("bone_marrow", 1, 0.3F, true)
+		/* 
+		* new GenericFoodItem(String unlocalizedName, int amount, float saturation, boolean isWolfFood, boolean isAlwaysEdible)
+		* .setPotionEffect(int id, int duration, int amplifier, float probability)
+		* */
+
+		bone_marrow = new GenericFoodItem("bone_marrow", 1, 0.3F, true, false)
 				.setPotionEffect(Potion.hunger.id, 6, 1, 0.25F);
 		registerItem(bone_marrow, "bone_marrow");
 
-		gray_gel = new GenericFoodItem("gray_gel", 2, 0.7F, false)
+		gray_gel = new GenericFoodItem("gray_gel", 2, 0.7F, false, true)
 				.setPotionEffect(Potion.jump.id, 15, 0, 0.4F);
 		registerItem(gray_gel, "gray_gel");
+
+		candy = new GenericFoodItem("candy", 1, 0.3F, false, true)
+				.setPotionEffect(Potion.moveSpeed.id, 10, 1, 1.0F);
+		registerItem(candy, "candy");
+
+		spicy_candy = new GenericFoodItem("spicy_candy", 1, 0.2F, false, true)
+				.setPotionEffect(Potion.fireResistance.id, 10, 1, 1.0F);
+		registerItem(spicy_candy, "spicy_candy");
+
+		hard_candy = new GenericFoodItem("hard_candy", 1, 0.6F, false, true)
+				.setPotionEffect(Potion.resistance.id, 10, 1, 1.0F);
+		registerItem(hard_candy, "hard_candy");
 
 	}
 
@@ -832,15 +861,26 @@ public class Spooky {
 	}
 
 	private void registerGuns() {
+
+		/*
+		 * new GenericGun(String name, int durability, Item bullet, byte damage)
+		 * new GenericGun(String name, int durability, Item bullet, byte damage, int bullets)
+		 * new GenericGun(String name, int durability, Item bullet, byte damage, double velocity)
+		 * new GenericGun(String name, int durability, Item bullet, byte damage, int bullets, double velocity)
+		 * 
+		 * Base velocity is 2
+		 */
+
 		prismarine_pistol = new GenericGun("prismarine_pistol", 1234,
-				Items.prismarine_shard, (byte) 6);
+				Items.prismarine_shard, (byte) 6, 1.0D);
 		registerItem(prismarine_pistol, "prismarine_pistol");
 
-		fire_gun = new GenericGun("fire_gun", 666, Items.fire_charge, (byte) 9);
+		fire_gun = new GenericGun("fire_gun", 666, Items.fire_charge, (byte) 9,
+				1.5D);
 		registerItem(fire_gun, "fire_gun");
 
 		ender_rifle = new GenericGun("ender_rifle", 888, Items.ender_pearl,
-				(byte) 11);
+				(byte) 11, 3.0D);
 		registerItem(ender_rifle, "ender_rifle");
 
 		compressed_redstone = new GenericItem("compressed_redstone", guns);
@@ -854,13 +894,13 @@ public class Spooky {
 		fire_bullet = new GenericItem("fire_bullet", guns);
 
 		incinerator_gun = new GenericGun("incinerator_gun", 1500, fire_bullet,
-				(byte) 14);
+				(byte) 14, 2.5D);
 		registerItem(incinerator_gun, "incinerator_gun");
 
 		registerItem(fire_bullet, "fire_bullet");
 
 		juggernaut_gun = new GenericGun("juggernaut_gun", 6666,
-				Items.iron_ingot, (byte) 40, (byte) 4);
+				Items.iron_ingot, (byte) 40, 4.0D);
 		registerItem(juggernaut_gun, "juggernaut_gun");
 	}
 
@@ -900,6 +940,8 @@ public class Spooky {
 		addBowsGunsAndStavesRecipes();
 
 		addMiscRecipes();
+
+		addFoodRecipes();
 
 	}
 
@@ -1292,9 +1334,6 @@ public class Spooky {
 				new ItemStack(Items.prismarine_shard, 8), new ItemStack(
 						Blocks.prismarine, 1, 2));
 
-		GameRegistry.addRecipe(new ItemStack(bone_marrow, 16), "bbb", "bBb",
-				"bbb", 'B', Items.bone, 'b', new ItemStack(Items.dye, 1, 15));
-
 		GameRegistry.addRecipe(new ItemStack(dimension_gateway), "bbb", "bBb",
 				"bbb", 'b', bone_box, 'B', bone4);
 
@@ -1347,11 +1386,36 @@ public class Spooky {
 		GameRegistry.addRecipe(ammunition_book, "geg", "ibi", "geg", 'b',
 				Items.book, 'g', Items.gunpowder, 'e', Blocks.ender_chest, 'i',
 				Items.iron_ingot);
-		
+
 		GameRegistry.addRecipe(ammunition_book, "gig", "ebe", "gig", 'b',
 				Items.book, 'g', Items.gunpowder, 'e', Blocks.ender_chest, 'i',
 				Items.iron_ingot);
+		
+		ItemStack velocity_book = new ItemStack(Items.enchanted_book, 1);
+		EnchantmentData enchData2 = new EnchantmentData(velocity, 1);
+		Items.enchanted_book.addEnchantment(velocity_book, enchData2);
+		GameRegistry.addRecipe(velocity_book, "geg", "ibi", "geg", 'b',
+				Items.book, 'g', Items.gunpowder, 'e', Items.ender_pearl, 'i',
+				Items.sugar);
 
+		GameRegistry.addRecipe(velocity_book, "gig", "ebe", "gig", 'b',
+				Items.book, 'g', Items.gunpowder, 'e', Items.ender_pearl, 'i',
+				Items.sugar);
+
+	}
+
+	private void addFoodRecipes() {
+		GameRegistry.addRecipe(new ItemStack(bone_marrow, 16), "bbb", "bBb",
+				"bbb", 'B', Items.bone, 'b', new ItemStack(Items.dye, 1, 15));
+
+		GameRegistry.addRecipe(new ItemStack(candy, 4), " s ", "sws", " s ",
+				's', Items.sugar, 'w', Items.water_bucket);
+
+		GameRegistry.addRecipe(new ItemStack(spicy_candy, 4), " c ", "cCc",
+				" c ", 'c', candy, 'C', fire_crystal);
+
+		GameRegistry.addRecipe(new ItemStack(hard_candy, 4), " c ", "cbc",
+				" c ", 'c', candy, 'b', bedrock_shard);
 	}
 
 	/*
@@ -1369,6 +1433,9 @@ public class Spooky {
 	}
 
 	private void registerSpawnEggMobs() {
+
+		RenderManager render = Minecraft.getMinecraft().getRenderManager();
+
 		registerModEntity(EntitySkeletonCow.class, new RenderSkeletonCow(),
 				"skeletoncow", EntityRegistry.findGlobalUniqueEntityId(),
 				0xEBEBD5, 0xC9C9A7);
@@ -1400,6 +1467,13 @@ public class Spooky {
 		registerModEntity(EntityJuggernaut.class, new RenderJuggernaut(),
 				"juggernaut", EntityRegistry.findGlobalUniqueEntityId(),
 				0x404040, 0x9E9E9E);
+
+		registerModEntity(EntityEnderBat.class, new RenderEnderBat(render),
+				"ender_bat", EntityRegistry.findGlobalUniqueEntityId(),
+				0xC652E3, 0x8D1491);
+
+		EntityRegistry.addSpawn(EntityEnderBat.class, 20, 1, 3,
+				EnumCreatureType.MONSTER, BiomeGenBase.sky);
 	}
 
 	private void registerNoSpawnEggMobs() {
@@ -1462,6 +1536,8 @@ public class Spooky {
 		MinecraftForge.EVENT_BUS.register(bones);
 
 		Enchantment.addToBookList(ammunition);
+
+		Enchantment.addToBookList(velocity);
 
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 		FMLCommonHandler.instance().bus().register(new EventHandlers());

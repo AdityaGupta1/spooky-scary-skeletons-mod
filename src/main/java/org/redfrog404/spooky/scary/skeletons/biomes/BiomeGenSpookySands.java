@@ -2,8 +2,8 @@ package org.redfrog404.spooky.scary.skeletons.biomes;
 
 import java.util.Random;
 
-import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
-import org.redfrog404.spooky.scary.skeletons.entity.EntitySkeletonCow;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityJellySkull;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntitySkeletonCow;
 import org.redfrog404.spooky.scary.skeletons.generic.Spooky;
 
 import net.minecraft.entity.monster.EntityEnderman;

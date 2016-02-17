@@ -27,10 +27,10 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
-import org.redfrog404.spooky.scary.skeletons.entity.EntityIncinerator;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityJellySkull;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityJuggernaut;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityRisenDead;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityIncinerator;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityJellySkull;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityJuggernaut;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityRisenDead;
 
 public class EventHandlers {
 

@@ -19,7 +19,8 @@ public class GenericGun extends Item {
 	private byte damage;
 	private Item ammunition;
 	private int bullets;
-	private byte velocity = 2;
+	private double velocity = 2;
+	private double multiplier;
 
 	public GenericGun(String name, int durability, Item bullet, byte damage) {
 		super();
@@ -44,7 +45,7 @@ public class GenericGun extends Item {
 		this.bullets = bullets;
 	}
 	
-	public GenericGun(String name, int durability, Item bullet, byte damage, byte velocity) {
+	public GenericGun(String name, int durability, Item bullet, byte damage, double velocity) {
 		super();
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(Spooky.guns);
@@ -57,7 +58,7 @@ public class GenericGun extends Item {
 	}
 	
 	public GenericGun(String name, int durability, Item bullet, byte damage,
-			int bullets, byte velocity) {
+			int bullets, double velocity) {
 		super();
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(Spooky.guns);
@@ -89,18 +90,22 @@ public class GenericGun extends Item {
 				}
 			}
 			
+			int velocityLevel = EnchantmentHelper.getEnchantmentLevel(
+					Spooky.velocity.effectId, player.getHeldItem());
+			multiplier = 1 + (0.2 * velocityLevel);
+			
 			if (!world.isRemote) {
 				EntityGenericBullet snowball = new EntityGenericBullet(world,
 						player, damage);
-				snowball.motionX *= velocity;
-				snowball.motionY *= velocity;
-				snowball.motionZ *= velocity;
+				snowball.motionX *= velocity * multiplier;
+				snowball.motionY *= velocity * multiplier;
+				snowball.motionZ *= velocity * multiplier;
 				world.spawnEntityInWorld(snowball);
 
 			}
 		}
 
-		world.playSoundAtEntity(player, "random.bow", 0.5F,
+		world.playSoundAtEntity(player, "random.explode", (float) (Math.log10(velocity * 2) * 2),
 				0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 		if (!player.capabilities.isCreativeMode) {
@@ -120,6 +125,7 @@ public class GenericGun extends Item {
 		tooltip.add(EnumChatFormatting.DARK_RED + "Damage: "
 				+ ((float) damage / 2) + " hearts");
 		tooltip.add(EnumChatFormatting.DARK_GREEN + "Bullets Shot: " + bullets);
+		tooltip.add(EnumChatFormatting.WHITE + "Base Bullet Velocity: " + velocity);
 		tooltip.add(EnumChatFormatting.AQUA + "Durability: "
 				+ (this.getMaxDamage() + 1));
 		tooltip.add(EnumChatFormatting.GOLD + "Ammunition: "

@@ -3,8 +3,8 @@ package org.redfrog404.spooky.scary.skeletons.biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
-import org.redfrog404.spooky.scary.skeletons.entity.EntityFrost;
-import org.redfrog404.spooky.scary.skeletons.entity.EntityIceGolem;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityFrost;
+import org.redfrog404.spooky.scary.skeletons.entity.entity.EntityIceGolem;
 
 public class BiomeGenIce extends BiomeGenBase {
 	
