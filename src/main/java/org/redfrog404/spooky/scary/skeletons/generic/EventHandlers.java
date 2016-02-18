@@ -24,6 +24,7 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
@@ -43,24 +44,24 @@ public class EventHandlers {
 	 */
 
 	@SubscribeEvent
-	public void onEntityUpdate(LivingUpdateEvent event) {
-		if (event.entityLiving.isPotionActive(Spooky.curse)) {
-			PotionEffect curse = event.entityLiving
-					.getActivePotionEffect(Spooky.curse);
+	public void applyPotionEffects(LivingUpdateEvent event) {
+		EntityLivingBase entity = event.entityLiving;
+
+		if (entity.isPotionActive(Spooky.curse)) {
+			PotionEffect curse = entity.getActivePotionEffect(Spooky.curse);
 			int level = curse == null ? 0 : curse.getAmplifier();
 
 			if (level == 0) {
 				return;
 			}
 
-			if (event.entityLiving.worldObj.rand.nextInt(5) == 0) {
-				event.entityLiving
-						.attackEntityFrom(DamageSource.generic, level);
+			if (entity.worldObj.rand.nextInt(5) == 0) {
+				entity.attackEntityFrom(DamageSource.generic, level);
 			}
 		}
 
-		if (event.entityLiving.isPotionActive(Spooky.radioactive)) {
-			PotionEffect radioactive = event.entityLiving
+		if (entity.isPotionActive(Spooky.radioactive)) {
+			PotionEffect radioactive = entity
 					.getActivePotionEffect(Spooky.radioactive);
 			int level = radioactive == null ? 0 : radioactive.getAmplifier();
 
@@ -68,10 +69,27 @@ public class EventHandlers {
 				return;
 			}
 
-			if (event.entityLiving.worldObj.rand.nextInt(5) == 0) {
-				event.entityLiving.attackEntityFrom(DamageSource.generic,
+			if (entity.worldObj.rand.nextInt(5) == 0) {
+				entity.attackEntityFrom(DamageSource.generic,
 						random.nextInt(level));
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void applyWeightEffect(LivingJumpEvent event) {
+		EntityLivingBase entity = event.entityLiving;
+
+		if (entity.isPotionActive(Spooky.weight)) {
+			PotionEffect weight = entity
+					.getActivePotionEffect(Spooky.weight);
+			double level = weight == null ? 0 : weight.getAmplifier();
+
+			if (level == 0) {
+				return;
+			}
+			
+			entity.motionY -= level/16;
 		}
 	}
 
@@ -214,7 +232,7 @@ public class EventHandlers {
 			return;
 		}
 
-		entity.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 160));
+		entity.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 10));
 		entity.extinguish();
 
 	}
@@ -302,6 +320,51 @@ public class EventHandlers {
 
 	}
 
+	@SubscribeEvent
+	public void slowEntityWithBedrockArmor(LivingUpdateEvent event) {
+		EntityLivingBase entity = event.entityLiving;
+		double slow = 0;
+
+		if (entity.getEquipmentInSlot(1) != null) {
+			if (entity.getEquipmentInSlot(1).getItem() == Spooky.bedrock_boots) {
+				slow += 0.5;
+			}
+		}
+
+		if (entity.getEquipmentInSlot(2) != null) {
+			if (entity.getEquipmentInSlot(2).getItem() == Spooky.bedrock_leggings) {
+				slow += 0.5;
+			}
+		}
+
+		if (entity.getEquipmentInSlot(3) != null) {
+			if (entity.getEquipmentInSlot(3).getItem() == Spooky.bedrock_chestplate) {
+				slow += 0.5;
+			}
+		}
+
+		if (entity.getEquipmentInSlot(4) != null) {
+			if (entity.getEquipmentInSlot(4).getItem() == Spooky.bedrock_helmet) {
+				slow += 0.5;
+			}
+		}
+		
+		int slowLevel = (int) Math.floor(slow);
+
+		if (slowLevel < 1) {
+			return;
+		}
+
+		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10,
+				slowLevel - 1));
+		
+		if (slowLevel < 2) {
+			return;
+		}
+		
+		entity.addPotionEffect(new PotionEffect(Spooky.weight.id, 10));
+	}
+
 	/*
 	 * ========================================================================================================================================================================
 	 * Other Stuff
@@ -330,7 +393,7 @@ public class EventHandlers {
 
 		event.entityLiving.setFire(10);
 	}
-	
+
 	@SubscribeEvent
 	public void applyFireSword(PlayerTickEvent event) {
 		EntityPlayer player = event.player;
@@ -343,7 +406,8 @@ public class EventHandlers {
 			return;
 		}
 
-		player.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(), 10, 3));
+		player.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(), 10,
+				3));
 	}
 
 	@SubscribeEvent
@@ -483,12 +547,13 @@ public class EventHandlers {
 		if (entity.getHeldItem() == null) {
 			return;
 		}
-		
+
 		if (entity.getHeldItem().getItem() != Spooky.radioactive_sword) {
 			return;
 		}
 
-		event.entityLiving.addPotionEffect(new PotionEffect(26, random.nextInt(200) + 200, 1));
+		event.entityLiving.addPotionEffect(new PotionEffect(26, random
+				.nextInt(200) + 200, 1));
 	}
 
 	@SubscribeEvent

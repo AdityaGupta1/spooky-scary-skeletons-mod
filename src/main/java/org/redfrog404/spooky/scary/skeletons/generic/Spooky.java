@@ -93,12 +93,12 @@ public class Spooky {
 
 	/*
 	 * ========================================================================================================================================================================
-	 * Enchantments, Creative Tabs, Tool/Armor Materials, Misc.
+	 * Non-Item/Block Variable Initialization
 	 * ========================================================================================================================================================================
 	 */
 
 	public static final String MODID = "Spooky";
-	public static final String VERSION = "2.4.1";
+	public static final String VERSION = "2.4.2";
 
 	public static final List<String> spooky_text = new ArrayList();
 
@@ -169,6 +169,10 @@ public class Spooky {
 
 	public static ArmorMaterial ICEARMOR = EnumHelper.addArmorMaterial(
 			"ICEARMOR", "spooky:ice_armor", 35, new int[] { 5, 6, 4, 5 }, 13);
+
+	public static ArmorMaterial BEDROCKARMOR = EnumHelper.addArmorMaterial(
+			"BEDROCKARMOR", "spooky:bedrock_armor", 500,
+			new int[] { 5, 7, 5, 5 }, 10);
 
 	/*
 	 * ========================================================================================================================================================================
@@ -300,6 +304,11 @@ public class Spooky {
 	public static Item ice_leggings;
 	public static Item ice_boots;
 
+	public static Item bedrock_helmet;
+	public static Item bedrock_chestplate;
+	public static Item bedrock_leggings;
+	public static Item bedrock_boots;
+
 	// Bows and Arrows
 	public static GenericBow double_bow;
 	public static GenericBow ender_bow;
@@ -326,7 +335,10 @@ public class Spooky {
 
 	// Potions
 
-	// For colors, do RED * 65536 + GREEN * 256 + BLUE
+	/*
+	 *  For colors, do [(RED * 65536) + (GREEN * 256) + BLUE]
+	 */
+	
 	public static final Potion curse = new GenericPotion(26,
 			new ResourceLocation("curse"), true, 9211020).setIconIndex(7, 1)
 			.setPotionName("potion.curse");
@@ -334,6 +346,10 @@ public class Spooky {
 	public static final Potion radioactive = new GenericPotion(27,
 			new ResourceLocation("radioactive"), true, 10040319).setIconIndex(
 			6, 0).setPotionName("potion.radioactive");
+	
+	public static final Potion weight = new GenericPotion(28,
+			new ResourceLocation("weight"), true, 5926017).setIconIndex(
+			1, 0).setPotionName("potion.weight");
 
 	/*
 	 * ========================================================================================================================================================================
@@ -735,6 +751,22 @@ public class Spooky {
 
 		ice_boots = new GenericArmor("ice_boots", ICEARMOR, 1, 3, "ice");
 		registerItem(ice_boots, "ice_boots");
+
+		bedrock_helmet = new GenericArmor("bedrock_helmet", BEDROCKARMOR, 1, 0,
+				"bedrock");
+		registerItem(bedrock_helmet, "bedrock_helmet");
+
+		bedrock_chestplate = new GenericArmor("bedrock_chestplate",
+				BEDROCKARMOR, 1, 1, "bedrock");
+		registerItem(bedrock_chestplate, "bedrock_chestplate");
+
+		bedrock_leggings = new GenericArmor("bedrock_leggings", BEDROCKARMOR,
+				2, 2, "bedrock");
+		registerItem(bedrock_leggings, "bedrock_leggings");
+
+		bedrock_boots = new GenericArmor("bedrock_boots", BEDROCKARMOR, 1, 3,
+				"bedrock");
+		registerItem(bedrock_boots, "bedrock_boots");
 
 	}
 
@@ -1245,6 +1277,18 @@ public class Spooky {
 		GameRegistry.addRecipe(new ItemStack(ice_boots), "c c", "b b", 'b',
 				ice_plate, 'c', ice_charge);
 
+		GameRegistry.addRecipe(new ItemStack(bedrock_helmet), "bcb", "b b",
+				'b', bedrockium_ingot, 'c', molten_essence);
+
+		GameRegistry.addRecipe(new ItemStack(bedrock_chestplate), "c c", "bcb",
+				"bbb", 'b', bedrockium_ingot, 'c', molten_essence);
+
+		GameRegistry.addRecipe(new ItemStack(bedrock_leggings), "bcb", "b b",
+				"b b", 'b', bedrockium_ingot, 'c', molten_essence);
+
+		GameRegistry.addRecipe(new ItemStack(bedrock_boots), "c c", "b b", 'b',
+				bedrockium_ingot, 'c', molten_essence);
+
 	}
 
 	private void addBowsGunsAndStavesRecipes() {
@@ -1284,16 +1328,13 @@ public class Spooky {
 		GameRegistry.addRecipe(new ItemStack(incinerator_summon), "c", "i",
 				"i", 'c', bone_core2, 'i', bone_ingot);
 
-		ItemStack flame_bow = new ItemStack(fire_bow);
-		flame_bow.addEnchantment(Enchantment.flame, 1);
-
-		GameRegistry.addRecipe(flame_bow, "iii", "ibi", "iii", 'b', ender_bow,
-				'i', fire_ingot);
+		GameRegistry.addRecipe(new ItemStack(fire_bow), "iii", "ibi", "iii",
+				'b', ender_bow, 'i', fire_ingot);
 
 		GameRegistry.addShapelessRecipe(new ItemStack(fire_arrow, 8),
 				new ItemStack(Items.arrow), new ItemStack(Items.blaze_powder));
 
-		GameRegistry.addShapelessRecipe(new ItemStack(fire_bullet, 8),
+		GameRegistry.addShapelessRecipe(new ItemStack(fire_bullet, 32),
 				new ItemStack(fire_ingot));
 
 		GameRegistry.addRecipe(new ItemStack(incinerator_gun), "eoo", " bb",
@@ -1390,7 +1431,7 @@ public class Spooky {
 		GameRegistry.addRecipe(ammunition_book, "gig", "ebe", "gig", 'b',
 				Items.book, 'g', Items.gunpowder, 'e', Blocks.ender_chest, 'i',
 				Items.iron_ingot);
-		
+
 		ItemStack velocity_book = new ItemStack(Items.enchanted_book, 1);
 		EnchantmentData enchData2 = new EnchantmentData(velocity, 1);
 		Items.enchanted_book.addEnchantment(velocity_book, enchData2);

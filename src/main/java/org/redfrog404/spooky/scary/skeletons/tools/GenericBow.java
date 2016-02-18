@@ -111,7 +111,7 @@ public class GenericBow extends ItemBow {
 				}
 
 				if (EnchantmentHelper.getEnchantmentLevel(
-						Enchantment.flame.effectId, stack) > 0) {
+						Enchantment.flame.effectId, stack) > 0 || stack.getItem().equals(Spooky.fire_bow)) {
 					entityarrow.setFire(100);
 				}
 
